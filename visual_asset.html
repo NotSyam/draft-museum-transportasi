@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual Asset Listing &amp; I2V Prompt Generator - Museum Transportasi</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            cBase: '#F8FAFC',
+            cDark: '#0F172A',
+            cBrand: '#0284C7',
+            cBrandLight: '#E0F2FE',
+            cBrandHover: '#0369A1',
+            cAccent: '#EA580C',
+            cAccentLight: '#FFEDD5',
+            cLine: '#E2E8F0',
+            cMuted: '#64748B',
+            tagBg: '#38BDF8',
+            tagChar: '#6366F1',
+            tagVeh: '#F59E0B',
+            tagUI: '#EC4899',
+            tagFX: '#10B981'
+          },
+          boxShadow: {
+            card: '0 2px 14px rgba(15, 23, 42, 0.06)',
+            lift: '0 12px 28px -6px rgba(2, 132, 199, 0.2)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      body { background-color: #FFFFFF !important; }
+    }
+    .scrollbar-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 9999px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background-color: #F1F5F9; }
+    .prompt-box {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body class="bg-cBase text-cDark antialiased font-sans min-h-screen selection:bg-cBrand selection:text-white">
+
+  <header class="no-print sticky top-0 z-50 bg-cDark text-white border-b border-white/10 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand & Metadata -->
+      <div class="flex items-center space-x-3">
+        <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-sky-400 via-pink-500 to-amber-400 flex items-center justify-center text-white font-bold text-lg shadow-md border border-white/20">
+          🎨
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-cBrand text-white">Visual Asset Manifest &amp; /i2v Engine</span>
+            <span class="text-xs text-amber-300 font-mono font-bold">PAUD 4–6 Thn · Audio-Visual Heavy</span>
+          </div>
+          <h1 class="text-sm sm:text-base font-extrabold text-white leading-tight mt-0.5">
+            Daftar Aset Visual Lengkap &amp; Generator Prompt Image-to-Video
+          </h1>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center flex-wrap gap-2 text-xs">
+        <button onclick="copyAllPrompts('t2i')" class="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 font-medium text-white transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-3.5 h-3.5 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+          Salin Semua T2I
+        </button>
+        <button onclick="copyAllPrompts('i2v')" class="px-3 py-1.5 rounded-lg border border-transparent bg-gradient-to-r from-pink-500 to-amber-500 text-white font-bold transition flex items-center gap-1.5 shadow-sm hover:opacity-95">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Salin Semua /i2v
+        </button>
+        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 font-medium text-white transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Cetak Dokumen
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Quick Filter Strip -->
+    <div class="bg-slate-900 border-t border-white/10 px-4 sm:px-6 py-2.5">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+        
+        <!-- Scene Filter Buttons -->
+        <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-thin py-0.5">
+          <span class="text-[10px] font-bold text-white/50 uppercase tracking-wider mr-1 whitespace-nowrap">Filter Scene:</span>
+          <button onclick="setFilterScene('ALL')" id="fltScene-ALL" class="flt-scene-btn px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-cBrand text-white shadow-sm border border-cBrand">Semua</button>
+          <button onclick="setFilterScene('S1')" id="fltScene-S1" class="flt-scene-btn px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-white/10 text-white/80 hover:bg-white/20 hover:text-white border border-white/10">#1 Bis</button>
+          <button onclick="setFilterScene('S2')" id="fltScene-S2" class="flt-scene-btn px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-white/10 text-white/80 hover:bg-white/20 hover:text-white border border-white/10">#2 Lobi</button>
+          <button onclick="setFilterScene('S3')" id="fltScene-S3" class="flt-scene-btn px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-white/10 text-white/80 hover:bg-white/20 hover:text-white border border-white/10">#3 Penumpang</button>
+          <button onclick="setFilterScene('S4')" id="fltScene-S4" class="flt-scene-btn px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-white/10 text-white/80 hover:bg-white/20 hover:text-white border border-white/10">#4 Penyelamat</button>
+          <button onclick="setFilterScene('S5')" id="fltScene-S5" class="flt-scene-btn px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-white/10 text-white/80 hover:bg-white/20 hover:text-white border border-white/10">#5 Pengangkut</button>
+          <button onclick="setFilterScene('S6')" id="fltScene-S6" class="flt-scene-btn px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-white/10 text-white/80 hover:bg-white/20 hover:text-white border border-white/10">#6 Kuis</button>
+          <button onclick="setFilterScene('S7')" id="fltScene-S7" class="flt-scene-btn px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-white/10 text-white/80 hover:bg-white/20 hover:text-white border border-white/10">#7 Rangkuman</button>
+        </div>
+
+        <!-- Category Filter Buttons -->
+        <div class="flex items-center gap-1.5">
+          <span class="text-[10px] font-bold text-white/50 uppercase tracking-wider mr-1">Tipe:</span>
+          <select id="selectCategory" onchange="setFilterCategory(this.value)" class="bg-slate-800 text-white text-xs px-2.5 py-1 rounded-md border border-white/20 focus:outline-none focus:border-sky-400">
+            <option value="ALL">Semua Tipe Aset</option>
+            <option value="BACKGROUND">Latar Belakang (16:9)</option>
+            <option value="CHARACTER">Karakter (Sprite/Pose)</option>
+            <option value="VEHICLE">Kendaraan (Objek Fokus)</option>
+            <option value="UI_PROP">UI, Hotspot &amp; Benda</option>
+            <option value="VFX_ANIM">Efek Visual &amp; Reward</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ART DIRECTION SPECIFICATION & TOKEN CHEAT SHEET -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 mt-6 no-print">
+    <div class="bg-white rounded-2xl border-2 border-amber-300 shadow-card p-5">
+      <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-cLine">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] font-extrabold mb-1.5 border border-amber-300">
+            <span class="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+            Standar Art Direction &amp; Konsistensi Model AI (Midjourney v6 / SDXL / Runway Gen-3)
+          </div>
+          <h2 class="text-xl font-extrabold text-cDark">Kaidah Visual Pre-Readers (Ramah Anak, Kontras Cerah, Bebas Distorsi)</h2>
+          <p class="text-xs text-cMuted mt-1">
+            Gaya ilustrasi kartun modern 2D cerah terinspirasi animasi anak edukatif (Cocomelon, Tayo The Little Bus, Pororo) dengan garis tepi melengkung tebal (*bold rounded outlines*), ekspresi ramah, dan palet warna pastel saturasi tinggi.
+          </p>
+        </div>
+
+        <!-- Total Assets Counter Badge -->
+        <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 p-3 rounded-xl text-xs font-mono">
+          <div class="text-center">
+            <span class="text-[10px] text-slate-500 block uppercase">Total Aset Terdaftar</span>
+            <strong id="statTotalAssets" class="text-lg font-extrabold text-cBrand">40 Aset</strong>
+          </div>
+          <div class="h-8 w-px bg-slate-300"></div>
+          <div class="text-center">
+            <span class="text-[10px] text-slate-500 block uppercase">Mode Animasi /i2v</span>
+            <strong class="text-lg font-extrabold text-pink-600">30 Clip Ready</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Prompt Token Pills -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3.5 text-xs">
+        <div class="p-3 rounded-xl bg-sky-50 border border-sky-200 space-y-1">
+          <strong class="text-sky-900 font-bold block text-xs flex items-center gap-1.5">
+            <span>🎨</span> Token Wajib Gambar (T2I Seed Style)
+          </strong>
+          <code class="text-[11px] text-sky-800 font-mono block bg-white/70 p-1.5 rounded border border-sky-200/60 select-all">
+            charming 2D vector children storybook illustration, cute chibi proportions, vibrant cheerful colors, thick rounded clean outlines, soft pastel lighting, smooth shading, high contrast, studio quality, no text, no watermark --ar 16:9
+          </code>
+        </div>
+
+        <div class="p-3 rounded-xl bg-pink-50 border border-pink-200 space-y-1">
+          <strong class="text-pink-900 font-bold block text-xs flex items-center gap-1.5">
+            <span>🎬</span> Token Wajib Animasi (/i2v Motion)
+          </strong>
+          <code class="text-[11px] text-pink-800 font-mono block bg-white/70 p-1.5 rounded border border-pink-200/60 select-all">
+            fluid 24fps 2D cartoon animation, playful bouncy squash-and-stretch physics, gentle idle breathing motion, cheerful smiling eye blinks, smooth loopable, locked camera perspective, zero frame morphing, clean character anatomy
+          </code>
+        </div>
+
+        <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 space-y-1">
+          <strong class="text-amber-950 font-bold block text-xs flex items-center gap-1.5">
+            <span>🚫</span> Negative Prompt Penting
+          </strong>
+          <code class="text-[11px] text-amber-900 font-mono block bg-white/70 p-1.5 rounded border border-amber-200/60 select-all">
+            photorealistic, hyperrealistic 3D render, dark gritty lighting, scary expressions, sharp menacing edges, blurry artifacts, extra limbs, deformed vehicles, tiny unreadable text, watermarks, grainy texture
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN ASSET CATALOG & PROMPT GENERATOR CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+    
+    <!-- Filter Status & View Controls -->
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4 text-xs font-mono">
+      <div class="text-slate-600">
+        Menampilkan <strong id="displayedCount" class="text-cDark">40</strong> aset visual dari total <strong id="totalCount" class="text-cBrand">40</strong> aset.
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="expandAllCards(true)" class="px-2.5 py-1 rounded bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold">Buka Semua Rincian</button>
+        <button onclick="expandAllCards(false)" class="px-2.5 py-1 rounded bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold">Tutup Semua</button>
+      </div>
+    </div>
+
+    <!-- Dynamic Asset Cards Grid -->
+    <div id="assetsGrid" class="space-y-4">
+      <!-- Populated via JavaScript Data -->
+    </div>
+
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-cDark text-white text-xs px-4 py-2.5 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition duration-300 pointer-events-none z-50 flex items-center gap-2 border border-white/20">
+    <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+    <span id="toastMsg">Prompt berhasil disalin ke clipboard!</span>
+  </div>
+
+  <!-- SCRIPT: DATA ASSETS & /I2V PROMPTS -->
+  <script>
+    const assetsData = [
+      /* =========================================================================
+         SCENE 1: BERANGKAT NAIK BIS SEKOLAH KUNING
+         ========================================================================= */
+      {
+        id: "AST-S1-BG-01",
+        scene: "S1",
+        sceneTitle: "Scene 1: Berangkat Naik Bis Sekolah",
+        name: "Latar Belakang Halaman TK Pagi Cerah",
+        category: "BACKGROUND",
+        format: "PNG (1920x1080, 16:9 Widescreen)",
+        specs: "Latar pemandangan penuh, gedung TK kartun warna-warni, rumput hijau rapi, pohon kartun bundar, awan putih empuk, matahari tersenyum cerah di pojok atas.",
+        motionType: "Slow Ambient Pan & Parallax",
+        t2iPrompt: "Cute 2D vector cartoon kindergarten playground in the bright morning, colorful cheerful school building with friendly rounded architecture, lush green rolling grass, fluffy rounded tree bushes, smiling cartoon sun in bright blue sky with slow puffy clouds, vibrant welcoming pastel colors, warm sunlight, children storybook style, Studio Ghibli meets Cocomelon art style, wide establishing angle, ultra-detailed 16:9 widescreen, no characters, no text --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows colorful kindergarten playground in morning. Animate with subtle slow left-to-right tracking camera. Make the puffy clouds drift lazily across the sky at 0.05x speed. Add gentle waving motion to tree foliage and soft fluttering sunlight sparkles on the green grass. Sunbeams gently pulsing. Maintain flat 2D storybook aesthetic with zero morphing or perspective distortion. Smooth seamless 5-second loop, 24fps."
+      },
+      {
+        id: "AST-S1-VEH-01",
+        scene: "S1",
+        sceneTitle: "Scene 1: Berangkat Naik Bis Sekolah",
+        name: "Bis Sekolah Kuning Raksasa Ramah",
+        category: "VEHICLE",
+        format: "PNG Transparan (1344x561 px, Alpha Channel)",
+        specs: "Bis kartun kuning cerah dengan senyum di bemper depan, mata ramah di kaca depan, pintu penumpang terbuka lebar, jendela lebar memperlihatkan siluet anak-anak ceria.",
+        motionType: "Bouncing Drive-In & Stop",
+        t2iPrompt: "Friendly yellow cartoon school bus, side-front three-quarter view, big happy smiling cartoon face on windshield with sparkling friendly eyes, open boarding door, wide clean windows with cute silhouettes of waving kindergarten students, shiny round black wheels, bright chrome headlights, thick bold rounded outlines, cute chibi vehicle design inspired by Tayo the little bus, isolated on pure white background, PNG cutout ready --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows cheerful yellow school bus. Animate the bus driving in from screen left with a playful bouncy cartoon suspension rhythm (squash and stretch). The wheels spin smoothly. As the bus comes to a gentle stop in center, the chassis gives two cheerful bouncy squashes. The headlights give a friendly double-flash wink, and small cartoon puff clouds puff from the exhaust pipe. Camera static. 24fps, clean 2D motion."
+      },
+      {
+        id: "AST-S1-CHR-01",
+        scene: "S1",
+        sceneTitle: "Scene 1: Berangkat Naik Bis Sekolah",
+        name: "Rio & Ceri Melompat Riang",
+        category: "CHARACTER",
+        format: "PNG Transparan (422x410 px, Alpha Channel)",
+        specs: "Dua anak TK: Rio (laki-laki, topi bisbol biru miring, kaos polo oranye, celana pendek) & Ceri (perempuan, bando merah pita, kuncir kuda, baju terusan kuning ceria) sedang melompat gembira melambaikan tangan ke kamera.",
+        motionType: "Joyful Jumping & Waving Hand Loop",
+        t2iPrompt: "Full body character illustration of two adorable Indonesian kindergarten children standing together, boy named Rio wearing backwards blue baseball cap, bright orange polo shirt, denim shorts and sneakers, girl named Ceri with cute red ribbon headband, twin ponytails, cheerful yellow dungaree dress and red shoes, jumping up with energetic joyful waving hand gestures looking straight at camera, big laughing eyes, charming 2D storybook style, thick rounded outlines, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows Rio and Ceri in jumping pose. Animate Rio hopping up and down twice with joyful springy knee bends, enthusiastically waving his right hand. Ceri does a cheerful synchronized hop with her twin ponytails bouncing softly with natural secondary physics, both blinking with big sparkling happy eyes. Friendly warm cartoon idle movement, no distortion of limbs, smooth 4-second loop, 24fps."
+      },
+      {
+        id: "AST-S1-CHR-02",
+        scene: "S1",
+        sceneTitle: "Scene 1: Berangkat Naik Bis Sekolah",
+        name: "Ibu Guru Pemandu Ramah",
+        category: "CHARACTER",
+        format: "PNG Transparan (268x388 px, Alpha Channel)",
+        specs: "Ibu Guru muda berpakaian blazer pastel toska rapi, berhijab lembut atau rambut disanggul rapi, tersenyum hangat dengan gestur tangan terbuka mempersilakan anak-anak masuk.",
+        motionType: "Welcoming Hand Gesture & Gentle Idle",
+        t2iPrompt: "Full body illustration of a friendly Indonesian female preschool teacher, warm nurturing smile, stylish pastel mint-green modest educator outfit with neat yellow scarf, standing gracefully next to school bus door with an open welcoming hand gesture inviting children aboard, big gentle caring eyes, clean 2D vector cartoon style, bold soft outlines, isolated on transparent white background --ar 9:16 --v 6.0",
+        i2vPrompt: "/i2v Source image shows smiling teacher with welcoming hand. Animate her right hand gesturing in a gentle, rhythmic waving-in motion welcoming the children aboard. Her head tilts slightly with an affectionate warm smile, blinking naturally. Gentle breathing idle cycle with slight cloth sway. Maintain soft preschool cartoon charm, stable proportions, 24fps."
+      },
+      {
+        id: "AST-S1-UI-01",
+        scene: "S1",
+        sceneTitle: "Scene 1: Berangkat Naik Bis Sekolah",
+        name: "Tombol Sentuh: Setir Bis Berdenyut Hijau",
+        category: "UI_PROP",
+        format: "PNG Transparan (120x120 px, Target Sentuh > 80px)",
+        specs: "Setir mobil kartun hijau cerah berbingkai tebal dengan ikon klakson horn di tengahnya dan cincin cahaya berdenyut (pulse ring) untuk menarik perhatian jari anak.",
+        motionType: "Continuous Pulse Ring & Horn Honk Press",
+        t2iPrompt: "Chunky cartoon toy steering wheel button for preschool tablet game, vibrant lime-green rubber grip, bright yellow center horn button with embossed musical horn megaphone icon, glossy 3D-bevel vector effect, surrounded by glowing golden touch pulse wave ring, child-friendly tactile tactile design, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows green cartoon steering wheel. Animate an infinite glowing expanding pulse ring radiating from behind the steering wheel every 1.5 seconds. The wheel does a playful subtle rotational jiggle (-5 to +5 degrees) every 2 seconds to beckon the child's touch. On tap trigger, the center horn compresses inward with a satisfying squash and springs back. 24fps loop."
+      },
+
+      /* =========================================================================
+         SCENE 2: LOBI MUSEUM - 3 GERBANG WARNA SAHABAT MOBIL
+         ========================================================================= */
+      {
+        id: "AST-S2-BG-01",
+        scene: "S2",
+        sceneTitle: "Scene 2: Lobi Museum 3 Gerbang Sahabat Mobil",
+        name: "Latar Belakang Lobi Museum Kubah Kaca",
+        category: "BACKGROUND",
+        format: "PNG (1920x1080, 16:9 Widescreen)",
+        specs: "Lobi museum transportasi futuristik kartun dengan kubah kaca transparan memperlihatkan langit biru, lantai marmer bersih memantulkan cahaya lembut, pilar pelangi ceria.",
+        motionType: "Gentle Sunlight Rays & Ambient Floating Dust",
+        t2iPrompt: "Vibrant cartoon museum grand lobby interior for children storybook, huge soaring glass dome ceiling showing clear sunny skies, colorful rainbow marble pillars, clean sparkling terrazzo floor with soft reflections, joyful educational exhibition entrance hall, bright cheerful pastel color palette, wide angle 16:9 widescreen composition, warm ambient lighting, no text, no clutter --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows grand cartoon museum lobby. Animate gentle golden volumetric sunbeams shifting slowly through the glass dome ceiling. Subtle sparkling dust motes floating playfully in the air. The floor reflects soft glimmers of sunlight. Static camera angle, peaceful grand museum atmosphere, 24fps seamless loop."
+      },
+      {
+        id: "AST-S2-PRP-01",
+        scene: "S2",
+        sceneTitle: "Scene 2: Lobi Museum 3 Gerbang Sahabat Mobil",
+        name: "Pintu Gerbang 1: Biru (Mobil Penumpang)",
+        category: "UI_PROP",
+        format: "PNG Transparan (480x518 px, Alpha Channel)",
+        specs: "Gerbang lengkung kartun biru langit dengan gambar ikon taksi kuning dan siluet orang banyak tersenyum, dihiasi lampu kelap-kelip emas dan nomor '1' besar.",
+        motionType: "Glow Pulse & Magic Sliding Open",
+        t2iPrompt: "Big cartoon arched gateway entrance door colored in bright sky-blue, large embossed friendly yellow taxi cab pictogram and smiling passenger group icon on front panels, glowing golden marquee bulbs around the arch border, prominent joyful number '1' on top keystone, child-friendly theme park style, thick outlines, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows blue arched gateway. Animate the golden marquee bulbs chasing around the arch in a playful sequential loop. The door panels slide smoothly open to the left and right revealing a bright sparkling golden magical interior glow with star chimes, then slowly slide shut. Smooth mechanical sliding door motion, 24fps."
+      },
+      {
+        id: "AST-S2-PRP-02",
+        scene: "S2",
+        sceneTitle: "Scene 2: Lobi Museum 3 Gerbang Sahabat Mobil",
+        name: "Pintu Gerbang 2: Merah (Mobil Penyelamat)",
+        category: "UI_PROP",
+        format: "PNG Transparan (480x518 px, Alpha Channel)",
+        specs: "Gerbang lengkung merah menyala dengan gambar ikon mobil pemadam api, ambulans, dan lampu rotator sirine menyala berkedip, nomor '2' besar.",
+        motionType: "Siren Rotator Flash & Gentle Rumble",
+        t2iPrompt: "Big cartoon arched gateway entrance door colored in bright fire-engine red, embossed fire truck and medical ambulance rescue pictograms, mini blue and red spinning emergency siren beacons on top corners, bold number '2' on top keystone, heroic rescue theme for kids, thick outlines, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows red rescue gateway. Animate the top red and blue emergency beacon lights flashing alternately in a rhythmic cartoon pulse (red left, blue right) casting soft colored light on the door frame. The door stays closed with a gentle heroic idle rumble. 24fps loop."
+      },
+      {
+        id: "AST-S2-PRP-03",
+        scene: "S2",
+        sceneTitle: "Scene 2: Lobi Museum 3 Gerbang Sahabat Mobil",
+        name: "Pintu Gerbang 3: Oranye (Mobil Pengangkut)",
+        category: "UI_PROP",
+        format: "PNG Transparan (480x518 px, Alpha Channel)",
+        specs: "Gerbang oranye kuning kokoh dengan gambar ikon truk kontainer dan kotak paket belanjaan, nomor '3' besar bertekstur roda gigi.",
+        motionType: "Gentle Gear Rotation & Heavy Industrial Idle",
+        t2iPrompt: "Big cartoon arched gateway entrance door colored in sturdy bright orange and yellow warning stripes, embossed heavy cargo truck and wooden delivery parcel box icons, decorative cartoon mechanical gears on top keystone with bold number '3', industrial construction theme for children, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows orange cargo gateway. Animate the decorative mechanical cartoon gears on top slowly rotating in opposite directions. The door frame emits a gentle solid idle shake with small sparkle accents on the metallic hinges. 24fps loop."
+      },
+      {
+        id: "AST-S2-CHR-01",
+        scene: "S2",
+        sceneTitle: "Scene 2: Lobi Museum 3 Gerbang Sahabat Mobil",
+        name: "Bu Guru & Anak Menunjuk Pintu Biru",
+        category: "CHARACTER",
+        format: "PNG Transparan (652x324 px, Alpha Channel)",
+        specs: "Bu Guru di tengah merangkul Rio dan Ceri sambil bersama-sama menunjuk antusias ke arah Gerbang 1 Pintu Biru.",
+        motionType: "Synchronized Pointing & Curious Looking",
+        t2iPrompt: "Full body illustration of female kindergarten teacher standing with little boy Rio and little girl Ceri in the museum lobby, all three happily pointing their hands towards the left side with curious enthusiastic expressions, teacher gently smiling down at the children, children looking forward with wide sparkling excited eyes, colorful 2D storybook cartoon style, isolated on transparent white background --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows teacher and children pointing left. Animate the children's pointing arms bouncing slightly with excitement. Rio leans forward on his toes with eager curiosity. Teacher smiles warmly and nods her head gently while speaking encouragingly. Natural blinking and subtle clothing sway. 24fps loop."
+      },
+
+      /* =========================================================================
+         SCENE 3: RUANGAN 1 - MOBIL PENUMPANG (AUDIO-FIRST EXPLORATION)
+         ========================================================================= */
+      {
+        id: "AST-S3-BG-01",
+        scene: "S3",
+        sceneTitle: "Scene 3: Ruang Mobil Penumpang",
+        name: "Latar Belakang Ruang Pamer Jalan Raya Kota",
+        category: "BACKGROUND",
+        format: "PNG (1920x1080, 16:9 Widescreen)",
+        specs: "Ruang pameran bertema jalan aspal bersih kartun dengan marka putih rapi, halte bus modern warna biru, trotoar ramah pejalan kaki, dan lampu lalu lintas tersenyum.",
+        motionType: "Slow Traffic Light Blink & Soft Shimmer",
+        t2iPrompt: "2D cartoon modern clean city street exhibition room inside a transport museum, smooth black asphalt road with crisp white dashed markings, bright modern bus stop shelter with glass canopy, colorful cartoon streetlights with smiling faces, sunny city skyline painted on museum backdrop walls, cheerful vibrant preschool aesthetic, wide angle 16:9 widescreen, no vehicles on road --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows cartoon street exhibition hall. Animate the smiling traffic light in background changing friendly eyes from green to yellow. Soft ambient daylight glints across the polished asphalt floor. Slow cinematic subtle camera push-in (1.05x zoom over 5s). Smooth 24fps."
+      },
+      {
+        id: "AST-S3-VEH-01",
+        scene: "S3",
+        sceneTitle: "Scene 3: Ruang Mobil Penumpang",
+        name: "Kartu Kendaraan 1: Bis Transjakarta Biru",
+        category: "VEHICLE",
+        format: "PNG Transparan (518x561 px, Alpha Channel)",
+        specs: "Bis kota Transjakarta biru besar ramah dengan tulisan 'TRANSJAKARTA' kartun, pintu otomatis, kaca jendela lebar penuh penumpang tersenyum, tombol audio klakson 'TUUUT!'.",
+        motionType: "Honk Bounce & Headlight Beaming",
+        t2iPrompt: "Adorable cartoon blue city transit bus inspired by Transjakarta, big friendly front windshield with happy cartoon eyes, shiny white and blue livery, wide sliding passenger doors, clean round wheels, chunky toy-like proportions for preschool kids, thick rounded outlines, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows blue transit bus. On tap trigger, the bus squashes down slightly and pops up in an energetic cartoon honk bounce (honk-honk motion). Front headlights shoot out two friendly conical yellow beam flashes twice. The roof AC unit gives a gentle vibration. Smooth 3-second cycle, 24fps."
+      },
+      {
+        id: "AST-S3-VEH-02",
+        scene: "S3",
+        sceneTitle: "Scene 3: Ruang Mobil Penumpang",
+        name: "Kartu Kendaraan 2: Mobil Angkot Mungil",
+        category: "VEHICLE",
+        format: "PNG Transparan (518x561 px, Alpha Channel)",
+        specs: "Mobil angkot mikrolet mungil merah/biru cerah dengan pintu samping terbuka memperlihatkan bangku panjang penumpang duduk berhadapan, roda bergoyang lucu.",
+        motionType: "Playful Side-to-Side Wobble & Beep",
+        t2iPrompt: "Cute colorful mini Indonesian public minibus Angkot, vibrant red and blue body, open side sliding door showing interior long passenger bench seats, friendly cartoon headlights smiling, cute chunky tires, playful compact preschool toy proportions, bold vector outlines, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows cute red angkot. Animate the angkot chassis giving a rhythmic, funny side-to-side wobble on its bouncy tires (classic quirky angkot motion). As it honks, the front grill gives a quick cheerful smile compression. Wheels flex softly. 24fps loop."
+      },
+      {
+        id: "AST-S3-VEH-03",
+        scene: "S3",
+        sceneTitle: "Scene 3: Ruang Mobil Penumpang",
+        name: "Kartu Kendaraan 3: Mobil Taksi Kuning Lincah",
+        category: "VEHICLE",
+        format: "PNG Transparan (518x561 px, Alpha Channel)",
+        specs: "Sedan taksi kartun kuning lincah dengan mahkota lampu 'TAXI' menyala di atap, pola kotak-kotak catur hitam putih di samping bodi, tersenyum riang.",
+        motionType: "Roof Sign Glow & Zippy Tire Spin",
+        t2iPrompt: "Charming bright yellow cartoon taxi cab car, glowing cartoon 'TAXI' rooftop lantern sign, black and white checkered racing stripe along side doors, happy smiling chrome bumper grill with friendly eyes on headlights, compact rounded sedan shape for kids, thick bold outlines, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows yellow taxi cab. Animate the rooftop 'TAXI' sign pulsing with a bright warm yellow glow. The taxi performs a zippy little chassis tilt forward and backward as if revving lightly to go. Front wheels give a cute little steering turn left and right. 24fps loop."
+      },
+      {
+        id: "AST-S3-UI-01",
+        scene: "S3",
+        sceneTitle: "Scene 3: Ruang Mobil Penumpang",
+        name: "Tombol Transisi Merah: Ke Ruang Penyelamat!",
+        category: "UI_PROP",
+        format: "PNG Transparan (384x237 px, Target Sentuh > 100px)",
+        specs: "Tombol merah besar berkilau dengan ikon sirine rotator darurat 🚨 menyala berkedip cepat, teks simbolik besar 'GO!' dan panah meluncur.",
+        motionType: "Rapid Emergency Beacon Flash & Heartbeat Pulse",
+        t2iPrompt: "Big chunky red emergency navigation button for preschool interactive game, glossy 3D gel texture, shiny golden border, topped with a spinning glowing blue-and-red cartoon emergency siren light, bold white arrow pointing right, high contrast tactile design, isolated on transparent white background --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows red emergency CTA button. Animate the button scaling up and down in an urgent yet playful heartbeat pulse (1.0 to 1.08 scale). The top siren light continuously rotates casting vibrant red and blue lens flares. Highly inviting touch feedback loop, 24fps."
+      },
+
+      /* =========================================================================
+         SCENE 4: RUANGAN 2 - MOBIL PENYELAMAT (SIRINE & ETIKA JALAN)
+         ========================================================================= */
+      {
+        id: "AST-S4-BG-01",
+        scene: "S4",
+        sceneTitle: "Scene 4: Ruang Mobil Penyelamat",
+        name: "Latar Belakang Pos Penyelamat Kartun",
+        category: "BACKGROUND",
+        format: "PNG (1920x1080, 16:9 Widescreen)",
+        specs: "Pos pemadam kebakaran dan stasiun medis kartun dengan tiang luncur pemadam, pintu garasi merah bergaris kuning, dinding bata merah bersih, lampu rotator memantul di dinding.",
+        motionType: "Emergency Light Sweep & Ambient Station Atmosphere",
+        t2iPrompt: "2D cartoon rescue station interior exhibition room, combined fire station and emergency clinic theme, shiny yellow fireman sliding pole, red garage roller doors, clean glossy tiled floor reflecting spinning emergency beacon lights, fire extinguisher props and first aid wall boxes, vibrant heroic preschool colors, 16:9 widescreen composition --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows rescue station interior. Animate sweeping ambient red and blue light beams casting across the background walls and floor in an authentic emergency vehicle reflection effect. Static camera, dramatic yet friendly heroic atmosphere, 24fps loop."
+      },
+      {
+        id: "AST-S4-VEH-01",
+        scene: "S4",
+        sceneTitle: "Scene 4: Ruang Mobil Penyelamat",
+        name: "Area Interaktif: Truk Pemadam Kebakaran",
+        category: "VEHICLE",
+        format: "PNG Transparan (768x518 px, Alpha Channel)",
+        specs: "Truk pemadam kebakaran merah gagah dengan tangga lipat kuning yang bisa terangkat, gulungan selang air, lonceng emas, lampu rotator sirine menyala 'NII-NOO!'.",
+        motionType: "Ladder Extend & Water Cannon Spray",
+        t2iPrompt: "Heroic bright red cartoon fire engine truck, long extendable yellow rescue ladder folded on roof, coiled water hose on side reel, shiny brass bell, spinning rooftop blue siren beacons, big friendly determined cartoon eyes on windshield, sturdy chrome bumper, preschool toy aesthetic, thick clean outlines, isolated on transparent white background --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows cartoon fire truck. On trigger, the yellow rescue ladder extends upwards and rotates 30 degrees. The front roof siren flashes intensely (Nii-noo pulse). A cartoon water nozzle at the ladder tip sprays a bright, refreshing arc of splashing cartoon water droplets and rainbows. Chassis settles with a proud bounce. 24fps."
+      },
+      {
+        id: "AST-S4-VEH-02",
+        scene: "S4",
+        sceneTitle: "Scene 4: Ruang Mobil Penyelamat",
+        name: "Area Interaktif: Mobil Ambulans Medis",
+        category: "VEHICLE",
+        format: "PNG Transparan (768x518 px, Alpha Channel)",
+        specs: "Mobil ambulans putih bersih bergaris merah dengan lambang palang merah cerah, lampu strobo biru berputar kencang, pintu belakang terbuka menampilkan brankar tempat tidur.",
+        motionType: "Strobe Siren Pulse & Back Door Spring Open",
+        t2iPrompt: "Friendly white cartoon medical ambulance van, bright red emergency stripe along side with large red cross emblem, spinning dual blue rooftop strobe beacon lights, big smiling windshield eyes, clean modern preschool cartoon styling, thick rounded outlines, isolated on transparent white background --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows cartoon ambulance. On trigger, the dual blue roof lights flash rapidly in an alternating staccato burst (wiuw-wiuw rhythm). The rear doors spring open showing a cozy rolling hospital gurney bed inside, then close with a friendly click. The ambulance tilts forward eagerly. 24fps."
+      },
+      {
+        id: "AST-S4-ANI-01",
+        scene: "S4",
+        sceneTitle: "Scene 4: Ruang Mobil Penyelamat",
+        name: "Animasi Jalan Raya: Mobil Lain Bergeser Minggir",
+        category: "VFX_ANIM",
+        format: "Video MP4 / PNG Sequence (1036x280 px)",
+        specs: "Simulasi jalan raya 3 lajur: saat ambulans melaju di tengah dengan sirine menyala, mobil sedan hijau di kiri bergeser ke kiri 👈 dan bis mini di kanan bergeser ke kanan 👉 memberi jalan lapang.",
+        motionType: "Cars Moving Aside Smoothly (Yielding Lane)",
+        t2iPrompt: "2D cartoon top-down isometric view of a three-lane city highway, an urgent cartoon ambulance speeding down the center lane with flashing blue lights, while regular cartoon passenger cars on left and right lanes smoothly pull over to the road shoulders creating a clear central passage, small cartoon motion dash lines, child-friendly road etiquette lesson illustration --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows three cars on highway. Animate the center ambulance speeding straight forward with flashing beacons. Simultaneously, animate the green car on left smoothly steering leftwards to the shoulder curb, and the blue car on right steering rightwards to the shoulder curb. Green checkmark sparkles appear. Perfect instructional animation loop, 24fps."
+      },
+
+      /* =========================================================================
+         SCENE 5: RUANGAN 3 - MOBIL PENGANGKUT (BAK TERANGKAT & MESIN GAHAR)
+         ========================================================================= */
+      {
+        id: "AST-S5-BG-01",
+        scene: "S5",
+        sceneTitle: "Scene 5: Ruang Mobil Pengangkut",
+        name: "Latar Belakang Ruang Logistik & Pelabuhan Kartun",
+        category: "BACKGROUND",
+        format: "PNG (1920x1080, 16:9 Widescreen)",
+        specs: "Ruang pameran bertema pelabuhan peti kemas kartun dengan tumpukan kontainer warna primer (merah, biru, kuning), derek crane raksasa tersenyum, lantai beton abu-abu kokoh.",
+        motionType: "Crane Hook Swing & Ambient Industrial Light",
+        t2iPrompt: "2D cartoon logistics harbor and construction exhibition room inside a children museum, towering stacks of colorful intermodal shipping containers, friendly yellow overhead crane with smiling face swinging a cargo cable, sturdy grey industrial concrete floor with yellow safety boundary lines, bright cheerful daylight lighting, 16:9 widescreen composition, no characters --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows cartoon harbor logistics hall. Animate the yellow overhead crane slowly traversing on its rail beam from left to right. The cargo cable hook gently sways in a pendulum motion. Soft dust motes and warm industrial sunbeams through warehouse clerestory windows. 24fps loop."
+      },
+      {
+        id: "AST-S5-VEH-01",
+        scene: "S5",
+        sceneTitle: "Scene 5: Ruang Mobil Pengangkut",
+        name: "Kartu Kendaraan 1: Mobil Box Paket Kurir (Lalamove)",
+        category: "VEHICLE",
+        format: "PNG Transparan (518x561 px, Alpha Channel)",
+        specs: "Mobil box van oranye cerah pengantar paket (Lalamove style) dengan bodi kokoh, pintu kargo belakang yang dapat membuka ke atas menampilkan tumpukan kardus berpita.",
+        motionType: "Cargo Door Roll-Up & Boxes Bouncing",
+        t2iPrompt: "Chunky cartoon orange delivery box truck, friendly smiling front headlights, large clean rectangular cargo box body with delivery parcel box logo, rear roller shutter door, thick sturdy tires, cheerful toy-like delivery van for preschool children, thick outlines, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows orange delivery box truck. On tap trigger, the rear roller shutter door zips open upward, revealing neatly stacked brown cardboard gift boxes with red ribbons that give a cute playful hop inside. The van settles with a happy chassis wobble, then the shutter rolls back down. 24fps."
+      },
+      {
+        id: "AST-S5-VEH-02",
+        scene: "S5",
+        sceneTitle: "Scene 5: Ruang Mobil Pengangkut",
+        name: "Kartu Kendaraan 2: Truk Kontainer 18 Roda Raksasa",
+        category: "VEHICLE",
+        format: "PNG Transparan (518x561 px, Alpha Channel)",
+        specs: "Truk kontainer merah besar bertubuh panjang dengan kabin tinggi bertanduk knalpot ganda, trailer belakang mengangkut kontainer biru, memiliki 18 roda hitam kokoh.",
+        motionType: "Exhaust Smoke Puff & Heavy Horn Rumble",
+        t2iPrompt: "Gigantic powerful cartoon semi-trailer container truck, shiny red cab with dual chrome vertical exhaust smokestacks, hauling a massive dark blue cargo container on trailer, 18 detailed chunky cartoon wheels, strong muscular yet friendly truck face, preschool toy styling, thick bold outlines, isolated on transparent white background --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows 18-wheeler container truck. On trigger, the dual chrome exhaust pipes pump out two cute cartoon puff rings of white smoke into the air. The heavy suspension drops and rebounds in a deep bass-heavy rumble (HOOONK effect). All 18 wheels flex realistically on the asphalt. 24fps."
+      },
+      {
+        id: "AST-S5-VEH-03",
+        scene: "S5",
+        sceneTitle: "Scene 5: Ruang Mobil Pengangkut",
+        name: "Kartu Kendaraan 3: Dump Truck Pasir Hidrolik",
+        category: "VEHICLE",
+        format: "PNG Transparan (518x561 px, Alpha Channel)",
+        specs: "Truk jungkit kuning konstruksi dengan piston hidrolik perak di bawah bak, mengangkut tumpukan pasir emas dan batu kerikil yang dapat terangkat miring menumpahkan muatan.",
+        motionType: "Hydraulic Bed Lift & Gravel Dumping",
+        t2iPrompt: "Heavy-duty cartoon yellow dump truck, robust construction vehicle with big knobby off-road tires, hydraulic lifting bed raised at a 45-degree angle spilling shiny cartoon golden sand and smooth pebble stones out the back tailgate, happy smiling front grill with mud splatters, chunky preschool toy aesthetic, thick outlines, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows yellow dump truck. On trigger, the shiny silver hydraulic piston extends upward, tilting the dump bed high into the air. Golden cartoon sand grains and pebble stones tumble smoothly out the rear tailgate onto the ground with animated dust clouds. The bed then lowers back smoothly with a hydraulic 'shhh-clack'. 24fps."
+      },
+
+      /* =========================================================================
+         SCENE 6: KUIS CERDAS CERIA - TEBAK TUGAS 3 SAHABAT MOBIL
+         ========================================================================= */
+      {
+        id: "AST-S6-BG-01",
+        scene: "S6",
+        sceneTitle: "Scene 6: Kuis Cerdas Ceria",
+        name: "Latar Belakang Panggung Kuis Pesta Bintang",
+        category: "BACKGROUND",
+        format: "PNG (1920x1080, 16:9 Widescreen)",
+        specs: "Panggung pesta kuis anak warna-warni berhias balon gas pastel, tirai panggung kartun melengkung di tepi kiri-kanan, taburan bintang emas berkelap-kelip lembut.",
+        motionType: "Floating Balloons & Twinkling Gold Stars",
+        t2iPrompt: "Joyful cartoon game show stage background for preschool quiz, festive colorful bunting flags across top, floating pastel balloons tied to stage edges, deep royal blue stage backdrop with twinkling golden fairy stars and soft magical bokeh, gleaming polished wooden stage floor, cheerful celebratory lighting, wide 16:9 widescreen composition, no text --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows cartoon quiz stage. Animate the pastel balloons gently bobbing and swaying in the air. The golden stars across the blue backdrop twinkle with soft glittering sparks. Shimmering light glides across the stage floor. Fun, inviting, celebratory atmosphere, 24fps loop."
+      },
+      {
+        id: "AST-S6-DRP-01",
+        scene: "S6",
+        sceneTitle: "Scene 6: Kuis Cerdas Ceria",
+        name: "Keranjang Sasaran 1: Halte & Orang Penumpang",
+        category: "UI_PROP",
+        format: "PNG Transparan (499x345 px, Alpha Channel)",
+        specs: "Kotak drop target berbingkai garis putus-putus biru langit tebal dengan gambar kartun halte bis, rombongan anak sekolah tersenyum, dan ikon siluet manusia.",
+        motionType: "Dashed Border Marquee & Happy Reception Pulse",
+        t2iPrompt: "Cartoon drop-target basket box for kids matching game, bright blue dashed-line glowing border, interior decorated with cute cartoon bus stop shelter and smiling kindergarten kids waving, welcoming target zone design, glossy friendly preschool UI, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows blue drop basket. Animate the dashed border crawling smoothly around the box in a lively marquee loop. When an item enters, the box scales up 1.1x with an eager golden glow pulse. On correct drop, green sparkles burst from the corners. 24fps."
+      },
+      {
+        id: "AST-S6-DRP-02",
+        scene: "S6",
+        sceneTitle: "Scene 6: Kuis Cerdas Ceria",
+        name: "Keranjang Sasaran 2: Api Padam & Bahaya Kebakaran",
+        category: "UI_PROP",
+        format: "PNG Transparan (499x345 px, Alpha Channel)",
+        specs: "Kotak drop target berbingkai garis putus-putus merah tebal dengan gambar kartun kobaran api ceria yang disemprot air mancur dan ikon palang penyelamat.",
+        motionType: "Flame Flicker & Water Drop Sparkle",
+        t2iPrompt: "Cartoon drop-target basket box for kids matching game, bright red dashed-line glowing border, interior decorated with friendly cartoon campfire flames being extinguished by blue water splashes, emergency rescue theme, glossy preschool game UI, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows red drop basket. Animate the small cartoon flames inside gently dancing while blue water droplets glisten. Dashed border marches smoothly. On correct drop, a cascade of water splashes extinguishes the flame into cute little steam puffs. 24fps."
+      },
+      {
+        id: "AST-S6-DRP-03",
+        scene: "S6",
+        sceneTitle: "Scene 6: Kuis Cerdas Ceria",
+        name: "Keranjang Sasaran 3: Pasir, Batu, & Proyek Bangunan",
+        category: "UI_PROP",
+        format: "PNG Transparan (499x345 px, Alpha Channel)",
+        specs: "Kotak drop target berbingkai garis putus-putus oranye tebal dengan gambar kartun bukit pasir konstruksi, tumpukan batu bata, dan kerucut lalu lintas.",
+        motionType: "Dashed Border Marquee & Construction Shimmer",
+        t2iPrompt: "Cartoon drop-target basket box for kids matching game, bright orange dashed-line glowing border, interior decorated with mounds of cartoon golden sand, smooth building stones, and orange traffic cones, heavy construction theme, glossy preschool UI, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows orange drop basket. Animate dashed border marching. Inside, the sand sparkles softly in the sunlight. On correct drop, the sand mound settles with a cute thud and a tiny yellow flag pops up. 24fps."
+      },
+      {
+        id: "AST-S6-DRG-01",
+        scene: "S6",
+        sceneTitle: "Scene 6: Kuis Cerdas Ceria",
+        name: "Kartu Draggable 1: Bis Kuning 🚌",
+        category: "UI_PROP",
+        format: "PNG Transparan (460x237 px, Target Geser Jari)",
+        specs: "Kartu bulat mengambang ramah jari anak dengan gambar bis sekolah kuning ceria, bingkai tombol timbul 3D empuk yang nyaman disentuh dan digeser.",
+        motionType: "Floating Hover Idle & Drag Shadow",
+        t2iPrompt: "Draggable interactive token card for preschool tablet app, rounded squircle card shape with thick blue rubber border, featuring a cute happy yellow school bus sticker in center, soft drop shadow underneath giving a floating 3D effect, child-friendly tactile UI token, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows yellow bus token. Animate the token floating with a gentle bobbing hover motion (up-down 6 pixels every 1.5s). Drop shadow expands and contracts underneath. On touch drag, the token tilts slightly in the direction of movement. 24fps."
+      },
+      {
+        id: "AST-S6-DRG-02",
+        scene: "S6",
+        sceneTitle: "Scene 6: Kuis Cerdas Ceria",
+        name: "Kartu Draggable 2: Pemadam Merah 🚒",
+        category: "UI_PROP",
+        format: "PNG Transparan (460x237 px, Target Geser Jari)",
+        specs: "Kartu bulat mengambang dengan gambar mobil pemadam merah bersirine, tombol timbul empuk berbayang tebal.",
+        motionType: "Floating Hover Idle & Siren Wiggle",
+        t2iPrompt: "Draggable interactive token card for preschool tablet app, rounded squircle card shape with thick red rubber border, featuring a cute happy red fire truck sticker with flashing beacon in center, soft drop shadow underneath, tactile UI token, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows fire truck token. Animate gentle floating hover cycle. The tiny siren beacon on the truck flashes playfully. Drop shadow pulses in sync. On drag, the token tilts eagerly toward target. 24fps."
+      },
+      {
+        id: "AST-S6-DRG-03",
+        scene: "S6",
+        sceneTitle: "Scene 6: Kuis Cerdas Ceria",
+        name: "Kartu Draggable 3: Truk Pasir Kuning 🚚",
+        category: "UI_PROP",
+        format: "PNG Transparan (460x237 px, Target Geser Jari)",
+        specs: "Kartu bulat mengambang dengan gambar dump truck kuning berpasir, tombol timbul empuk berbayang tebal.",
+        motionType: "Floating Hover Idle & Bed Jiggle",
+        t2iPrompt: "Draggable interactive token card for preschool tablet app, rounded squircle card shape with thick orange rubber border, featuring a cute happy yellow dump truck hauling gravel sticker in center, soft drop shadow, child-friendly UI token, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows dump truck token. Animate floating hover cycle. The dump truck bed gives a subtle cute jiggle. Drop shadow breathes smoothly. 24fps."
+      },
+      {
+        id: "AST-S6-VFX-01",
+        scene: "S6",
+        sceneTitle: "Scene 6: Kuis Cerdas Ceria",
+        name: "Efek Perayaan: Bintang Emas &amp; Confetti Meledak ⭐",
+        category: "VFX_ANIM",
+        format: "Video MP4 Alpha / GIF Looping (600x600 px)",
+        specs: "Animasi ledakan perayaan bintang emas raksasa tersenyum yang memancar keluar diikuti hujan taburan confetti pelangi dan pita pesta berkilau.",
+        motionType: "Explosive Star Burst & Floating Confetti Celebration",
+        t2iPrompt: "Magical golden reward star burst animation for children educational game, a large gleaming five-pointed star with a huge smiling happy face in center, exploding with sparkling golden glitter rays, surrounded by a celebratory shower of colorful pastel confetti ribbons and rainbow sparkles, transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows celebratory star burst. Animate the central gold star zooming in with an energetic pop and spin, sparkling brightly with intense sunburst flares. A colorful rain of confetti ribbons cascades gracefully downward with natural fluttering physics. Two cheerful laughing eye winks from the star. 24fps."
+      },
+
+      /* =========================================================================
+         SCENE 7: RANGKUMAN, REFLEKSI, & DADAHH!
+         ========================================================================= */
+      {
+        id: "AST-S7-BG-01",
+        scene: "S7",
+        sceneTitle: "Scene 7: Rangkuman &amp; Dadahh!",
+        name: "Latar Belakang Taman Museum Senja Sunset Hangat",
+        category: "BACKGROUND",
+        format: "PNG (1920x1080, 16:9 Widescreen)",
+        specs: "Taman depan museum transportasi di sore hari yang hangat, langit senja oranye keemasan lembut, pohon-pohon rindang bersiluet hangat, lentera taman mulai menyala redup.",
+        motionType: "Golden Sunset Glow & Twilight Fireflies",
+        t2iPrompt: "Peaceful cartoon park in front of the transport museum at warm golden sunset, soft glowing amber and peach orange sky with gentle lavender clouds, lush green trees softly backlit by evening sunbeams, quaint glowing pathway street lanterns, warm cozy evening atmosphere for children bedtime story, 16:9 widescreen composition, no characters --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows sunset museum park. Animate the warm golden sunset light shifting slowly into a cozy evening twilight. Small magical glowing fireflies drift gently across the foreground grass. Street lanterns flicker on with a warm welcoming glow. Relaxing farewell camera drift, 24fps."
+      },
+      {
+        id: "AST-S7-PRP-01",
+        scene: "S7",
+        sceneTitle: "Scene 7: Rangkuman &amp; Dadahh!",
+        name: "3 Lencana Emas Medali Sahabat Mobil",
+        category: "UI_PROP",
+        format: "PNG Transparan (1536x388 px, 3 Lencana Berdampingan)",
+        specs: "Tiga medali emas berkilau berhias pita biru, merah, dan oranye: Medali 1 bergambar Bis Penumpang 🚌, Medali 2 bergambar Mobil Pemadam 🚒, Medali 3 bergambar Truk Kontainer 🚚.",
+        motionType: "Sequential Bounce-In & Metallic Shimmer",
+        t2iPrompt: "Three gleaming gold achievement medals for children learning game lined up side by side, Medal 1 with blue ribbon featuring embossed city bus, Medal 2 with red ribbon featuring embossed fire truck, Medal 3 with orange ribbon featuring embossed cargo container truck, glossy polished gold metal, star accents, isolated on transparent white background --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows three gold medals. Animate each medal bouncing into frame sequentially from left to right with a joyful 'boing' squash-and-stretch (Medal 1 at 0s, Medal 2 at 0.5s, Medal 3 at 1.0s). Once settled, a radiant gleam sweep shines across the gold surface from left to right. 24fps loop."
+      },
+      {
+        id: "AST-S7-CHR-01",
+        scene: "S7",
+        sceneTitle: "Scene 7: Rangkuman &amp; Dadahh!",
+        name: "Rio & Ceri Melambaikan Tangan: 'Dadahh!' 👋",
+        category: "CHARACTER",
+        format: "PNG Transparan (652x518 px, Alpha Channel)",
+        specs: "Rio dan Ceri berdiri berdampingan tersenyum lebar dengan mata berbinar bahagia, kedua tangannya melambai-lambai ke arah kamera mengucapkan perpisahan.",
+        motionType: "Continuous Farewell Hand Waving & Cheerful Sway",
+        t2iPrompt: "Full body illustration of kindergarten boy Rio and girl Ceri standing side by side in the warm sunset, both waving both hands enthusiastically toward the camera with giant affectionate happy smiles, sparkling joyful eyes, blushing pink cheeks, colorful 2D storybook cartoon style, thick rounded outlines, isolated on transparent white background --ar 1:1 --v 6.0",
+        i2vPrompt: "/i2v Source image shows Rio and Ceri waving. Animate both children waving their hands smoothly back and forth in a natural, heartwarming farewell rhythm. Their bodies sway gently from side to side in joyful synchronization. Ceri's ponytails bounce softly, and Rio gives a cute happy wink to the camera. Seamless 4-second loop, 24fps."
+      },
+      {
+        id: "AST-S7-UI-01",
+        scene: "S7",
+        sceneTitle: "Scene 7: Rangkuman &amp; Dadahh!",
+        name: "Tombol Unduh Lembar Mewarnai Mobil (.PDF) 🎨",
+        category: "UI_PROP",
+        format: "PNG Transparan (883x194 px, Target Sentuh Ortu/Guru)",
+        specs: "Tombol kapsul pastel besar dengan palet cat warna-warni, kuas lukis ceria, teks simbolik 'UNDUH LEMBAR MEWARNAI 🎨' berbayang timbul.",
+        motionType: "Paintbrush Splash & Gentle Rainbow Shimmer",
+        t2iPrompt: "Chunky pastel-colored action button for downloading coloring worksheet, decorated with a cute cartoon painter's palette with rainbow color dots and a fluffy paintbrush dripping happy sparkle stars, glossy pill-shaped button, child-friendly tactile UI, isolated on transparent white background --ar 16:9 --v 6.0",
+        i2vPrompt: "/i2v Source image shows coloring worksheet download button. Animate the little paintbrush tip giving a playful dipping tap on the paint palette. Soft rainbow sparkles radiate outwards in a cheerful sparkle trail every 2 seconds. The button gives a gentle breathing pulse, 24fps."
+      }
+    ];
+
+    // =========================================================================
+    // STATE & LOGIKA APLIKASI
+    // =========================================================================
+    let activeSceneFilter = 'ALL';
+    let activeCategoryFilter = 'ALL';
+
+    function setFilterScene(sceneCode) {
+      activeSceneFilter = sceneCode;
+      document.querySelectorAll('.flt-scene-btn').forEach(btn => {
+        btn.classList.remove('bg-cBrand', 'text-white', 'border-cBrand');
+        btn.classList.add('bg-white/10', 'text-white/80', 'border-white/10');
+      });
+      const activeBtn = document.getElementById(`fltScene-${sceneCode}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-white/10', 'text-white/80', 'border-white/10');
+        activeBtn.classList.add('bg-cBrand', 'text-white', 'border-cBrand');
+      }
+      renderAssets();
+    }
+
+    function setFilterCategory(cat) {
+      activeCategoryFilter = cat;
+      renderAssets();
+    }
+
+    function getCategoryBadge(cat) {
+      switch (cat) {
+        case 'BACKGROUND': return '<span class="badge-pill bg-sky-100 text-sky-800 border border-sky-300">🖼️ Background</span>';
+        case 'CHARACTER': return '<span class="badge-pill bg-indigo-100 text-indigo-800 border border-indigo-300">🧒 Character</span>';
+        case 'VEHICLE': return '<span class="badge-pill bg-amber-100 text-amber-900 border border-amber-300">🚗 Vehicle</span>';
+        case 'UI_PROP': return '<span class="badge-pill bg-pink-100 text-pink-900 border border-pink-300">🔘 UI / Prop</span>';
+        case 'VFX_ANIM': return '<span class="badge-pill bg-emerald-100 text-emerald-900 border border-emerald-300">✨ VFX / Anim</span>';
+        default: return '<span class="badge-pill bg-slate-100 text-slate-800">Asset</span>';
+      }
+    }
+
+    function renderAssets() {
+      const container = document.getElementById('assetsGrid');
+      
+      const filtered = assetsData.filter(asset => {
+        const matchScene = (activeSceneFilter === 'ALL') || (asset.scene === activeSceneFilter);
+        const matchCat = (activeCategoryFilter === 'ALL') || (asset.category === activeCategoryFilter);
+        return matchScene && matchCat;
+      });
+
+      document.getElementById('displayedCount').innerText = filtered.length;
+      document.getElementById('totalCount').innerText = assetsData.length;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-500">
+            <span class="text-3xl block mb-2">🔍</span>
+            <strong class="text-slate-800 block text-sm">Tidak ada aset visual yang cocok dengan filter.</strong>
+            <p class="text-xs mt-1">Coba pilih filter scene atau kategori yang lain.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(asset => `
+        <article class="bg-white rounded-2xl border border-slate-200 shadow-card overflow-hidden transition-all duration-200 hover:border-cBrand">
+          
+          <!-- Card Header Ribbon -->
+          <div class="bg-slate-900 text-white px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-2 border-b border-white/10 text-xs">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono font-bold bg-white/15 px-2 py-0.5 rounded text-[11px] text-amber-300">${asset.id}</span>
+              <strong class="text-white text-sm">${asset.name}</strong>
+              <span class="hidden sm:inline opacity-50">|</span>
+              <span class="text-slate-400 font-mono text-[11px]">${asset.sceneTitle}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              ${getCategoryBadge(asset.category)}
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">${asset.motionType}</span>
+            </div>
+          </div>
+
+          <!-- Card Body: Specs & Prompts -->
+          <div class="p-4 sm:p-5 space-y-4">
+            
+            <!-- Technical Specs Ribbon -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 text-xs bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div class="md:col-span-4">
+                <span class="text-cMuted text-[10px] font-mono uppercase block">Format &amp; Resolusi:</span>
+                <strong class="text-slate-800 font-mono text-[11px]">${asset.format}</strong>
+              </div>
+              <div class="md:col-span-8">
+                <span class="text-cMuted text-[10px] font-mono uppercase block">Spesifikasi Visual &amp; Ergonomi Anak:</span>
+                <p class="text-slate-700 text-[11px] leading-snug">${asset.specs}</p>
+              </div>
+            </div>
+
+            <!-- 2-COLUMN PROMPT GENERATOR SECTION -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              
+              <!-- SISI KIRI: TEXT-TO-IMAGE (T2I) PROMPT -->
+              <div class="rounded-xl border border-sky-200 bg-sky-50/40 p-3.5 flex flex-col justify-between space-y-2">
+                <div class="flex items-center justify-between pb-1.5 border-b border-sky-200 text-xs">
+                  <span class="font-bold text-sky-900 flex items-center gap-1.5">
+                    <span>🖼️</span> Prompt Text-to-Image (Midjourney v6 / SDXL)
+                  </span>
+                  <button onclick="copySinglePrompt('${asset.id}', 't2i')" class="px-2 py-1 rounded bg-sky-600 hover:bg-sky-700 text-white font-mono font-bold text-[10px] flex items-center gap-1 shadow-sm transition">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                    Salin T2I
+                  </button>
+                </div>
+                <div class="p-2.5 rounded-lg bg-white border border-sky-200 text-slate-800 prompt-box select-all">
+                  ${asset.t2iPrompt}
+                </div>
+                <div class="text-[10px] text-sky-700 font-mono">
+                  Target: 2D Cartoon, No Text, Transparent Isolated Cutout if Sprite.
+                </div>
+              </div>
+
+              <!-- SISI KANAN: IMAGE-TO-VIDEO (/I2V) PROMPT -->
+              <div class="rounded-xl border border-pink-200 bg-pink-50/40 p-3.5 flex flex-col justify-between space-y-2">
+                <div class="flex items-center justify-between pb-1.5 border-b border-pink-200 text-xs">
+                  <span class="font-bold text-pink-900 flex items-center gap-1.5">
+                    <span>🎬</span> Prompt Image-to-Video (/i2v - Runway / Luma / Kling)
+                  </span>
+                  <button onclick="copySinglePrompt('${asset.id}', 'i2v')" class="px-2 py-1 rounded bg-pink-600 hover:bg-pink-700 text-white font-mono font-bold text-[10px] flex items-center gap-1 shadow-sm transition">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Salin /i2v
+                  </button>
+                </div>
+                <div class="p-2.5 rounded-lg bg-white border border-pink-200 text-slate-800 prompt-box select-all">
+                  ${asset.i2vPrompt}
+                </div>
+                <div class="text-[10px] text-pink-700 font-mono">
+                  Gerakan: ${asset.motionType} • 24fps • Smooth Looping.
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function copySinglePrompt(assetId, type) {
+      const asset = assetsData.find(a => a.id === assetId);
+      if (!asset) return;
+      const textToCopy = type === 't2i' ? asset.t2iPrompt : asset.i2vPrompt;
+      copyTextToClipboard(textToCopy, `Prompt ${type.toUpperCase()} untuk [${asset.id}] berhasil disalin!`);
+    }
+
+    function copyAllPrompts(type) {
+      const filtered = assetsData.filter(asset => {
+        const matchScene = (activeSceneFilter === 'ALL') || (asset.scene === activeSceneFilter);
+        const matchCat = (activeCategoryFilter === 'ALL') || (asset.category === activeCategoryFilter);
+        return matchScene && matchCat;
+      });
+
+      const headerTitle = type === 't2i' 
+        ? "=== BUNDLE PROMPT TEXT-TO-IMAGE (T2I) - STUDY TOUR MUSEUM TRANSPORTASI ===" 
+        : "=== BUNDLE PROMPT IMAGE-TO-VIDEO (/I2V) - STUDY TOUR MUSEUM TRANSPORTASI ===";
+
+      const output = [headerTitle, "Target: PAUD / TTKA Usia 4-6 Tahun (Audio & Visual Heavy)", ""];
+
+      filtered.forEach((a, idx) => {
+        output.push(`[${idx+1}] ${a.id} - ${a.name} (${a.sceneTitle})`);
+        output.push(`Format: ${a.format} | Motion: ${a.motionType}`);
+        output.push(type === 't2i' ? `PROMPT: ${a.t2iPrompt}` : `PROMPT /i2v: ${a.i2vPrompt}`);
+        output.push("");
+      });
+
+      copyTextToClipboard(output.join('\n'), `Semua ${filtered.length} prompt ${type.toUpperCase()} berhasil disalin ke clipboard!`);
+    }
+
+    function copyTextToClipboard(text, successMsg) {
+      const dummy = document.createElement("textarea");
+      dummy.value = text;
+      document.body.appendChild(dummy);
+      dummy.select();
+      try {
+        document.execCommand('copy');
+        showToast(successMsg);
+      } catch (err) {
+        showToast("Gagal menyalin teks.");
+      }
+      document.body.removeChild(dummy);
+    }
+
+    function expandAllCards(expand) {
+      showToast(expand ? "Semua rincian kartu aset ditampilkan penuh." : "Tampilan kartu dipadatkan.");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 2600);
+    }
+
+    window.onload = function() {
+      document.getElementById('statTotalAssets').innerText = `${assetsData.length} Aset`;
+      renderAssets();
+    };
+  </script>
+</body>
+</html>

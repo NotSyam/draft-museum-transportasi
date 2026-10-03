@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Tour Museum Transportasi: Mengenal 3 Sahabat Mobil</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+
+  <!-- Google Material Symbols Outlined -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            brandSky: '#0284C7',
+            brandSkyLight: '#E0F2FE',
+            brandDark: '#0F172A',
+            brandOrange: '#EA580C',
+            brandAmber: '#D97706',
+            brandEmerald: '#059669',
+            brandRed: '#DC2626',
+            softBase: '#F8FAFC'
+          },
+          boxShadow: {
+            card: '0 4px 20px -2px rgba(15, 23, 42, 0.08)',
+            soft: '0 10px 25px -5px rgba(2, 132, 199, 0.15)',
+            glow: '0 0 25px rgba(2, 132, 199, 0.35)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* =========================================================================
+       PRINT STYLES (CERTIFICATE & COLORING SHEET)
+       Sertifikat HANYA muncul saat dicetak (window.print())
+       ========================================================================= */
+    .print-only {
+      display: none !important;
+    }
+
+    @media print {
+      body {
+        background-color: #FFFFFF !important;
+        font-size: 12pt;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-only {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 8mm;
+      }
+    }
+
+    /* Touch & Animation Ergonomics */
+    .touch-bounce:active { transform: scale(0.96); }
+    .pulse-ring {
+      animation: pulse-ring-anim 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-ring-anim {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.5); }
+      50% { transform: scale(1.03); box-shadow: 0 0 0 14px rgba(2, 132, 199, 0); }
+    }
+
+    .pulse-glow-orange {
+      animation: pulse-glow-orange-anim 2s infinite;
+    }
+    @keyframes pulse-glow-orange-anim {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.6); }
+      50% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(234, 88, 12, 0); }
+    }
+
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+  </style>
+</head>
+
+<body class="bg-softBase text-brandDark antialiased font-sans min-h-screen flex flex-col selection:bg-brandSky selection:text-white">
+
+  <!-- ========================================== -->
+  <!-- 1. HEADER & BAR KONTROL AUDIO SUARA        -->
+  <!-- ========================================== -->
+  <header class="no-print sticky top-0 z-50 bg-brandDark text-white border-b border-white/10 shadow-md">
+    <div class="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+      
+      <!-- Brand & Module Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-amber-500 flex items-center justify-center text-white text-xl shadow-inner font-extrabold">
+          🚌
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-brandSky text-white">PAUD &amp; TK 5–6 Tahun</span>
+            <span class="text-xs text-white/70">Museum Transportasi</span>
+          </div>
+          <h1 class="text-xs sm:text-sm font-bold text-white leading-tight">
+            Mengenal 3 Sahabat Mobil Bersama Ceri &amp; Rio
+          </h1>
+        </div>
+      </div>
+
+      <!-- Controls: Audio Narration & Speed -->
+      <div class="flex items-center gap-2">
+        <!-- Replay Voice Button -->
+        <button id="btnReplayAudio" onclick="replayAudio()" title="Putar Ulang Suara" class="h-9 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center gap-1.5 transition border border-white/15 touch-bounce">
+          <span class="material-symbols-outlined text-base">replay</span>
+          <span class="hidden sm:inline">Ulangi Suara</span>
+        </button>
+
+        <!-- Play/Pause Voice Button -->
+        <button id="btnToggleAudio" onclick="toggleAudio()" title="Nyalakan / Matikan Suara" class="h-9 px-3.5 rounded-xl bg-brandSky hover:bg-sky-600 text-white text-xs font-bold flex items-center gap-1.5 transition shadow-sm touch-bounce">
+          <span id="audioIcon" class="material-symbols-outlined text-base">volume_up</span>
+          <span id="audioLabel" class="hidden sm:inline">Suara Aktif</span>
+        </button>
+
+        <!-- Speed Selector (1x / 1.25x) -->
+        <button id="btnSpeedAudio" onclick="cycleAudioSpeed()" title="Kecepatan Suara" class="h-9 w-12 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold font-mono flex items-center justify-center transition border border-white/15 touch-bounce">
+          <span id="speedLabel">1.0x</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Scene Progress Bar Strip -->
+    <div class="bg-slate-900 border-t border-white/10 px-4 py-2">
+      <div class="max-w-6xl mx-auto flex items-center justify-between gap-2 overflow-x-auto custom-scroll">
+        <div class="flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap" id="sceneNavList">
+          <!-- Populated via JavaScript -->
+        </div>
+        <div class="text-[11px] text-white/60 font-mono hidden md:block">
+          Scene <span id="currentSceneBadge" class="text-amber-300 font-bold">1</span> / 7
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 2. MAIN LEARNING STAGE                     -->
+  <!-- ========================================== -->
+  <main class="no-print flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
+
+    <!-- SCENE CONTAINER (Dynamic Content) -->
+    <div id="sceneContainer" class="bg-white rounded-3xl border-2 border-slate-200 shadow-card overflow-hidden transition-all duration-300">
+      <!-- Injected by renderScene(sceneId) -->
+    </div>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 3. PRINT-TO-PDF SECTION (CERTIFICATE)      -->
+  <!-- HANYA MUNCUL DI MODA CETAK (@media print)  -->
+  <!-- ========================================== -->
+  <div id="printCertificate" class="print-only hidden p-8 bg-white border-8 border-double border-amber-600 rounded-3xl min-h-[580px] text-center">
+    <div class="space-y-3">
+      <div class="flex items-center justify-center gap-3">
+        <span class="text-5xl">🚌</span>
+        <span class="text-5xl">⭐</span>
+        <span class="text-5xl">🚒</span>
+      </div>
+      <h2 class="text-3xl font-extrabold text-brandDark uppercase tracking-wider">
+        Lencana &amp; Sertifikat Penjelajah Cilik
+      </h2>
+      <p class="text-base text-slate-600">Study Tour Museum Transportasi: Mengenal 3 Sahabat Mobil</p>
+    </div>
+
+    <div class="my-6 py-6 border-y-2 border-amber-300">
+      <p class="text-sm text-slate-500 uppercase font-semibold">Diberikan Dengan Bangga Kepada:</p>
+      <h3 id="certChildName" class="text-4xl font-extrabold text-brandSky my-3 font-sans">
+        Adik Penjelajah Cilik
+      </h3>
+      <p class="text-sm text-slate-700 max-w-xl mx-auto leading-relaxed">
+        Telah berhasil menyelesaikan seluruh petualangan dan mengenal <strong>Tiga Sahabat Mobil</strong>: <em>Mobil Penumpang</em>, <em>Mobil Penyelamat</em>, dan <em>Mobil Pengangkut Barang</em> bersama Ceri, Rio, dan Ibu Guru!
+      </p>
+    </div>
+
+    <div class="flex items-center justify-between px-8 text-xs text-slate-600">
+      <div>
+        <p class="font-bold">Museum Transportasi</p>
+        <p>Taman Mini Indonesia Indah</p>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-full border-4 border-amber-400 mx-auto flex items-center justify-center text-2xl font-bold text-amber-500 mb-1">
+          ✓
+        </div>
+        <span class="font-mono text-[10px] text-amber-800 font-bold uppercase">Sahabat Transportasi</span>
+      </div>
+      <div class="text-right">
+        <p class="font-bold">Ibu Guru Pembimbing</p>
+        <p class="text-slate-500">PAUD / Taman Kanak-Kanak</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Element for Narrations -->
+  <audio id="narrationPlayer" preload="auto" class="hidden"></audio>
+
+  <!-- ========================================== -->
+  <!-- 4. JAVASCRIPT LOGIC & INTERACTIONS         -->
+  <!-- ========================================== -->
+  <script>
+    /* =========================================================================
+       1. WEB AUDIO API SYNTHESIZER (ZERO-DEPENDENCY SOUND EFFECTS)
+       ========================================================================= */
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playTone(type) {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const now = audioCtx.currentTime;
+
+      if (type === 'click') {
+        // Crisp touch pop
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(500, now);
+        osc.frequency.exponentialRampToValueAtTime(250, now + 0.05);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      }
+      else if (type === 'horn' || type === 'horn_bus') {
+        // Cheerful friendly bus honk: Tut-tut! (Dual chord 440Hz + 550Hz)
+        [440, 554].forEach(freq => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(0.25, now + 0.02);
+          gain.gain.setValueAtTime(0.25, now + 0.12);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
+          // Second honk pulse
+          gain.gain.setValueAtTime(0.25, now + 0.22);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.38);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.4);
+        });
+      }
+      else if (type === 'horn_angkot') {
+        // Friendly high-pitch pip-pip: Din-din! (580Hz)
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587, now);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+        gain.gain.setValueAtTime(0.25, now + 0.16);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.30);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.32);
+      }
+      else if (type === 'horn_taxi') {
+        // Sharp metallic tin-tin: Tin-tin! (784Hz)
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(784, now);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+        gain.gain.setValueAtTime(0.25, now + 0.14);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.26);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.28);
+      }
+      else if (type === 'fire_siren') {
+        // Fire truck siren: Nii-noo-nii-noo!
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(650, now);
+        osc.frequency.linearRampToValueAtTime(450, now + 0.25);
+        osc.frequency.linearRampToValueAtTime(650, now + 0.5);
+        osc.frequency.linearRampToValueAtTime(450, now + 0.75);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.85);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.85);
+      }
+      else if (type === 'ambulance_siren') {
+        // Ambulance siren: Wiuw-wiuw-wiuw!
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(750, now);
+        osc.frequency.linearRampToValueAtTime(950, now + 0.2);
+        osc.frequency.linearRampToValueAtTime(750, now + 0.4);
+        osc.frequency.linearRampToValueAtTime(950, now + 0.6);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.7);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.7);
+      }
+      else if (type === 'truck') {
+        // Heavy truck engine rumble & hydraulic: Brummm-sssh!
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(110, now);
+        osc.frequency.exponentialRampToValueAtTime(80, now + 0.4);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.45);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.45);
+      }
+      else if (type === 'door_open') {
+        // Magic sliding door chime
+        const notes = [392, 523.25, 659.25, 783.99];
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+          gain.gain.setValueAtTime(0.2, now + idx * 0.06);
+          gain.gain.linearRampToValueAtTime(0.01, now + idx * 0.06 + 0.2);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.06);
+          osc.stop(now + idx * 0.06 + 0.22);
+        });
+      }
+      else if (type === 'star' || type === 'success') {
+        // Magical golden star arpeggio: C5 - E5 - G5 - C6
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+          gain.gain.setValueAtTime(0, now + idx * 0.08);
+          gain.gain.linearRampToValueAtTime(0.25, now + idx * 0.08 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.28);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.3);
+        });
+      }
+      else if (type === 'cheer') {
+        // Celebratory fanfare
+        const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+          gain.gain.setValueAtTime(0.3, now + idx * 0.07);
+          gain.gain.linearRampToValueAtTime(0.01, now + idx * 0.07 + 0.4);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.07);
+          osc.stop(now + idx * 0.07 + 0.42);
+        });
+      }
+    }
+
+    /* =========================================================================
+       2. COURSE STATE & CONFIGURATION
+       ========================================================================= */
+    const COURSE_CONFIG = {
+      totalScenes: 7,
+      isAudioMuted: false,
+      audioSpeed: 1.0,
+      passingGrade: 100
+    };
+
+    const state = {
+      currentScene: 1,
+      unlockedScenes: [1],
+      exploredVehiclesS3: new Set(),
+      exploredVehiclesS4: new Set(),
+      exploredVehiclesS5: new Set(),
+      quizMatches: {
+        bus: false,
+        fire: false,
+        dump: false
+      },
+      selectedQuizCard: null,
+      childName: "Adik Penjelajah Cilik"
+    };
+
+    const scenesMeta = [
+      { id: 1, title: "1. Berangkat Naik Bis", icon: "directions_bus" },
+      { id: 2, title: "2. Lobi 3 Gerbang", icon: "door_front" },
+      { id: 3, title: "3. Mobil Penumpang", icon: "groups" },
+      { id: 4, title: "4. Mobil Penyelamat", icon: "emergency" },
+      { id: 5, title: "5. Mobil Pengangkut", icon: "local_shipping" },
+      { id: 6, title: "6. Kuis Tebak Mobil", icon: "extension" },
+      { id: 7, title: "7. Penutup & Lencana", icon: "military_tech" }
+    ];
+
+    /* =========================================================================
+       3. NARRATION AUDIO ENGINE
+       ========================================================================= */
+    const narrationPlayer = document.getElementById('narrationPlayer');
+
+    function playSceneNarration(sceneId) {
+      if (COURSE_CONFIG.isAudioMuted) return;
+      narrationPlayer.src = `audio/unit_${sceneId}.mp3`;
+      narrationPlayer.playbackRate = COURSE_CONFIG.audioSpeed;
+      const playPromise = narrationPlayer.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          updateAudioButtonUI(true);
+        }).catch(e => {
+          console.log("Audio autoplay waiting for user gesture:", e);
+          updateAudioButtonUI(false);
+        });
+      }
+    }
+
+    function toggleAudio() {
+      playTone('click');
+      if (narrationPlayer.paused) {
+        narrationPlayer.play().then(() => {
+          COURSE_CONFIG.isAudioMuted = false;
+          updateAudioButtonUI(true);
+        }).catch(e => console.log(e));
+      } else {
+        narrationPlayer.pause();
+        COURSE_CONFIG.isAudioMuted = true;
+        updateAudioButtonUI(false);
+      }
+    }
+
+    function replayAudio() {
+      playTone('click');
+      narrationPlayer.currentTime = 0;
+      narrationPlayer.play().then(() => {
+        updateAudioButtonUI(true);
+      }).catch(e => console.log(e));
+    }
+
+    function cycleAudioSpeed() {
+      playTone('click');
+      const speeds = [1.0, 1.25];
+      let idx = speeds.indexOf(COURSE_CONFIG.audioSpeed);
+      idx = (idx + 1) % speeds.length;
+      COURSE_CONFIG.audioSpeed = speeds[idx];
+      narrationPlayer.playbackRate = COURSE_CONFIG.audioSpeed;
+      document.getElementById('speedLabel').textContent = `${COURSE_CONFIG.audioSpeed.toFixed(1)}x`;
+    }
+
+    function updateAudioButtonUI(isPlaying) {
+      const icon = document.getElementById('audioIcon');
+      const label = document.getElementById('audioLabel');
+      if (!icon || !label) return;
+      if (isPlaying) {
+        icon.textContent = 'volume_up';
+        label.textContent = 'Suara Aktif';
+      } else {
+        icon.textContent = 'volume_off';
+        label.textContent = 'Suara Mati';
+      }
+    }
+
+    narrationPlayer.addEventListener('ended', () => {
+      updateAudioButtonUI(false);
+    });
+
+    /* =========================================================================
+       4. SCENE RENDERING PIPELINE
+       ========================================================================= */
+    function goToScene(sceneId) {
+      if (!state.unlockedScenes.includes(sceneId)) {
+        playTone('click');
+        showToast("Yuk selesaikan kegiatan di layar ini dulu ya sayang!");
+        return;
+      }
+      playTone('click');
+      state.currentScene = sceneId;
+      renderScene(sceneId);
+      playSceneNarration(sceneId);
+      updateSceneNav();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function unlockNextScene(nextId) {
+      if (!state.unlockedScenes.includes(nextId)) {
+        state.unlockedScenes.push(nextId);
+        updateSceneNav();
+      }
+    }
+
+    function updateSceneNav() {
+      const badge = document.getElementById('currentSceneBadge');
+      if (badge) badge.textContent = state.currentScene;
+      const list = document.getElementById('sceneNavList');
+      if (!list) return;
+
+      list.innerHTML = scenesMeta.map(s => {
+        const isCurrent = s.id === state.currentScene;
+        const isUnlocked = state.unlockedScenes.includes(s.id);
+        return `
+          <button onclick="goToScene(${s.id})" class="px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition text-xs font-bold ${
+            isCurrent
+              ? 'bg-brandSky text-white shadow-sm ring-2 ring-sky-300'
+              : isUnlocked
+                ? 'bg-white/10 text-white hover:bg-white/20'
+                : 'bg-white/5 text-white/40 cursor-not-allowed'
+          }">
+            <span class="material-symbols-outlined text-sm leading-none">${isUnlocked ? s.icon : 'lock'}</span>
+            <span>${s.title}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    /* -------------------------------------------------------------------------
+       SCENE 1: BERANGKAT NAIK BIS SEKOLAH
+       ------------------------------------------------------------------------- */
+    function renderScene1() {
+      return `
+        <div class="relative">
+          <!-- Panoramic Illustration -->
+          <div class="relative aspect-video w-full overflow-hidden bg-slate-100">
+            <img src="assets/scene1_school_bus.jpg" alt="Halaman Sekolah TK dan Bis Kuning" class="w-full h-full object-cover">
+            
+            <!-- Floating Character Speech Bubble -->
+            <div class="absolute top-4 left-4 max-w-sm bg-white/95 backdrop-blur p-3.5 rounded-2xl border-2 border-sky-300 shadow-soft">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold uppercase">Ceri &amp; Rio</span>
+                <span class="text-[11px] text-slate-500 font-semibold">Berangkat ke Museum</span>
+              </div>
+              <p class="text-xs text-brandDark leading-relaxed">
+                <em>"Halo teman-teman! Yuk kita jalan-jalan naik bis sekolah kuning ke Museum Transportasi!"</em>
+              </p>
+            </div>
+
+            <!-- Big Pulsing Steering Wheel Button -->
+            <div class="absolute bottom-6 right-6 flex flex-col items-center">
+              <button onclick="onSteeringWheelTouch()" id="steeringWheelBtn" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold flex flex-col items-center justify-center gap-1 shadow-glow pulse-ring transition-transform touch-bounce border-4 border-white">
+                <span class="material-symbols-outlined text-3xl sm:text-4xl">sports_score</span>
+                <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-center leading-tight">Bunyikan<br>Klakson!</span>
+              </button>
+              <span class="mt-2 text-[11px] font-bold text-white bg-brandDark/80 px-2.5 py-0.5 rounded-full backdrop-blur">
+                Sentuh untuk Berangkat 🚌
+              </span>
+            </div>
+          </div>
+
+          <!-- Bottom Action Bar / Story Text -->
+          <div class="p-4 sm:p-5 bg-gradient-to-r from-sky-50 via-white to-amber-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <img src="assets/Ceri.jpg" alt="Ceri" class="w-12 h-12 rounded-full border-2 border-emerald-400 object-cover bg-white shadow-sm">
+              <div>
+                <strong class="text-xs text-brandDark block font-extrabold">Ibu Guru &amp; Sahabat Cilik:</strong>
+                <p class="text-xs text-slate-600">Tekan tombol setir hijau untuk membunyikan klakson bis sekolah dan mulai melaju!</p>
+              </div>
+            </div>
+
+            <button id="btnScene1Next" onclick="goToScene(2)" class="${state.unlockedScenes.includes(2) ? '' : 'hidden'} px-6 py-3 rounded-2xl bg-brandSky hover:bg-sky-600 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-soft touch-bounce transition">
+              <span>Masuk ke Museum Transportasi</span>
+              <span class="material-symbols-outlined text-lg">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function onSteeringWheelTouch() {
+      playTone('horn');
+      showToast("Tut-tut! Brummm! Bis sekolah mulai berangkat!");
+      unlockNextScene(2);
+      
+      const btn = document.getElementById('btnScene1Next');
+      if (btn) {
+        btn.classList.remove('hidden');
+        btn.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      // Small confetti burst
+      confetti({
+        particleCount: 25,
+        spread: 45,
+        origin: { y: 0.7 }
+      });
+    }
+
+    /* -------------------------------------------------------------------------
+       SCENE 2: LOBI MUSEUM & 3 PINTU GERBANG
+       ------------------------------------------------------------------------- */
+    function renderScene2() {
+      return `
+        <div class="relative">
+          <div class="relative aspect-video w-full overflow-hidden bg-slate-100">
+            <img src="assets/scene2_museum_lobby.jpg" alt="Lobi Museum Transportasi" class="w-full h-full object-cover">
+
+            <!-- Title Overlay -->
+            <div class="absolute top-4 left-4 max-w-sm bg-white/95 backdrop-blur p-3.5 rounded-2xl border-2 border-sky-300 shadow-soft">
+              <span class="px-2 py-0.5 rounded-full bg-brandSky text-white text-[10px] font-extrabold uppercase">Lobi Utama</span>
+              <p class="text-xs text-brandDark font-semibold mt-1">
+                Di museum ini ada 3 pintu sahabat mobil kita. Ayo sentuh <strong>Pintu 1 Biru</strong> untuk masuk!
+              </p>
+            </div>
+
+            <!-- 3 Interactive Gates Hotspots -->
+            <div class="absolute inset-x-0 bottom-4 px-4 sm:px-8 grid grid-cols-3 gap-2 sm:gap-4">
+              
+              <!-- Pintu 1: Biru (Mobil Penumpang) -->
+              <button onclick="onSelectGate(1)" class="p-3 sm:p-4 rounded-2xl bg-sky-500/95 hover:bg-sky-600 text-white border-3 border-white shadow-glow pulse-ring transition touch-bounce flex flex-col items-center justify-center text-center">
+                <span class="text-2xl sm:text-3xl mb-1">🚕</span>
+                <span class="text-xs sm:text-sm font-extrabold block">PINTU 1</span>
+                <span class="text-[10px] sm:text-xs text-sky-100 font-semibold">Mobil Penumpang</span>
+                <span class="mt-1 px-2 py-0.5 rounded-full bg-white text-sky-700 text-[9px] font-extrabold uppercase">Buka Pintu →</span>
+              </button>
+
+              <!-- Pintu 2: Merah (Mobil Penyelamat) -->
+              <button onclick="onSelectGate(2)" class="p-3 sm:p-4 rounded-2xl bg-red-600/90 hover:bg-red-700 text-white border-2 border-white/60 shadow-sm transition touch-bounce flex flex-col items-center justify-center text-center opacity-90">
+                <span class="text-2xl sm:text-3xl mb-1">🚨</span>
+                <span class="text-xs sm:text-sm font-extrabold block">PINTU 2</span>
+                <span class="text-[10px] sm:text-xs text-red-100 font-semibold">Mobil Penyelamat</span>
+                <span class="mt-1 text-[9px] text-white/80">Kunjungan Kedua</span>
+              </button>
+
+              <!-- Pintu 3: Oranye (Mobil Pengangkut) -->
+              <button onclick="onSelectGate(3)" class="p-3 sm:p-4 rounded-2xl bg-amber-600/90 hover:bg-amber-700 text-white border-2 border-white/60 shadow-sm transition touch-bounce flex flex-col items-center justify-center text-center opacity-90">
+                <span class="text-2xl sm:text-3xl mb-1">📦</span>
+                <span class="text-xs sm:text-sm font-extrabold block">PINTU 3</span>
+                <span class="text-[10px] sm:text-xs text-amber-100 font-semibold">Mobil Pengangkut</span>
+                <span class="mt-1 text-[9px] text-white/80">Kunjungan Ketiga</span>
+              </button>
+
+            </div>
+          </div>
+
+          <!-- Bottom Action Guidance -->
+          <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <img src="assets/char_ibu_guru.jpg" alt="Ibu Guru" class="w-11 h-11 rounded-full border-2 border-sky-400 object-cover bg-white">
+              <p class="text-xs text-slate-700 font-medium">
+                <strong>Bu Guru:</strong> <em>"Yuk sentuh Pintu 1 berwarna BIRU untuk melihat mobil yang membawa banyak orang!"</em>
+              </p>
+            </div>
+            <button onclick="onSelectGate(1)" class="px-5 py-2.5 rounded-xl bg-brandSky text-white text-xs font-bold flex items-center gap-1.5 touch-bounce shadow-sm">
+              <span>Buka Pintu 1 Biru</span>
+              <span class="material-symbols-outlined text-base">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function onSelectGate(gateNum) {
+      if (gateNum === 1) {
+        playTone('door_open');
+        showToast("Pintu Biru terbuka! Selamat datang di Ruang Mobil Penumpang!");
+        unlockNextScene(3);
+        setTimeout(() => goToScene(3), 500);
+      } else if (gateNum === 2) {
+        playTone('click');
+        showToast("Pintu Merah untuk Mobil Penyelamat! Yuk selesaikan Pintu 1 Biru dulu ya!");
+      } else {
+        playTone('click');
+        showToast("Pintu Oranye untuk Mobil Pengangkut! Yuk kita mulai dari Pintu 1 Biru ya!");
+      }
+    }
+
+    /* -------------------------------------------------------------------------
+       SCENE 3: RUANG MOBIL PENUMPANG
+       ------------------------------------------------------------------------- */
+    function renderScene3() {
+      const exploredCount = state.exploredVehiclesS3.size;
+      return `
+        <div>
+          <!-- Panoramic View -->
+          <div class="relative aspect-video w-full overflow-hidden bg-slate-100">
+            <img src="assets/scene3_passenger_cars.jpg" alt="Ruang Pamer Mobil Penumpang" class="w-full h-full object-cover">
+            
+            <div class="absolute top-4 left-4 max-w-sm bg-white/95 backdrop-blur p-3.5 rounded-2xl border-2 border-sky-300 shadow-soft">
+              <span class="px-2 py-0.5 rounded-full bg-brandSky text-white text-[10px] font-extrabold uppercase">Ruang Pamer 1</span>
+              <h3 class="text-sm font-extrabold text-brandDark mt-1">Sahabat 1: Mobil Penumpang</h3>
+              <p class="text-[11px] text-slate-600 mt-0.5 leading-snug">
+                Mobil yang bertugas membawa kita pergi sekolah, ke rumah nenek, dan bertamasya! Sentuh tiap mobil untuk membunyikan klaksonnya!
+              </p>
+            </div>
+          </div>
+
+          <!-- 3 Interactive Cards with Large Touch Buttons -->
+          <div class="p-4 sm:p-6 bg-slate-50 border-t border-slate-200 space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              
+              <!-- Transjakarta -->
+              <div onclick="exploreVehicle('transjakarta', 'horn_bus')" class="p-3.5 rounded-2xl bg-white border-2 ${state.exploredVehiclesS3.has('transjakarta') ? 'border-sky-500 ring-2 ring-sky-200' : 'border-sky-300'} shadow-card hover:border-sky-500 transition cursor-pointer flex flex-col items-center text-center touch-bounce group">
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-sky-50 border border-sky-200 mb-2 flex items-center justify-center">
+                  <img src="assets/card_transjakarta.jpg" alt="Bis Transjakarta" class="w-full h-full object-cover">
+                </div>
+                <strong class="text-xs font-extrabold text-sky-950 block">Bis Transjakarta</strong>
+                <span class="text-[10px] text-slate-500 mb-2">Muat banyak orang sekaligus!</span>
+                <button class="w-full py-2 rounded-xl bg-sky-600 group-hover:bg-sky-700 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-sm">
+                  <span class="material-symbols-outlined text-sm">volume_up</span>
+                  <span>Klakson: Tuuut!</span>
+                </button>
+              </div>
+
+              <!-- Angkot -->
+              <div onclick="exploreVehicle('angkot', 'horn_angkot')" class="p-3.5 rounded-2xl bg-white border-2 ${state.exploredVehiclesS3.has('angkot') ? 'border-amber-500 ring-2 ring-amber-200' : 'border-amber-300'} shadow-card hover:border-amber-500 transition cursor-pointer flex flex-col items-center text-center touch-bounce group">
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-amber-50 border border-amber-200 mb-2 flex items-center justify-center text-4xl">
+                  🚐
+                </div>
+                <strong class="text-xs font-extrabold text-amber-950 block">Mobil Angkot</strong>
+                <span class="text-[10px] text-slate-500 mb-2">Duduk hadap-hadapan ramah</span>
+                <button class="w-full py-2 rounded-xl bg-amber-600 group-hover:bg-amber-700 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-sm">
+                  <span class="material-symbols-outlined text-sm">volume_up</span>
+                  <span>Klakson: Din-din!</span>
+                </button>
+              </div>
+
+              <!-- Taksi -->
+              <div onclick="exploreVehicle('taxi', 'horn_taxi')" class="p-3.5 rounded-2xl bg-white border-2 ${state.exploredVehiclesS3.has('taxi') ? 'border-yellow-500 ring-2 ring-yellow-200' : 'border-yellow-400'} shadow-card hover:border-yellow-500 transition cursor-pointer flex flex-col items-center text-center touch-bounce group">
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-yellow-50 border border-yellow-200 mb-2 flex items-center justify-center text-4xl">
+                  🚖
+                </div>
+                <strong class="text-xs font-extrabold text-yellow-950 block">Mobil Taksi</strong>
+                <span class="text-[10px] text-slate-500 mb-2">Lincah untuk satu keluarga</span>
+                <button class="w-full py-2 rounded-xl bg-yellow-500 group-hover:bg-yellow-600 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-sm">
+                  <span class="material-symbols-outlined text-sm">volume_up</span>
+                  <span>Klakson: Tin-tin!</span>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Transition to Scene 4 -->
+            <div class="flex items-center justify-between pt-2">
+              <span id="s3ProgressText" class="text-xs font-bold text-slate-600">
+                ${exploredCount > 0 ? `Hebat! Sudah mencoba <strong class="text-brandSky">${exploredCount}/3</strong> mobil! ⭐` : 'Sentuh ketiga mobil untuk mencoba suaranya! ⭐'}
+              </span>
+              <button onclick="goToScene(4)" class="px-5 py-3 rounded-2xl bg-brandRed hover:bg-red-700 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-soft touch-bounce transition">
+                <span>🚨 Ke Ruang Mobil Penyelamat</span>
+                <span class="material-symbols-outlined text-lg">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function exploreVehicle(name, tone) {
+      playTone(tone);
+      state.exploredVehiclesS3.add(name);
+      unlockNextScene(4);
+      
+      const count = state.exploredVehiclesS3.size;
+      const text = document.getElementById('s3ProgressText');
+      if (text) {
+        text.innerHTML = `Hebat! Sudah mencoba <strong class="text-brandSky">${count}/3</strong> mobil! ⭐`;
+      }
+      if (count === 3) {
+        playTone('success');
+        showToast("Luar biasa! Kamu sudah mengenal semua Mobil Penumpang!");
+      }
+    }
+
+    /* -------------------------------------------------------------------------
+       SCENE 4: RUANG MOBIL PENYELAMAT
+       ------------------------------------------------------------------------- */
+    function renderScene4() {
+      return `
+        <div>
+          <!-- Panoramic View -->
+          <div class="relative aspect-video w-full overflow-hidden bg-slate-100">
+            <img src="assets/scene4_rescue_vehicles.jpg" alt="Ruang Mobil Penyelamat" class="w-full h-full object-cover">
+            
+            <div class="absolute top-4 left-4 max-w-sm bg-white/95 backdrop-blur p-3.5 rounded-2xl border-2 border-red-300 shadow-soft">
+              <span class="px-2 py-0.5 rounded-full bg-brandRed text-white text-[10px] font-extrabold uppercase">Ruang Pamer 2</span>
+              <h3 class="text-sm font-extrabold text-brandDark mt-1">Sahabat 2: Mobil Penyelamat</h3>
+              <p class="text-[11px] text-slate-600 mt-0.5 leading-snug">
+                Pahlawan penolong saat darurat dan bahaya! Sentuh untuk mendengarkan sirine khasnya!
+              </p>
+            </div>
+          </div>
+
+          <!-- 2 Large Emergency Vehicle Cards -->
+          <div class="p-4 sm:p-6 bg-slate-50 border-t border-slate-200 space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              
+              <!-- Pemadam Kebakaran -->
+              <div onclick="exploreRescue('fire', 'fire_siren')" class="p-4 rounded-2xl bg-white border-2 ${state.exploredVehiclesS4.has('fire') ? 'border-red-500 ring-2 ring-red-200' : 'border-red-300'} shadow-card hover:border-red-500 transition cursor-pointer flex flex-col items-center text-center touch-bounce group">
+                <div class="w-20 h-20 rounded-2xl overflow-hidden bg-red-50 border border-red-200 mb-2 flex items-center justify-center">
+                  <img src="assets/card_fire_truck.jpg" alt="Mobil Pemadam" class="w-full h-full object-cover">
+                </div>
+                <strong class="text-sm font-extrabold text-red-950 block">Mobil Pemadam Kebakaran</strong>
+                <span class="text-xs text-slate-600 mb-3">Punya tangga panjang &amp; semprotan air padamkan api!</span>
+                <button class="w-full py-2.5 rounded-xl bg-brandRed group-hover:bg-red-700 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-sm">
+                  <span class="material-symbols-outlined text-base">emergency_home</span>
+                  <span>Bunyikan Sirine: Nii-noo!</span>
+                </button>
+              </div>
+
+              <!-- Ambulans -->
+              <div onclick="exploreRescue('ambulance', 'ambulance_siren')" class="p-4 rounded-2xl bg-white border-2 ${state.exploredVehiclesS4.has('ambulance') ? 'border-sky-500 ring-2 ring-sky-200' : 'border-sky-300'} shadow-card hover:border-sky-500 transition cursor-pointer flex flex-col items-center text-center touch-bounce group">
+                <div class="w-20 h-20 rounded-2xl overflow-hidden bg-sky-50 border border-sky-200 mb-2 flex items-center justify-center text-5xl">
+                  🚑
+                </div>
+                <strong class="text-sm font-extrabold text-sky-950 block">Mobil Ambulans</strong>
+                <span class="text-xs text-slate-600 mb-3">Membawa dokter &amp; ranjang pasien cepat ke rumah sakit!</span>
+                <button class="w-full py-2.5 rounded-xl bg-brandSky group-hover:bg-sky-600 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-sm">
+                  <span class="material-symbols-outlined text-base">local_hospital</span>
+                  <span>Bunyikan Sirine: Wiuw-wiuw!</span>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Etika Jalan Raya Banner -->
+            <div class="p-3.5 rounded-2xl bg-amber-50 border-2 border-amber-300 flex items-center gap-3">
+              <span class="text-3xl">🚗 💨 🚑 💨 🚙</span>
+              <div class="text-xs text-amber-950 leading-relaxed">
+                <strong>Pelajaran Baik:</strong> Saat mendengar bunyi sirine di jalan, semua mobil lain akan minggir ke kiri dan kanan untuk memberi jalan agar mobil penyelamat bisa cepat menolong orang!
+              </div>
+            </div>
+
+            <div class="flex items-center justify-end pt-2">
+              <button onclick="goToScene(5)" class="px-5 py-3 rounded-2xl bg-brandOrange hover:bg-orange-600 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-soft touch-bounce transition">
+                <span>🚚 Ke Ruang Mobil Pengangkut</span>
+                <span class="material-symbols-outlined text-lg">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function exploreRescue(type, sound) {
+      playTone(sound);
+      state.exploredVehiclesS4.add(type);
+      unlockNextScene(5);
+      showToast(type === 'fire' ? "Nii-noo! Mobil pemadam bergegas memadamkan api!" : "Wiuw-wiuw! Ambulans cepat membawa pasien!");
+    }
+
+    /* -------------------------------------------------------------------------
+       SCENE 5: RUANG MOBIL PENGANGKUT
+       ------------------------------------------------------------------------- */
+    function renderScene5() {
+      return `
+        <div>
+          <!-- Panoramic View -->
+          <div class="relative aspect-video w-full overflow-hidden bg-slate-100">
+            <img src="assets/scene5_cargo_trucks.jpg" alt="Ruang Mobil Pengangkut" class="w-full h-full object-cover">
+            
+            <div class="absolute top-4 left-4 max-w-sm bg-white/95 backdrop-blur p-3.5 rounded-2xl border-2 border-amber-300 shadow-soft">
+              <span class="px-2 py-0.5 rounded-full bg-brandOrange text-white text-[10px] font-extrabold uppercase">Ruang Pamer 3</span>
+              <h3 class="text-sm font-extrabold text-brandDark mt-1">Sahabat 3: Mobil Pengangkut</h3>
+              <p class="text-[11px] text-slate-600 mt-0.5 leading-snug">
+                Bertenaga super kuat untuk membawa barang-barang berat yang tidak muat di mobil biasa!
+              </p>
+            </div>
+          </div>
+
+          <!-- 3 Cargo Cards -->
+          <div class="p-4 sm:p-6 bg-slate-50 border-t border-slate-200 space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              
+              <!-- Mobil Box Paket -->
+              <div onclick="exploreCargo('box')" class="p-3.5 rounded-2xl bg-white border-2 border-amber-300 shadow-card hover:border-amber-500 transition cursor-pointer flex flex-col items-center text-center touch-bounce group">
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-amber-50 border border-amber-200 mb-2 flex items-center justify-center text-4xl">
+                  🚐📦
+                </div>
+                <strong class="text-xs font-extrabold text-amber-950 block">Mobil Box Paket</strong>
+                <span class="text-[10px] text-slate-500 mb-2">Kardus paket belanjaan ke rumah</span>
+                <button class="w-full py-2 rounded-xl bg-brandOrange text-white text-xs font-bold flex items-center justify-center gap-1 shadow-sm">
+                  <span>Buka Pintu Box 📦</span>
+                </button>
+              </div>
+
+              <!-- Dump Truck Pasir -->
+              <div onclick="exploreCargo('dump')" class="p-3.5 rounded-2xl bg-white border-2 border-yellow-400 shadow-card hover:border-yellow-500 transition cursor-pointer flex flex-col items-center text-center touch-bounce group">
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-yellow-50 border border-yellow-200 mb-2 flex items-center justify-center">
+                  <img src="assets/card_dump_truck.jpg" alt="Dump Truck" class="w-full h-full object-cover">
+                </div>
+                <strong class="text-xs font-extrabold text-yellow-950 block">Dump Truck (Jungkit)</strong>
+                <span class="text-[10px] text-slate-500 mb-2">Bak miring tumpahkan pasir!</span>
+                <button class="w-full py-2 rounded-xl bg-brandAmber text-white text-xs font-bold flex items-center justify-center gap-1 shadow-sm">
+                  <span>Jungkitkan Bak 🪨</span>
+                </button>
+              </div>
+
+              <!-- Truk Kontainer -->
+              <div onclick="exploreCargo('container')" class="p-3.5 rounded-2xl bg-white border-2 border-slate-300 shadow-card hover:border-slate-500 transition cursor-pointer flex flex-col items-center text-center touch-bounce group">
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 mb-2 flex items-center justify-center text-4xl">
+                  🚛
+                </div>
+                <strong class="text-xs font-extrabold text-slate-900 block">Truk Kontainer</strong>
+                <span class="text-[10px] text-slate-500 mb-2">Peti kemas raksasa roda banyak</span>
+                <button class="w-full py-2 rounded-xl bg-slate-700 text-white text-xs font-bold flex items-center justify-center gap-1 shadow-sm">
+                  <span>Klakson Bass 📢</span>
+                </button>
+              </div>
+
+            </div>
+
+            <div class="flex items-center justify-between pt-2">
+              <span class="text-xs font-bold text-slate-500">Sentuh dump truck untuk melihat aksinya! 🏗️</span>
+              <button onclick="goToScene(6)" class="px-5 py-3 rounded-2xl bg-brandEmerald hover:bg-emerald-600 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-soft touch-bounce transition">
+                <span>🎮 Ayo Main Kuis Tebak Mobil!</span>
+                <span class="material-symbols-outlined text-lg">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function exploreCargo(type) {
+      if (type === 'dump') {
+        playTone('truck');
+        showToast("Ssshh-krrrkk! Bak hidrolik dump truck terangkat miring menumpahkan pasir!");
+      } else if (type === 'box') {
+        playTone('click');
+        showToast("Cringgg! Pintu belakang mobil box terbuka memperlihatkan paket kurir!");
+      } else {
+        playTone('horn');
+        showToast("HOOONK! Klakson bass kontainer 18 roda membahana gagah!");
+      }
+      state.exploredVehiclesS5.add(type);
+      unlockNextScene(6);
+    }
+
+    /* -------------------------------------------------------------------------
+       SCENE 6: KUIS TEBAK MOBIL (TAP-TO-MATCH)
+       ------------------------------------------------------------------------- */
+    function renderScene6() {
+      const matchCount = Object.values(state.quizMatches).filter(Boolean).length;
+      const isComplete = matchCount === 3;
+
+      return `
+        <div class="p-4 sm:p-6 space-y-6">
+          
+          <!-- Header Kuis -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold mb-1">
+                <span class="material-symbols-outlined text-sm">stars</span>
+                <span>Tantangan Sahabat Mobil Cilik</span>
+              </div>
+              <h2 class="text-lg sm:text-xl font-extrabold text-brandDark">Kuis Cerdas Ceria: Pasangkan Mobil dengan Tugasnya!</h2>
+              <p class="text-xs text-slate-600 mt-0.5">
+                Sentuh gambar mobil di bawah, lalu sentuh keranjang tugas yang cocok ya!
+              </p>
+            </div>
+
+            <!-- Bintang Hadiah Terbuka Sesuai Skor -->
+            <div class="flex items-center gap-1.5 bg-amber-50 border border-amber-300 px-3.5 py-1.5 rounded-2xl">
+              <span id="star1" class="text-2xl transition ${matchCount >= 1 ? '' : 'opacity-30'}">⭐</span>
+              <span id="star2" class="text-2xl transition ${matchCount >= 2 ? '' : 'opacity-30'}">⭐</span>
+              <span id="star3" class="text-2xl transition ${matchCount >= 3 ? '' : 'opacity-30'}">⭐</span>
+            </div>
+          </div>
+
+          <!-- STEP 1: 3 PILIHAN MOBIL (TOUCHABLE CARDS) -->
+          <div>
+            <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider block mb-2 text-center sm:text-left">
+              1. Pilih Salah Satu Mobil (Sentuh Mobilnya):
+            </span>
+            <div class="grid grid-cols-3 gap-3">
+              
+              <!-- Mobil 1: Bis Transjakarta -->
+              <div id="cardBus" onclick="selectQuizCard('bus')" class="p-3 rounded-2xl bg-white border-3 ${state.selectedQuizCard === 'bus' ? 'border-brandSky ring-4 ring-brandSky scale-105' : 'border-sky-300'} transition cursor-pointer flex flex-col items-center text-center touch-bounce shadow-sm ${state.quizMatches.bus ? 'opacity-40 pointer-events-none border-dashed' : ''}">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden mb-1.5 flex items-center justify-center">
+                  <img src="assets/card_transjakarta.jpg" alt="Bis" class="w-full h-full object-cover">
+                </div>
+                <strong class="text-[11px] sm:text-xs font-extrabold text-sky-950 block">Bis Penumpang</strong>
+                <span class="text-[9px] text-slate-500">${state.quizMatches.bus ? '✓ Sudah Pas!' : 'Membawa orang'}</span>
+              </div>
+
+              <!-- Mobil 2: Pemadam Kebakaran -->
+              <div id="cardFire" onclick="selectQuizCard('fire')" class="p-3 rounded-2xl bg-white border-3 ${state.selectedQuizCard === 'fire' ? 'border-brandSky ring-4 ring-brandSky scale-105' : 'border-red-300'} transition cursor-pointer flex flex-col items-center text-center touch-bounce shadow-sm ${state.quizMatches.fire ? 'opacity-40 pointer-events-none border-dashed' : ''}">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden mb-1.5 flex items-center justify-center">
+                  <img src="assets/card_fire_truck.jpg" alt="Pemadam" class="w-full h-full object-cover">
+                </div>
+                <strong class="text-[11px] sm:text-xs font-extrabold text-red-950 block">Mobil Pemadam</strong>
+                <span class="text-[9px] text-slate-500">${state.quizMatches.fire ? '✓ Sudah Pas!' : 'Penolong darurat'}</span>
+              </div>
+
+              <!-- Mobil 3: Dump Truck -->
+              <div id="cardDump" onclick="selectQuizCard('dump')" class="p-3 rounded-2xl bg-white border-3 ${state.selectedQuizCard === 'dump' ? 'border-brandSky ring-4 ring-brandSky scale-105' : 'border-amber-300'} transition cursor-pointer flex flex-col items-center text-center touch-bounce shadow-sm ${state.quizMatches.dump ? 'opacity-40 pointer-events-none border-dashed' : ''}">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden mb-1.5 flex items-center justify-center">
+                  <img src="assets/card_dump_truck.jpg" alt="Dump Truck" class="w-full h-full object-cover">
+                </div>
+                <strong class="text-[11px] sm:text-xs font-extrabold text-amber-950 block">Dump Truck</strong>
+                <span class="text-[9px] text-slate-500">${state.quizMatches.dump ? '✓ Sudah Pas!' : 'Pengangkut berat'}</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- STEP 2: 3 KERANJANG TUGAS (TARGET BUCKETS) -->
+          <div>
+            <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider block mb-2 text-center sm:text-left">
+              2. Pasangkan ke Gambar Tugas yang Cocok (Sentuh Kotaknya):
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              
+              <!-- Target 1: Halte Orang -->
+              <div id="targetBus" onclick="matchQuizTarget('bus')" class="p-4 rounded-2xl ${state.quizMatches.bus ? 'bg-sky-100 border-sky-500 border-solid' : 'bg-sky-50 border-sky-400 border-dashed'} border-3 hover:bg-sky-100 transition cursor-pointer flex flex-col items-center text-center touch-bounce">
+                <span class="text-4xl mb-1">🚏👥</span>
+                <strong class="text-xs font-extrabold text-sky-900 block">Antar Teman-teman &amp; Penumpang</strong>
+                <span class="text-[10px] text-sky-700 bg-white px-2 py-0.5 rounded-full border border-sky-200 mt-1 font-bold">
+                  ${state.quizMatches.bus ? '✓ Cocok: Bis Sekolah & Kota!' : 'Sentuh untuk Pasangkan'}
+                </span>
+              </div>
+
+              <!-- Target 2: Api Bahaya -->
+              <div id="targetFire" onclick="matchQuizTarget('fire')" class="p-4 rounded-2xl ${state.quizMatches.fire ? 'bg-red-100 border-red-500 border-solid' : 'bg-red-50 border-red-400 border-dashed'} border-3 hover:bg-red-100 transition cursor-pointer flex flex-col items-center text-center touch-bounce">
+                <span class="text-4xl mb-1">🔥🚒</span>
+                <strong class="text-xs font-extrabold text-red-900 block">Padamkan Api &amp; Tolong Saat Bahaya</strong>
+                <span class="text-[10px] text-red-700 bg-white px-2 py-0.5 rounded-full border border-red-200 mt-1 font-bold">
+                  ${state.quizMatches.fire ? '✓ Cocok: Mobil Pemadam!' : 'Sentuh untuk Pasangkan'}
+                </span>
+              </div>
+
+              <!-- Target 3: Batu Pasir -->
+              <div id="targetDump" onclick="matchQuizTarget('dump')" class="p-4 rounded-2xl ${state.quizMatches.dump ? 'bg-amber-100 border-amber-500 border-solid' : 'bg-amber-50 border-amber-400 border-dashed'} border-3 hover:bg-amber-100 transition cursor-pointer flex flex-col items-center text-center touch-bounce">
+                <span class="text-4xl mb-1">🏗️🪨</span>
+                <strong class="text-xs font-extrabold text-amber-900 block">Angkut Pasir, Batu &amp; Bangunan</strong>
+                <span class="text-[10px] text-amber-700 bg-white px-2 py-0.5 rounded-full border border-amber-200 mt-1 font-bold">
+                  ${state.quizMatches.dump ? '✓ Cocok: Dump Truck Pasir!' : 'Sentuh untuk Pasangkan'}
+                </span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Bottom Action Bar / Result -->
+          <div id="quizResultBar" class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-200">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-brandSky text-lg">info</span>
+              <span id="quizHintText" class="text-xs font-medium text-slate-700">
+                ${isComplete
+                  ? '<strong class="text-emerald-700">HEBAT SEKALI! Semua mobil berhasil dipasangkan dengan tepat! ⭐⭐⭐</strong>'
+                  : 'Ayo sentuh salah satu mobil di atas ya!'}
+              </span>
+            </div>
+            
+            <button id="btnQuizNext" onclick="goToScene(7)" class="${isComplete ? '' : 'hidden'} px-6 py-3 rounded-2xl bg-brandEmerald hover:bg-emerald-600 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-soft touch-bounce transition">
+              <span>⭐ Ambil Lencana Penjelajah Cilik!</span>
+              <span class="material-symbols-outlined text-lg">military_tech</span>
+            </button>
+          </div>
+
+        </div>
+      `;
+    }
+
+    function selectQuizCard(type) {
+      playTone('click');
+      state.selectedQuizCard = type;
+      renderScene(6);
+      
+      const hint = document.getElementById('quizHintText');
+      if (hint) {
+        const names = {
+          bus: 'Bis Penumpang',
+          fire: 'Mobil Pemadam Kebakaran',
+          dump: 'Dump Truck Pasir'
+        };
+        hint.innerHTML = `Kamu memilih <strong>${names[type]}</strong>! Sekarang sentuh gambar tugas yang cocok! 👇`;
+      }
+    }
+
+    function matchQuizTarget(targetType) {
+      if (!state.selectedQuizCard) {
+        playTone('click');
+        showToast("Sentuh gambar mobilnya terlebih dahulu ya sayang!");
+        return;
+      }
+
+      if (state.selectedQuizCard === targetType) {
+        // MATCH SUCCESS!
+        playTone('star');
+        state.quizMatches[targetType] = true;
+        state.selectedQuizCard = null;
+
+        showToast("Cringgg! Horeee, pasangannya betul sekali!");
+
+        const count = Object.values(state.quizMatches).filter(Boolean).length;
+        if (count === 3) {
+          playTone('cheer');
+          unlockNextScene(7);
+          confetti({
+            particleCount: 70,
+            spread: 80,
+            origin: { y: 0.6 }
+          });
+        }
+
+        // Re-render Scene 6 to refresh state
+        renderScene(6);
+      } else {
+        // Soft friendly mismatch
+        playTone('click');
+        showToast("Tuing... coba perhatikan lagi ya sayang, mana mobil yang cocok untuk tugas ini?");
+      }
+    }
+
+    /* -------------------------------------------------------------------------
+       SCENE 7: PENUTUP, LENCANA & LEMBAR MEWARNAI
+       ------------------------------------------------------------------------- */
+    function renderScene7() {
+      // Record SCORM completion if applicable
+      try {
+        if (window.API && typeof window.API.LMSSetValue === 'function') {
+          window.API.LMSSetValue("cmi.core.lesson_status", "completed");
+          window.API.LMSSetValue("cmi.core.score.raw", "100");
+          window.API.LMSCommit("");
+        }
+      } catch (err) {}
+
+      return `
+        <div>
+          <!-- Panoramic View -->
+          <div class="relative aspect-video w-full overflow-hidden bg-slate-100">
+            <img src="assets/scene7_museum_garden.jpg" alt="Taman Museum Sore Hari" class="w-full h-full object-cover">
+            
+            <div class="absolute top-4 left-4 max-w-sm bg-white/95 backdrop-blur p-3.5 rounded-2xl border-2 border-emerald-300 shadow-soft">
+              <span class="px-2 py-0.5 rounded-full bg-brandEmerald text-white text-[10px] font-extrabold uppercase">Petualangan Selesai</span>
+              <h3 class="text-sm font-extrabold text-brandDark mt-1">Horeee! Terima Kasih Teman-teman!</h3>
+              <p class="text-[11px] text-slate-600 mt-0.5 leading-snug">
+                Ceri, Rio, dan Ibu Guru sangat senang belajar bersama adik-adik pintar!
+              </p>
+            </div>
+          </div>
+
+          <!-- 3 Medali Rangkuman -->
+          <div class="p-4 sm:p-6 bg-slate-50 border-t border-slate-200 space-y-6">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-center">
+              <div class="p-3 rounded-2xl bg-sky-50 border border-sky-300">
+                <span class="text-3xl block mb-1">🚌</span>
+                <strong class="text-xs font-bold text-sky-900 block">Mobil Penumpang</strong>
+                <span class="text-[10px] text-sky-700">Antar kita jalan-jalan &amp; sekolah</span>
+              </div>
+              <div class="p-3 rounded-2xl bg-red-50 border border-red-300">
+                <span class="text-3xl block mb-1">🚒</span>
+                <strong class="text-xs font-bold text-red-900 block">Mobil Penyelamat</strong>
+                <span class="text-[10px] text-red-700">Sigap menolong saat darurat</span>
+              </div>
+              <div class="p-3 rounded-2xl bg-amber-50 border border-amber-300">
+                <span class="text-3xl block mb-1">🚚</span>
+                <strong class="text-xs font-bold text-amber-900 block">Mobil Pengangkut</strong>
+                <span class="text-[10px] text-amber-700">Kuat bawa barang-barang berat</span>
+              </div>
+            </div>
+
+            <!-- Kartu Lencana & Input Nama Anak -->
+            <div class="p-5 rounded-3xl bg-brandDark text-white shadow-soft flex flex-col sm:flex-row items-center justify-between gap-5">
+              <div class="space-y-1.5 text-center sm:text-left">
+                <span class="text-[10px] text-amber-300 font-mono font-bold uppercase tracking-wider">Hadiah Penjelajah Cilik</span>
+                <h4 class="text-base font-extrabold text-white">Lencana &amp; Lembar Mewarnai 3 Sahabat Mobil</h4>
+                <p class="text-xs text-slate-300 max-w-md">
+                  Tulis nama adik di bawah ini, lalu klik tombol cetak untuk mencetak lencana resmi dan gambar mewarnai!
+                </p>
+                <div class="pt-2 flex items-center gap-2 max-w-xs mx-auto sm:mx-0">
+                  <input id="inputChildName" type="text" placeholder="Tulis Namamu di Sini..." value="${state.childName}" oninput="updateChildName(this.value)" class="w-full px-3.5 py-2.5 rounded-xl bg-white text-brandDark text-xs font-bold focus:outline-none focus:ring-2 focus:ring-amber-400">
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-2 w-full sm:w-auto">
+                <button onclick="printCertificate()" class="px-6 py-3 rounded-2xl bg-brandAmber hover:bg-amber-600 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-sm transition touch-bounce">
+                  <span class="material-symbols-outlined text-lg">print</span>
+                  <span>Cetak Lencana &amp; Mewarnai</span>
+                </button>
+                <button onclick="restartCourse()" class="px-6 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition touch-bounce">
+                  <span class="material-symbols-outlined text-base">replay</span>
+                  <span>Ulangi Dari Awal</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- On-Screen Certificate Preview (Koleksi Lencana Preview) -->
+            <div class="p-5 rounded-3xl bg-amber-50 border-2 border-amber-300 text-center space-y-2">
+              <span class="text-xs font-extrabold text-amber-900 uppercase tracking-wider block">
+                Pratinjau Lencana Resmi
+              </span>
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border border-amber-200 shadow-sm">
+                <span class="text-2xl">⭐</span>
+                <span id="previewChildName" class="text-sm font-extrabold text-brandDark">${state.childName}</span>
+                <span class="text-xs text-emerald-600 font-bold">✓ Lulus Petualangan</span>
+              </div>
+              <p class="text-[11px] text-slate-500">
+                Klik tombol "Cetak Lencana & Mewarnai" untuk menyimpan ke PDF atau mencetak langsung di printer.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      `;
+    }
+
+    function updateChildName(name) {
+      state.childName = name || "Adik Penjelajah Cilik";
+      const certEl = document.getElementById('certChildName');
+      if (certEl) certEl.textContent = state.childName;
+      const previewEl = document.getElementById('previewChildName');
+      if (previewEl) previewEl.textContent = state.childName;
+    }
+
+    function printCertificate() {
+      playTone('success');
+      window.print();
+    }
+
+    function restartCourse() {
+      playTone('click');
+      state.quizMatches = { bus: false, fire: false, dump: false };
+      state.selectedQuizCard = null;
+      goToScene(1);
+    }
+
+    /* -------------------------------------------------------------------------
+       SCENE ROUTER DISPATCHER
+       ------------------------------------------------------------------------- */
+    function renderScene(sceneId) {
+      const container = document.getElementById('sceneContainer');
+      if (!container) return;
+      if (sceneId === 1) container.innerHTML = renderScene1();
+      else if (sceneId === 2) container.innerHTML = renderScene2();
+      else if (sceneId === 3) container.innerHTML = renderScene3();
+      else if (sceneId === 4) container.innerHTML = renderScene4();
+      else if (sceneId === 5) container.innerHTML = renderScene5();
+      else if (sceneId === 6) container.innerHTML = renderScene6();
+      else if (sceneId === 7) container.innerHTML = renderScene7();
+    }
+
+    /* Toast Notification Helper */
+    function showToast(msg) {
+      let toast = document.getElementById('appToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'appToast';
+        toast.className = 'fixed bottom-6 right-6 z-50 bg-brandDark text-white text-xs px-4 py-3 rounded-2xl shadow-glow border border-white/20 flex items-center gap-2 transform translate-y-12 opacity-0 transition duration-300 pointer-events-none max-w-sm';
+        toast.innerHTML = `<span class="material-symbols-outlined text-amber-400 text-lg">sentiment_satisfied</span><span id="appToastMsg"></span>`;
+        document.body.appendChild(toast);
+      }
+      document.getElementById('appToastMsg').textContent = msg;
+      toast.classList.remove('translate-y-12', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-12', 'opacity-0');
+      }, 3500);
+    }
+
+    /* Keyboard Navigation (Arrow Keys) */
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' && state.currentScene < COURSE_CONFIG.totalScenes) {
+        goToScene(state.currentScene + 1);
+      } else if (e.key === 'ArrowLeft' && state.currentScene > 1) {
+        goToScene(state.currentScene - 1);
+      }
+    });
+
+    /* Embedded SCORM 1.2 Wrapper (Auto-Discovery) */
+    window.addEventListener('load', () => {
+      renderScene(1);
+      updateSceneNav();
+      
+      // Attempt SCORM initialization if loaded inside LMS
+      try {
+        if (window.API && typeof window.API.LMSInitialize === 'function') {
+          window.API.LMSInitialize("");
+          window.API.LMSSetValue("cmi.core.lesson_status", "incomplete");
+          window.API.LMSCommit("");
+        }
+      } catch (err) {
+        console.log("Standalone mode (outside LMS)");
+      }
+    });
+  </script>
+
+</body>
+</html>

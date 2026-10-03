@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blocking Layout &amp; Spatial Blueprint - Modul Interaktif Museum Transportasi (Audio-Visual Heavy)</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    /* Konfigurasi Visual Blocking Layout: Paradigma Audio-Visual Heavy (Pre-Readers Usia 4–6 Tahun) */
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            cBase: '#F8FAFC',
+            cDark: '#0F172A',
+            cBrand: '#0284C7',
+            cBrandLight: '#E0F2FE',
+            cBrandHover: '#0369A1',
+            cAccent: '#EA580C',
+            cAccentLight: '#FFEDD5',
+            cLine: '#E2E8F0',
+            cMuted: '#64748B',
+            zoneChar: '#3B82F6',
+            zoneObject: '#F59E0B',
+            zoneVoice: '#10B981',
+            zoneCTA: '#EC4899',
+            zoneHUD: '#6366F1'
+          },
+          boxShadow: {
+            card: '0 2px 14px rgba(15, 23, 42, 0.06)',
+            canvas: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
+            pulseTouch: '0 0 0 6px rgba(236, 72, 153, 0.25)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      body { background-color: #FFFFFF !important; }
+    }
+    .scrollbar-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 9999px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background-color: #F1F5F9; }
+    
+    /* Grid Pattern Kanvas Spasial */
+    .bg-grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(226, 232, 240, 0.6) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(226, 232, 240, 0.6) 1px, transparent 1px);
+    }
+    .touch-target-pulse {
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.4); }
+      50% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(236, 72, 153, 0); }
+    }
+  </style>
+</head>
+<body class="bg-cBase text-cDark antialiased font-sans min-h-screen selection:bg-cBrand selection:text-white">
+
+  <!-- TOP APP BAR / CONTROLS & METADATA -->
+  <header class="no-print sticky top-0 z-50 bg-cDark text-white border-b border-white/10 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand & Metadata Header -->
+      <div class="flex items-center space-x-3">
+        <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-sky-500 via-pink-500 to-amber-500 flex items-center justify-center text-white font-bold text-lg shadow-md border border-white/20">
+          📐
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-cBrand text-white">Spatial Blocking Blueprint</span>
+            <span class="text-xs text-amber-300 font-bold font-mono">Audio &amp; Visual Heavy (Usia 4–6 Tahun / PAUD)</span>
+          </div>
+          <h1 class="text-sm sm:text-base font-extrabold text-white leading-tight mt-0.5">
+            Cetak Biru Tata Letak Spasial: Study Tour Museum Transportasi
+          </h1>
+        </div>
+      </div>
+
+      <!-- Action & View Controls -->
+      <div class="flex items-center flex-wrap gap-2 text-xs">
+        <button id="btnToggleGrid" onclick="toggleOverlay('grid')" class="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 font-medium text-white transition flex items-center gap-1.5 shadow-sm">
+          <span class="w-2.5 h-2.5 rounded-sm border border-sky-300 bg-sky-400"></span>
+          Grid 12-Kolom
+        </button>
+        <button id="btnToggleSafe" onclick="toggleOverlay('safe')" class="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 font-medium text-white transition flex items-center gap-1.5 shadow-sm">
+          <span class="w-2.5 h-2.5 rounded-full border border-pink-300 bg-pink-500"></span>
+          Safe Area Sentuh
+        </button>
+        <button id="btnToggleThirds" onclick="toggleOverlay('thirds')" class="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 font-medium text-white transition flex items-center gap-1.5 shadow-sm">
+          <span class="w-2.5 h-2.5 rounded-sm border border-amber-300 bg-amber-400"></span>
+          Rule of Thirds
+        </button>
+        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 font-medium text-white transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Cetak Blueprint
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Scene Selector Quick Strip -->
+    <div class="bg-slate-900 border-t border-white/10 px-4 sm:px-6 py-2">
+      <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto scrollbar-thin">
+        <span class="text-[10px] font-bold text-white/50 uppercase tracking-wider whitespace-nowrap mr-1">Pilih Scene:</span>
+        <div class="flex items-center gap-1.5" id="sceneNavButtons">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- INSTRUCTIONAL ARCHITECTURE & ERGONOMIC STANDARDS (PRE-READERS) -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 mt-6 no-print">
+    <div class="bg-white rounded-2xl border-2 border-amber-300 shadow-card p-5">
+      <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-cLine">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] font-extrabold mb-1.5 border border-amber-300">
+            <span class="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+            Prinsip Ergonomi Sentuh &amp; Pre-Literacy (Anak Usia 4–6 Tahun / TTKA)
+          </div>
+          <h2 class="text-xl font-extrabold text-cDark">Rancang Bangun Tata Letak Audio-Visual Heavy (Zero-Reading Burden)</h2>
+          <p class="text-xs text-cMuted mt-1">
+            <strong>Target Kanvas:</strong> 1920 &times; 1080 px (16:9) • <strong>Minimum Target Sentuh Anak:</strong> &ge; 80 &times; 80 px • <strong>Prinsip:</strong> Pemandu Suara Otomatis 100%, Piktogram Kartun Besar, Animasi Interaktif, dan Bebas Teks Paragraf Panjang.
+          </p>
+        </div>
+        
+        <!-- Quick Sound Test Strip -->
+        <div class="flex flex-wrap items-center gap-1.5 bg-slate-100 p-2 rounded-xl border border-slate-200 text-xs">
+          <span class="text-[10px] font-bold text-slate-500 uppercase block w-full mb-0.5">Uji SFX Terkait Bounding Box:</span>
+          <button onclick="playSFX('horn')" class="px-2 py-1 rounded bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold text-[10px] border border-sky-300">📢 Klakson</button>
+          <button onclick="playSFX('fire')" class="px-2 py-1 rounded bg-red-100 hover:bg-red-200 text-red-800 font-bold text-[10px] border border-red-300">🚒 Sirine Pemadam</button>
+          <button onclick="playSFX('ambulance')" class="px-2 py-1 rounded bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-[10px] border border-amber-300">🚑 Sirine Ambulans</button>
+          <button onclick="playSFX('truck')" class="px-2 py-1 rounded bg-orange-100 hover:bg-orange-200 text-orange-900 font-bold text-[10px] border border-orange-300">🚚 Deru Truk</button>
+          <button onclick="playSFX('reward')" class="px-2 py-1 rounded bg-yellow-100 hover:bg-yellow-200 text-yellow-900 font-bold text-[10px] border border-yellow-300">⭐ Reward</button>
+        </div>
+      </div>
+
+      <!-- Legend of Zones -->
+      <div class="flex flex-wrap items-center gap-2 pt-3 text-xs">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 font-bold text-[11px]">
+          <span class="w-3 h-3 rounded-md bg-blue-500"></span> Zona Karakter (Staging Tokoh)
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-950 font-bold text-[11px]">
+          <span class="w-3 h-3 rounded-md bg-amber-500"></span> Objek Fokus &amp; Kartu Kendaraan
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-950 font-bold text-[11px]">
+          <span class="w-3 h-3 rounded-md bg-emerald-500"></span> Indikator Suara &amp; Balon Audio
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-pink-50 border border-pink-200 text-pink-950 font-bold text-[11px]">
+          <span class="w-3 h-3 rounded-md bg-pink-500"></span> Tombol Sentuh / Aksi Interaktif (CTA)
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-950 font-bold text-[11px]">
+          <span class="w-3 h-3 rounded-md bg-indigo-500"></span> Judul Simbolik / Papan Piktogram (HUD)
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN WORKSPACE: INTERACTIVE CANVAS VIEWPORT & SPECS INSPECTOR -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- CANVAS VIEWPORT CONTAINER -->
+    <div class="bg-white rounded-3xl border-2 border-slate-300 shadow-canvas overflow-hidden">
+      
+      <!-- Canvas Status Bar -->
+      <div class="bg-slate-900 text-white px-5 py-2.5 flex items-center justify-between border-b border-white/10 text-xs">
+        <div class="flex items-center gap-2">
+          <span id="canvasSceneBadge" class="px-2.5 py-0.5 rounded font-mono font-bold bg-cBrand text-white text-[11px]">SCENE #1</span>
+          <span id="canvasSceneTitle" class="font-bold text-slate-200 truncate max-w-[280px] sm:max-w-md">Berangkat Naik Bis Sekolah Kuning</span>
+        </div>
+        <div class="flex items-center gap-3 text-[11px] font-mono text-slate-400">
+          <span class="hidden sm:inline">Rasio: <strong>16:9 Widescreen</strong> (1920 &times; 1080 px)</span>
+          <span class="bg-slate-800 px-2.5 py-0.5 rounded text-amber-300 border border-slate-700" id="canvasComponentTag">PowerPoint Slide + Narration Sync</span>
+        </div>
+      </div>
+
+      <!-- SIMULATED 16:9 VIEWPORT (Relative Coordinates 0-100%) -->
+      <div class="p-4 sm:p-6 bg-slate-200/80 flex items-center justify-center">
+        <div id="canvasViewport" class="relative w-full aspect-video bg-white rounded-2xl overflow-hidden shadow-inner border border-slate-300 bg-grid-pattern transition-all duration-300 select-none">
+          
+          <!-- OVERLAY: 12-COLUMN GRID (Toggleable) -->
+          <div id="overlayGrid" class="absolute inset-0 pointer-events-none z-30 hidden grid grid-cols-12 gap-2 px-8 py-6 opacity-35">
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+            <div class="h-full bg-sky-400/20 border-x border-sky-400/30"></div>
+          </div>
+
+          <!-- OVERLAY: RULE OF THIRDS (Toggleable) -->
+          <div id="overlayThirds" class="absolute inset-0 pointer-events-none z-30 hidden">
+            <div class="absolute left-1/3 top-0 bottom-0 w-[1px] bg-amber-500/50 dashed border-r border-dashed border-amber-500"></div>
+            <div class="absolute left-2/3 top-0 bottom-0 w-[1px] bg-amber-500/50 dashed border-r border-dashed border-amber-500"></div>
+            <div class="absolute top-1/3 left-0 right-0 h-[1px] bg-amber-500/50 dashed border-b border-dashed border-amber-500"></div>
+            <div class="absolute top-2/3 left-0 right-0 h-[1px] bg-amber-500/50 dashed border-b border-dashed border-amber-500"></div>
+          </div>
+
+          <!-- OVERLAY: TOUCH SAFE ZONE (Toggleable) -->
+          <div id="overlaySafe" class="absolute inset-[6%] pointer-events-none z-30 hidden border-2 border-dashed border-pink-500/70 rounded-xl bg-pink-500/5 flex items-start justify-end p-2">
+            <span class="text-[9px] font-mono font-bold bg-pink-600 text-white px-2 py-0.5 rounded shadow">Safe Touch Zone Tablet (&ge; 60px Margin)</span>
+          </div>
+
+          <!-- DYNAMIC BOUNDING BOXES CONTAINER (Populated via JS) -->
+          <div id="dynamicBoundingBoxes" class="absolute inset-0 z-20">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- BACKGROUND WATERMARK / ART DIRECTION GUIDE -->
+          <div id="backgroundArtGuide" class="absolute inset-0 z-0 opacity-20 pointer-events-none flex items-center justify-center text-slate-400 font-extrabold text-2xl sm:text-4xl uppercase tracking-widest text-center px-4">
+            BACKGROUND ART LAYER
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Canvas Footer Quick Controls -->
+      <div class="bg-slate-50 px-5 py-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-slate-600">Petunjuk Interaksi:</span>
+          <span class="text-slate-700">Klik salah satu kotak zona (*bounding box*) di atas untuk menginspeksi koordinat spasial, ukuran piksel 1080p, dan perilaku sentuh/audio ramah anak.</span>
+        </div>
+        <div class="flex items-center gap-2 font-mono text-[11px]">
+          <span class="text-slate-400">Elemen Terpilih:</span>
+          <strong id="selectedZoneBadge" class="px-2.5 py-0.5 rounded bg-sky-100 text-sky-800 font-bold">Semua Zona Aktif</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAILED SPATIAL INSPECTOR & MATRIX SPECIFICATIONS -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- SISI KIRI: INSPEKTOR ZONA TERPILIH (5 Cols) -->
+      <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-card p-5 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-cLine">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-cBrand"></span>
+            <h3 class="text-sm font-extrabold text-cDark">Inspektor Bounding Box Pre-Readers</h3>
+          </div>
+          <span id="inspectTypeBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-bold uppercase">Properties</span>
+        </div>
+
+        <div id="inspectorContent" class="space-y-3 text-xs">
+          <!-- Populated dynamically upon box selection -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 space-y-2 text-center py-8">
+            <div class="text-3xl mb-1">👆</div>
+            <strong class="text-slate-800 block text-sm">Pilih Bounding Box pada Kanvas</strong>
+            <p class="text-[11px] text-slate-500 leading-snug">Klik elemen visual di atas untuk melihat koordinat X/Y, ukuran piksel 1080p, layer z-index, respon audio, serta komponen iSpring Suite 11 yang digunakan.</p>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-cLine flex items-center justify-between">
+          <button onclick="copyCurrentSceneCoords()" class="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-sm">
+            <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+            Salin Matriks Koordinat Scene Ini
+          </button>
+        </div>
+      </div>
+
+      <!-- SISI KANAN: TABEL MATRIKS TATA LETAK LENGKAP (7 Cols) -->
+      <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-card p-5 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-cLine">
+          <div>
+            <h3 class="text-sm font-extrabold text-cDark">Matriks Koordinat Spasial (1920 &times; 1080 px Widescreen)</h3>
+            <p class="text-[11px] text-cMuted">Pemetaan koordinat untuk pembuatan master slide PowerPoint &amp; bounding box iSpring Visuals.</p>
+          </div>
+          <span class="text-[10px] font-mono text-cBrand font-bold bg-cBrandLight px-2 py-0.5 rounded">Native 16:9</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border border-cLine rounded-xl overflow-hidden">
+            <thead class="bg-slate-900 text-white text-[10px] font-mono uppercase">
+              <tr>
+                <th class="p-2.5">ID / Nama Elemen</th>
+                <th class="p-2.5">Zona</th>
+                <th class="p-2.5">X, Y (%)</th>
+                <th class="p-2.5">W &times; H (%)</th>
+                <th class="p-2.5">Ukuran Piksel (1080p)</th>
+                <th class="p-2.5">Z-Index</th>
+              </tr>
+            </thead>
+            <tbody id="coordTableBody" class="divide-y divide-cLine font-mono text-[11px]">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-3 rounded-xl bg-cBase border border-cLine text-[11px] text-slate-600 space-y-1">
+          <div class="font-bold text-cDark flex items-center gap-1.5">
+            <span>💡</span>
+            <span>Rekomendasi Implementasi Authoring (PowerPoint + iSpring 11):</span>
+          </div>
+          <p class="leading-relaxed">
+            Gunakan garis panduan <em>View &rarr; Guides</em> di PowerPoint. Masukkan rumus: <code>Posisi X = 1920 &times; (X%)</code> dan <code>Posisi Y = 1080 &times; (Y%)</code>. Seluruh elemen interaktif memiliki padding sentuh ekstra besar (&ge; 80px) untuk memfasilitasi interaksi motorik halus anak usia 4–6 tahun pada perangkat tablet layar sentuh.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PEDOMAN DESIGN TOKEN & KEBUTUHAN ASET PER ZONA (PRE-READERS) -->
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-card p-5 space-y-4">
+      <div class="border-b border-cLine pb-3">
+        <h3 class="text-sm font-extrabold text-cDark uppercase tracking-wider text-cBrand">
+          Design Tokens &amp; Checklist Aset Grafis (Zero-Reading Ergonomics)
+        </h3>
+        <p class="text-xs text-cMuted mt-0.5">Spesifikasi visual dan auditori agar optimal bagi perkembangan daya tangkap visual anak usia 4–6 tahun.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="p-3.5 rounded-xl bg-sky-50/70 border border-sky-200 space-y-1.5">
+          <strong class="text-sky-900 block font-bold text-sm">1. Bebas Beban Baca (Pre-Literacy)</strong>
+          <ul class="list-disc pl-4 space-y-1 text-slate-700 text-[11px]">
+            <li><strong>Zero Paragraph:</strong> Hindari penjelasan teks berparagraf. Informasi disampaikan 100% via narasi suara Bu Guru.</li>
+            <li><strong>Piktogram &amp; Warna Ikonik:</strong> Pintu Biru = Taksi 🚕, Pintu Merah = Api &amp; Sirine 🚒, Pintu Oranye = Peti Barang 🚚.</li>
+            <li><strong>Balon Audio Ringkas:</strong> Subtitle hanya menampilkan nama tokoh berikon dan frasa pendek ramah anak.</li>
+          </ul>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 space-y-1.5">
+          <strong class="text-amber-950 block font-bold text-sm">2. Target Sentuhan Motorik Halus</strong>
+          <ul class="list-disc pl-4 space-y-1 text-slate-700 text-[11px]">
+            <li><strong>Ukuran Minimum Tombol:</strong> Minimal <strong>80 &times; 80 px</strong> hingga <strong>120 &times; 120 px</strong> (mencegah salah sentuh).</li>
+            <li><strong>Umpan Balik Instan:</strong> Animasi pembesaran (*scale up 1.08*), cahaya berdenyut (*pulse ring*), dan bunyi otentik (*Tut-tut, Nii-noo*).</li>
+            <li><strong>Area Aman Margin:</strong> Minimal 60 px dari tepi layar agar tidak terhalang bingkai casing tablet anak.</li>
+          </ul>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-1.5">
+          <strong class="text-emerald-950 block font-bold text-sm">3. Layering &amp; Audio Staging</strong>
+          <ul class="list-disc pl-4 space-y-1 text-slate-700 text-[11px]">
+            <li><strong>Z-Index 10–20:</strong> Objek kendaraan kartun besar di latar panggung utama.</li>
+            <li><strong>Z-Index 25–30:</strong> Karakter Rio &amp; Ceri berdiri di latar depan dengan pose ceria dan mata memandang kamera.</li>
+            <li><strong>Z-Index 40–50:</strong> Tombol aksi sentuh berdenyut dan indikator suara Ibu Guru di lapisan paling atas.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-cDark text-white text-xs px-4 py-2.5 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition duration-300 pointer-events-none z-50 flex items-center gap-2 border border-white/20">
+    <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+    <span id="toastMsg">Matriks koordinat berhasil disalin ke clipboard!</span>
+  </div>
+
+  <script>
+    // =========================================================================
+    // SIMULATOR WEB AUDIO SYNTHESIZER (UJI SUARA SFX)
+    // =========================================================================
+    function playSFX(type) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const now = ctx.currentTime;
+
+        if (type === 'horn') {
+          // Bus dual-tone horn
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc1.type = 'sawtooth'; osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(340, now);
+          osc2.frequency.setValueAtTime(510, now);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+          osc1.connect(gain); osc2.connect(gain); gain.connect(ctx.destination);
+          osc1.start(now); osc2.start(now);
+          osc1.stop(now + 0.5); osc2.stop(now + 0.5);
+          showToast("📢 Suara Klakson Bis: 'Tut-tut!'");
+        } else if (type === 'fire') {
+          // Fire truck siren
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(620, now);
+          osc.frequency.linearRampToValueAtTime(950, now + 0.35);
+          osc.frequency.linearRampToValueAtTime(620, now + 0.7);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.75);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(now); osc.stop(now + 0.8);
+          showToast("🚒 Sirine Pemadam: 'Nii-noo-nii-noo!'");
+        } else if (type === 'ambulance') {
+          // Ambulance siren
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(780, now);
+          osc.frequency.setValueAtTime(980, now + 0.2);
+          osc.frequency.setValueAtTime(780, now + 0.4);
+          osc.frequency.setValueAtTime(980, now + 0.6);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.75);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(now); osc.stop(now + 0.8);
+          showToast("🚑 Sirine Ambulans: 'Wiuw-wiuw-wiuw!'");
+        } else if (type === 'truck') {
+          // Heavy diesel engine rumble
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(85, now);
+          osc.frequency.linearRampToValueAtTime(130, now + 0.3);
+          osc.frequency.linearRampToValueAtTime(90, now + 0.6);
+          gain.gain.setValueAtTime(0.28, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.65);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(now); osc.stop(now + 0.7);
+          showToast("🚚 Suara Mesin & Bak Truk: 'Brummm... Krrrkk!'");
+        } else if (type === 'reward') {
+          // Star chime
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.1);
+          osc.frequency.setValueAtTime(783.99, now + 0.2);
+          osc.frequency.setValueAtTime(1046.50, now + 0.3);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(now); osc.stop(now + 0.65);
+          showToast("⭐ Suara Hadiah Bintang: 'Tringgg!'");
+        }
+      } catch (e) {
+        console.log("Audio not supported or restricted");
+      }
+    }
+
+    // =========================================================================
+    // DATA DEFINISI BLOCKING LAYOUT (AUDIO & VISUAL HEAVY / 1920x1080)
+    // =========================================================================
+    const blockingData = [
+      /* SCENE 1: BERANGKAT NAIK BIS SEKOLAH KUNING */
+      {
+        sceneNum: 1,
+        title: "Scene 1: Berangkat Naik Bis Sekolah Kuning",
+        authoringComponent: "PowerPoint Slide + iSpring Narration Sync (Auto-Play Audio)",
+        backgroundDesc: "Halaman sekolah TK cerah, matahari tersenyum, gedung warna-warni kartun (1920x1080)",
+        boxes: [
+          {
+            id: "S1-HUD-BANNER",
+            label: "Spanduk Ikonik: 'Ayo Naik Bis!' 🚌",
+            type: "HUD",
+            color: "zoneHUD",
+            x: 15, y: 4, w: 70, h: 10, z: 40,
+            pixelSize: "1344 x 108 px",
+            description: "Spanduk lengkung kartun ceria dengan piktogram bis besar dan bintang.",
+            ispringTrigger: "Bentuk PPT Rounded Shape • Animasi Drop In • Dibacakan suara otomatis oleh Bu Guru",
+            sfxType: "horn"
+          },
+          {
+            id: "S1-OBJ-BUS",
+            label: "Bis Sekolah Kuning Raksasa (Fokus Objek)",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 25, y: 18, w: 70, h: 52, z: 10,
+            pixelSize: "1344 x 561 px",
+            description: "Bis kuning kartun ramah dengan pintu terbuka dan jendela luas menampilkan siluet anak-anak.",
+            ispringTrigger: "Animasi Motion Path melaju perlahan dari kiri dan berhenti di halte • Tap &rarr; Bunyi klakson 'Tut-tut!'",
+            sfxType: "horn"
+          },
+          {
+            id: "S1-CHAR-GURU",
+            label: "Ibu Guru Pemandu (Welcoming Gesture)",
+            type: "CHARACTER",
+            color: "zoneChar",
+            x: 43, y: 44, w: 14, h: 36, z: 20,
+            pixelSize: "268 x 388 px",
+            description: "Ibu Guru berdiri di samping pintu bis melambaikan tangan hangat menyambut anak-anak.",
+            ispringTrigger: "Karakter Ilustrasi Vektor • Suara pembuka otomatis berputar seketika",
+            sfxType: null
+          },
+          {
+            id: "S1-CHAR-KIDS",
+            label: "Ceri & Rio Melompat Riang",
+            type: "CHARACTER",
+            color: "zoneChar",
+            x: 6, y: 44, w: 22, h: 38, z: 25,
+            pixelSize: "422 x 410 px",
+            description: "Rio (topi biru) dan Ceri (bando merah) melompat riang melambaikan tangan ke kamera anak-anak.",
+            ispringTrigger: "Animasi Bounce In (00:01 detik) • Sinkronisasi audio: 'Halo aku Ceri! Halo aku Rio!'",
+            sfxType: null
+          },
+          {
+            id: "S1-VOX-GUIDE",
+            label: "Pemandu Suara Otomatis & Balon Audio Mini",
+            type: "VOICE",
+            color: "zoneVoice",
+            x: 6, y: 80, w: 64, h: 16, z: 35,
+            pixelSize: "1228 x 172 px",
+            description: "Balon suara kartun dengan ikon avatar tokoh berbicara (Bukan teks panjang yang harus dibaca anak).",
+            ispringTrigger: "Audio Auto-Play Narration Editor • 100% Pemandu Suara: Anak hanya mendengarkan",
+            sfxType: null
+          },
+          {
+            id: "S1-CTA-STEERING",
+            label: "Tombol Sentuh: Setir Bis Berdenyut 📢",
+            type: "CTA",
+            color: "zoneCTA",
+            x: 74, y: 76, w: 20, h: 20, z: 45,
+            pixelSize: "384 x 216 px",
+            description: "Tombol interaktif setir mobil hijau besar berdenyut (Pulse Ring). Ukuran target sentuh > 120 px.",
+            ispringTrigger: "Hyperlink to Scene 2 • Sound: Klakson Bis 'Tut-tut / Telolet!' • Efek bis melaju ke kanan",
+            sfxType: "horn"
+          }
+        ]
+      },
+
+      /* SCENE 2: LOBI MUSEUM - 3 GERBANG WARNA */
+      {
+        sceneNum: 2,
+        title: "Scene 2: Tiba di Museum & Lobi 3 Gerbang Sahabat Mobil",
+        authoringComponent: "iSpring Visuals -> Hotspot / Guided Image",
+        backgroundDesc: "Lobi museum megah kubah kaca kartun, lantai marmer bersih, pilar warna-warni",
+        boxes: [
+          {
+            id: "S2-HUD-WELCOME",
+            label: "Papan Nama Kartun: 'Dunia Sahabat Mobil' 🚗",
+            type: "HUD",
+            color: "zoneHUD",
+            x: 18, y: 4, w: 64, h: 10, z: 40,
+            pixelSize: "1228 x 108 px",
+            description: "Papan kayu kartun warna-warni berhias balon dan bendera pesta.",
+            ispringTrigger: "Papan judul statis ramah anak",
+            sfxType: null
+          },
+          {
+            id: "S2-DOOR-PASSENGER",
+            label: "Pintu 1: Warna Biru (Mobil Penumpang 🚕)",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 8, y: 18, w: 25, h: 48, z: 15,
+            pixelSize: "480 x 518 px",
+            description: "Pintu gerbang biru langit dengan gambar Taksi & Orang. Dikelilingi cincin kilau berkedip (*Glow Ring*).",
+            ispringTrigger: "iSpring Hotspot Target Utama • Tap &rarr; Pintu terbuka dengan suara cringgg &rarr; Masuk Scene 3",
+            sfxType: "reward"
+          },
+          {
+            id: "S2-DOOR-RESCUE",
+            label: "Pintu 2: Warna Merah (Mobil Penyelamat 🚒🚨)",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 37.5, y: 18, w: 25, h: 48, z: 15,
+            pixelSize: "480 x 518 px",
+            description: "Pintu gerbang merah gagah bergambar Mobil Pemadam & Ambulans dengan rotator mini menyala.",
+            ispringTrigger: "iSpring Hotspot Terkunci sementara • Jika disentuh: Suara Bu Guru 'Kita ke pintu biru dulu ya, sayang!'",
+            sfxType: "fire"
+          },
+          {
+            id: "S2-DOOR-CARGO",
+            label: "Pintu 3: Warna Oranye (Mobil Pengangkut 🚚📦)",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 67, y: 18, w: 25, h: 48, z: 15,
+            pixelSize: "480 x 518 px",
+            description: "Pintu gerbang oranye kuning bergambar Truk Kontainer besar dan kotak paket belanjaan.",
+            ispringTrigger: "iSpring Hotspot Terkunci sementara",
+            sfxType: "truck"
+          },
+          {
+            id: "S2-CHAR-GUIDE",
+            label: "Bu Guru, Rio, & Ceri Menunjuk Pintu Biru",
+            type: "CHARACTER",
+            color: "zoneChar",
+            x: 33, y: 64, w: 34, h: 30, z: 30,
+            pixelSize: "652 x 324 px",
+            description: "Ibu Guru di tengah merangkul Rio dan Ceri sambil mengarahkan tangan ke Pintu 1 Warna Biru.",
+            ispringTrigger: "Karakter Ilustrasi • Pose: Mengajak anak menyentuh pintu biru",
+            sfxType: null
+          },
+          {
+            id: "S2-VOX-PROMPT",
+            label: "Instruksi Suara: 'Sentuh Pintu 1 Warna Biru!'",
+            type: "VOICE",
+            color: "zoneVoice",
+            x: 10, y: 82, w: 80, h: 14, z: 35,
+            pixelSize: "1536 x 151 px",
+            description: "Balon instruksi suara dengan ikon gelombang audio 🔊 (Dipandu suara Bu Guru secara penuh).",
+            ispringTrigger: "Audio Prompt Otomatis • Memandu anak berdasarkan warna dan gambar",
+            sfxType: null
+          }
+        ]
+      },
+
+      /* SCENE 3: RUANGAN 1 - MOBIL PENUMPANG (AUDIO-FIRST EXPLORATION) */
+      {
+        sceneNum: 3,
+        title: "Scene 3: Ruang Mobil Penumpang (Transjakarta, Angkot, & Taksi)",
+        authoringComponent: "iSpring Visuals -> Tabs Navigation (Audio-Guided Cards)",
+        backgroundDesc: "Ruang pameran bertema jalan aspal bersih kartun, halte bus modern, lampu jalan ramah",
+        boxes: [
+          {
+            id: "S3-HUD-CATEGORY",
+            label: "Papan Ikonik: 'Mobil Penumpang' 👥 (Membawa Orang)",
+            type: "HUD",
+            color: "zoneHUD",
+            x: 15, y: 4, w: 70, h: 10, z: 40,
+            pixelSize: "1344 x 108 px",
+            description: "Header visual kartun dengan gambar rombongan orang tersenyum dan halte bis.",
+            ispringTrigger: "Header statis dengan suara sambutan Bu Guru otomatis",
+            sfxType: null
+          },
+          {
+            id: "S3-CARD-BUS",
+            label: "Kartu 1: Bis Transjakarta 🚌 + Tombol Klakson",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 6, y: 17, w: 27, h: 52, z: 20,
+            pixelSize: "518 x 561 px",
+            description: "Gambar kartun bis Transjakarta biru besar. Tombol audio besar: 'Sentuh Klakson: Tuuut!' (Target sentuh > 100px).",
+            ispringTrigger: "iSpring Tab 1 • Tap &rarr; Klakson bis berbunyi 'Tuuut-tuuut!' & lampu menyala",
+            sfxType: "horn"
+          },
+          {
+            id: "S3-CARD-ANGKOT",
+            label: "Kartu 2: Mobil Angkot 🚐 + Tombol Klakson",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 36.5, y: 17, w: 27, h: 52, z: 20,
+            pixelSize: "518 x 561 px",
+            description: "Gambar kartun angkot mungil keliling kota. Tombol audio: 'Sentuh Klakson: Din-din!'.",
+            ispringTrigger: "iSpring Tab 2 • Tap &rarr; Klakson angkot berbunyi 'Din-diiin!' & roda bergoyang lucu",
+            sfxType: "horn"
+          },
+          {
+            id: "S3-CARD-TAXI",
+            label: "Kartu 3: Mobil Taksi 🚖 + Tombol Klakson",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 67, y: 17, w: 27, h: 52, z: 20,
+            pixelSize: "518 x 561 px",
+            description: "Gambar kartun taksi kuning lincah bermahkota lampu. Tombol audio: 'Sentuh Klakson: Tin-tin!'.",
+            ispringTrigger: "iSpring Tab 3 • Tap &rarr; Klakson taksi berbunyi 'Tin-tiiin!'",
+            sfxType: "horn"
+          },
+          {
+            id: "S3-CHAR-GUIDE",
+            label: "Rio & Ceri Berdialog Ceria",
+            type: "CHARACTER",
+            color: "zoneChar",
+            x: 6, y: 72, w: 24, h: 24, z: 30,
+            pixelSize: "460 x 259 px",
+            description: "Rio dan Ceri mengacungkan jempol gembira membunyikan klakson ketiga mobil.",
+            ispringTrigger: "Karakter Vektor • Sinkronisasi audio percakapan",
+            sfxType: null
+          },
+          {
+            id: "S3-VOX-AUDIO",
+            label: "Pemandu Suara: Pengertian, Fungsi, & Contoh",
+            type: "VOICE",
+            color: "zoneVoice",
+            x: 32, y: 74, w: 40, h: 20, z: 35,
+            pixelSize: "768 x 216 px",
+            description: "Kotak gelombang suara suara Bu Guru menceritakan fungsi mobil membawa orang pergi sekolah dan jalan-jalan.",
+            ispringTrigger: "100% Pemandu Suara Otomatis (Tanpa teks bacaan)",
+            sfxType: null
+          },
+          {
+            id: "S3-CTA-NEXT",
+            label: "Tombol Merah Berkedip: 🚨 Ke Ruang Penyelamat!",
+            type: "CTA",
+            color: "zoneCTA",
+            x: 74, y: 72, w: 20, h: 22, z: 45,
+            pixelSize: "384 x 237 px",
+            description: "Tombol transisi merah mencolok berkedip dengan ikon rotator darurat (Target sentuh > 100px).",
+            ispringTrigger: "Jump to Scene 4 • Audio Transisi Chime",
+            sfxType: "fire"
+          }
+        ]
+      },
+
+      /* SCENE 4: RUANGAN 2 - MOBIL PENYELAMAT */
+      {
+        sceneNum: 4,
+        title: "Scene 4: Ruang Mobil Penyelamat (Pemadam Kebakaran & Ambulans)",
+        authoringComponent: "iSpring Visuals -> Hotspot Audio & Visual Simulation",
+        backgroundDesc: "Pos pemadam dan pos medis darurat kartun, lampu rotator merah-biru berkelap-kelip",
+        boxes: [
+          {
+            id: "S4-HUD-CATEGORY",
+            label: "Papan Ikonik: 'Mobil Penyelamat' 🚨 (Pahlawan Penolong Bahaya)",
+            type: "HUD",
+            color: "zoneHUD",
+            x: 10, y: 4, w: 80, h: 9, z: 40,
+            pixelSize: "1536 x 97 px",
+            description: "Header kartun berhias bintang pahlawan dan sirine menyala.",
+            ispringTrigger: "Banner statis ikonik",
+            sfxType: null
+          },
+          {
+            id: "S4-CARD-FIRE",
+            label: "Area Interaktif: Truk Pemadam 🚒 + Sirine Nii-noo",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 8, y: 16, w: 40, h: 48, z: 20,
+            pixelSize: "768 x 518 px",
+            description: "Truk pemadam kartun besar dengan tangga dan selang air. Tombol sentuh sirine 'Nii-noo-nii-noo!'.",
+            ispringTrigger: "Hotspot Audio Interaktif • Tap &rarr; Sirine berbunyi kencang & animasi semprotan air mancur",
+            sfxType: "fire"
+          },
+          {
+            id: "S4-CARD-AMBULANCE",
+            label: "Area Interaktif: Mobil Ambulans 🚑 + Sirine Wiuw-wiuw",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 52, y: 16, w: 40, h: 48, z: 20,
+            pixelSize: "768 x 518 px",
+            description: "Mobil ambulans putih palang merah dengan brankar. Tombol sentuh sirine 'Wiuw-wiuw-wiuw!'.",
+            ispringTrigger: "Hotspot Audio Interaktif • Tap &rarr; Sirine berbunyi darurat & lampu rotator berputar",
+            sfxType: "ambulance"
+          },
+          {
+            id: "S4-ANI-ROAD",
+            label: "Animasi Jalan Raya: Mobil Lain Bergeser Minggir 👈🚗 🚑 🚙👉",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 8, y: 68, w: 54, h: 26, z: 30,
+            pixelSize: "1036 x 280 px",
+            description: "Simulasi jalan raya kartun: saat sirine berbunyi, mobil-mobil lain otomatis bergeser ke kiri dan kanan.",
+            ispringTrigger: "Animasi visual etika jalan raya • Dinarasikan suara Bu Guru: 'Harus diutamakan jalannya!'",
+            sfxType: null
+          },
+          {
+            id: "S4-CHAR-TRIO",
+            label: "Rio, Ceri, & Guru (Memberi Hormat Jempol 👍)",
+            type: "CHARACTER",
+            color: "zoneChar",
+            x: 64, y: 68, w: 18, h: 26, z: 30,
+            pixelSize: "345 x 280 px",
+            description: "Karakter Rio dan Ceri berpose hormat kagum kepada mobil pahlawan.",
+            ispringTrigger: "Pose Karakter Bersahabat",
+            sfxType: null
+          },
+          {
+            id: "S4-CTA-CARGO",
+            label: "Tombol Kuning: 🚚 Ke Ruang Mobil Pengangkut!",
+            type: "CTA",
+            color: "zoneCTA",
+            x: 84, y: 68, w: 12, h: 26, z: 45,
+            pixelSize: "230 x 280 px",
+            description: "Tombol kuning besar untuk beralih ke ruangan kendaraan barang berat.",
+            ispringTrigger: "Jump to Scene 5 • Suara trompet 'Ta-da!'",
+            sfxType: "truck"
+          }
+        ]
+      },
+
+      /* SCENE 5: RUANGAN 3 - MOBIL PENGANGKUT */
+      {
+        sceneNum: 5,
+        title: "Scene 5: Ruang Mobil Pengangkut (Truk Kontainer, Dump Truck, & Mobil Box)",
+        authoringComponent: "iSpring Visuals -> Media Cards (Mechanical Animations & SFX)",
+        backgroundDesc: "Ruang logistik pelabuhan dan konstruksi kartun, tumpukan kontainer dan pasir",
+        boxes: [
+          {
+            id: "S5-HUD-CATEGORY",
+            label: "Papan Ikonik: 'Mobil Pengangkut' 📦 (Bertenaga Kuat Angkut Barang)",
+            type: "HUD",
+            color: "zoneHUD",
+            x: 10, y: 4, w: 80, h: 9, z: 40,
+            pixelSize: "1536 x 97 px",
+            description: "Header visual kartun berhias peti kayu dan roda gerigi kuat.",
+            ispringTrigger: "Header statis ramah anak",
+            sfxType: null
+          },
+          {
+            id: "S5-CARD-LALAMOVE",
+            label: "Kartu 1: Mobil Box Paket 🚐📦 (Buka Pintu Bagasi!)",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 6, y: 16, w: 27, h: 52, z: 20,
+            pixelSize: "518 x 561 px",
+            description: "Mobil box pengantar kurir paket (Lalamove). Tap &rarr; Pintu belakang terbuka menampilkan kardus belanjaan.",
+            ispringTrigger: "Media Card Tap Interaction • Suara geser pintu bagasi & kardus",
+            sfxType: null
+          },
+          {
+            id: "S5-CARD-CONTAINER",
+            label: "Kartu 2: Truk Kontainer 18 Roda 🚛 (Klakson 'HOOONK!')",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 36.5, y: 16, w: 27, h: 52, z: 20,
+            pixelSize: "518 x 561 px",
+            description: "Truk kontainer raksasa dengan banyak roda. Tap &rarr; Klakson bass besar berbunyi gahar 'HOOONK!'.",
+            ispringTrigger: "Media Card Tap Interaction • Suara klakson bass berat",
+            sfxType: "truck"
+          },
+          {
+            id: "S5-CARD-DUMP",
+            label: "Kartu 3: Dump Truck Pasir 🚚🪨 (Bak Terangkat!)",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 67, y: 16, w: 27, h: 52, z: 20,
+            pixelSize: "518 x 561 px",
+            description: "Truk jungkit pasir. Tap &rarr; Bak hidrolik terangkat miring menumpahkan kerikil batu dengan suara 'Krrrkk!'.",
+            ispringTrigger: "Media Card Tap Interaction • Suara hidrolik & tumpahan pasir",
+            sfxType: "truck"
+          },
+          {
+            id: "S5-VOX-STORY",
+            label: "Dialog Audio: 'Tenaga Ekstra Kuat untuk Barang Raksasa!'",
+            type: "VOICE",
+            color: "zoneVoice",
+            x: 6, y: 72, w: 66, h: 22, z: 35,
+            pixelSize: "1267 x 237 px",
+            description: "Balon avatar suara Bu Guru menjelaskan mengapa kasur, semen, dan lemari harus diangkut truk bertenaga ekstra.",
+            ispringTrigger: "Narasi Audio Otomatis (Anak tidak perlu membaca)",
+            sfxType: null
+          },
+          {
+            id: "S5-CTA-QUIZ",
+            label: "Tombol Hijau Berdenyut: 🎮 Ayo Main Kuis Tebak Mobil!",
+            type: "CTA",
+            color: "zoneCTA",
+            x: 74, y: 72, w: 20, h: 22, z: 45,
+            pixelSize: "384 x 237 px",
+            description: "Tombol bermain kuis gamifikasi dengan ikon bintang emas menyala (Target sentuh > 110px).",
+            ispringTrigger: "Launch iSpring QuizMaker Module (Scene 6)",
+            sfxType: "reward"
+          }
+        ]
+      },
+
+      /* SCENE 6: KUIS INTERAKTIF ANAK (DRAG-AND-DROP AUDIO-VISUAL) */
+      {
+        sceneNum: 6,
+        title: "Scene 6: Kuis Cerdas Ceria - Tebak Tugas 3 Sahabat Mobil (Audio Matching)",
+        authoringComponent: "iSpring QuizMaker -> Drag-and-Drop Matching (Non-Reading)",
+        backgroundDesc: "Panggung kuis kartun ceria bertabur balon warna-warni dan taburan bintang emas",
+        boxes: [
+          {
+            id: "S6-HUD-PROMPT",
+            label: "Suara Soal Otomatis: 'Pasangkan Mobil dengan Tugasnya!' 🎯",
+            type: "HUD",
+            color: "zoneHUD",
+            x: 10, y: 4, w: 80, h: 12, z: 40,
+            pixelSize: "1536 x 129 px",
+            description: "Papan instruksi bergambar bintang. Suara Bu Guru otomatis membacakan instruksi mencocokkan gambar.",
+            ispringTrigger: "iSpring Audio Prompt Otomatis • Suara Bu Guru membacakan soal",
+            sfxType: null
+          },
+          {
+            id: "S6-DROP-1",
+            label: "Keranjang Sasaran 1: Halte Orang 🚏👥 (Tugas Penumpang)",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 8, y: 19, w: 26, h: 32, z: 20,
+            pixelSize: "499 x 345 px",
+            description: "Kotak drop target berbingkai putus-putus dengan gambar kartun halte dan orang tersenyum.",
+            ispringTrigger: "iSpring Drop Target 1 (Snap to Center saat mobil bis dilepas)",
+            sfxType: null
+          },
+          {
+            id: "S6-DROP-2",
+            label: "Keranjang Sasaran 2: Api Padam 🔥🚒 (Tugas Bahaya)",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 37, y: 19, w: 26, h: 32, z: 20,
+            pixelSize: "499 x 345 px",
+            description: "Kotak drop target berbingkai putus-putus dengan gambar kartun kobaran api dan air semprotan.",
+            ispringTrigger: "iSpring Drop Target 2 (Snap to Center saat mobil pemadam dilepas)",
+            sfxType: null
+          },
+          {
+            id: "S6-DROP-3",
+            label: "Keranjang Sasaran 3: Pasir & Batu 🏗️🪨 (Tugas Angkut)",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 66, y: 19, w: 26, h: 32, z: 20,
+            pixelSize: "499 x 345 px",
+            description: "Kotak drop target berbingkai putus-putus dengan gambar kartun bangunan dan gundukan pasir.",
+            ispringTrigger: "iSpring Drop Target 3 (Snap to Center saat dump truck dilepas)",
+            sfxType: null
+          },
+          {
+            id: "S6-DRAG-BUS",
+            label: "Mobil 1: Bis Kuning 🚌 (Draggable Item)",
+            type: "CTA",
+            color: "zoneCTA",
+            x: 10, y: 55, w: 24, h: 22, z: 30,
+            pixelSize: "460 x 237 px",
+            description: "Kartu gambar bis kuning besar yang dapat digeser jari anak ke Keranjang Sasaran 1.",
+            ispringTrigger: "Draggable Element • Sentuh & geser jari di layar tablet",
+            sfxType: "horn"
+          },
+          {
+            id: "S6-DRAG-FIRE",
+            label: "Mobil 2: Pemadam Merah 🚒 (Draggable Item)",
+            type: "CTA",
+            color: "zoneCTA",
+            x: 38, y: 55, w: 24, h: 22, z: 30,
+            pixelSize: "460 x 237 px",
+            description: "Kartu gambar mobil pemadam kebakaran yang dapat digeser jari anak ke Keranjang Sasaran 2.",
+            ispringTrigger: "Draggable Element • Sentuh & geser jari di layar tablet",
+            sfxType: "fire"
+          },
+          {
+            id: "S6-DRAG-TRUCK",
+            label: "Mobil 3: Truk Pasir 🚚 (Draggable Item)",
+            type: "CTA",
+            color: "zoneCTA",
+            x: 66, y: 55, w: 24, h: 22, z: 30,
+            pixelSize: "460 x 237 px",
+            description: "Kartu gambar dump truck yang dapat digeser jari anak ke Keranjang Sasaran 3.",
+            ispringTrigger: "Draggable Element • Sentuh & geser jari di layar tablet",
+            sfxType: "truck"
+          },
+          {
+            id: "S6-CTA-SUBMIT",
+            label: "Tombol Sentuh: Periksa Jawaban ✓ (Hadiah Bintang ⭐)",
+            type: "CTA",
+            color: "zoneCTA",
+            x: 35, y: 81, w: 30, h: 14, z: 45,
+            pixelSize: "576 x 151 px",
+            description: "Tombol hijau besar ramah anak. Tap &rarr; Memeriksa kecocokan, bunyi tepuk tangan dan bintang emas!",
+            ispringTrigger: "Submit Quiz &rarr; Efek Tepuk Tangan 'Horeee Pintar!' & Animasi Bintang",
+            sfxType: "reward"
+          }
+        ]
+      },
+
+      /* SCENE 7: RANGKUMAN, REFLEKSI, & DADAHH! */
+      {
+        sceneNum: 7,
+        title: "Scene 7: Rangkuman Petualangan, Pesan Ayah Bunda, & Dadahh!",
+        authoringComponent: "PowerPoint Slide + Resources (Download Lembar Mewarnai PDF)",
+        backgroundDesc: "Taman depan museum transportasi di sore hari yang hangat, langit senja oranye lembut",
+        boxes: [
+          {
+            id: "S7-HUD-TITLE",
+            label: "3 Lencana Sahabat Mobil (Penumpang, Penyelamat, Pengangkut)",
+            type: "OBJECT",
+            color: "zoneObject",
+            x: 10, y: 5, w: 80, h: 36, z: 20,
+            pixelSize: "1536 x 388 px",
+            description: "3 Medali kartun emas merangkum ketiga sahabat mobil: 🚌 Bis, 🚒 Pemadam, 🚚 Truk Barang.",
+            ispringTrigger: "Animasi Bounce In bergantian (0.5s)",
+            sfxType: "reward"
+          },
+          {
+            id: "S7-CHAR-WAVING",
+            label: "Rio & Ceri Melambaikan Tangan ke Kamera: 'Dadahh!' 👋",
+            type: "CHARACTER",
+            color: "zoneChar",
+            x: 10, y: 46, w: 34, h: 48, z: 30,
+            pixelSize: "652 x 518 px",
+            description: "Rio dan Ceri berdiri berdampingan tersenyum ceria dan melambaikan tangan perpisahan kepada anak-anak.",
+            ispringTrigger: "Animasi Lambaian Tangan Kartun Berkelanjutan",
+            sfxType: null
+          },
+          {
+            id: "S7-VOX-CLOSING",
+            label: "Suara Rio & Ceri: 'Ceritakan ke Ayah dan Bunda ya!'",
+            type: "VOICE",
+            color: "zoneVoice",
+            x: 48, y: 46, w: 46, h: 24, z: 35,
+            pixelSize: "883 x 259 px",
+            description: "Balon avatar suara penutup: mengajak anak di rumah memilih mobil favorit dan menceritakannya ke orang tua.",
+            ispringTrigger: "Audio Penutup Hangat & BGM Ukulele Ceria Fade-Out",
+            sfxType: null
+          },
+          {
+            id: "S7-CTA-COLORING",
+            label: "Tombol Unduh: Lembar Mewarnai Mobil (.PDF) 🎨",
+            type: "CTA",
+            color: "zoneCTA",
+            x: 48, y: 74, w: 46, h: 18, z: 45,
+            pixelSize: "883 x 194 px",
+            description: "Tombol hadiah untuk orang tua / guru mengunduh lembar mewarnai untuk mengasah motorik halus anak di rumah.",
+            ispringTrigger: "Trigger iSpring Presentation Resources (File attachment download)",
+            sfxType: "reward"
+          }
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // STATE & LOGIKA APLIKASI BLOCKING LAYOUT
+    // =========================================================================
+    let activeSceneIndex = 0;
+    let selectedBoxId = null;
+    let overlays = {
+      grid: false,
+      safe: false,
+      thirds: false
+    };
+
+    function renderSceneNav() {
+      const container = document.getElementById('sceneNavButtons');
+      container.innerHTML = blockingData.map((scene, idx) => `
+        <button onclick="selectScene(${idx})" class="px-2.5 py-1 rounded text-xs font-mono font-bold transition flex items-center gap-1 border ${
+          idx === activeSceneIndex
+            ? 'bg-cBrand text-white border-cBrand shadow-sm'
+            : 'bg-white/10 text-white/80 border-white/10 hover:bg-white/20 hover:text-white'
+        }">
+          <span>#${scene.sceneNum}</span>
+          <span class="hidden md:inline font-sans font-normal text-[10px] truncate max-w-[90px]">${scene.title.split(':')[0]}</span>
+        </button>
+      `).join('');
+    }
+
+    function selectScene(index) {
+      activeSceneIndex = index;
+      selectedBoxId = null;
+      renderSceneNav();
+      renderCanvas();
+      renderCoordTable();
+      resetInspector();
+    }
+
+    function toggleOverlay(type) {
+      overlays[type] = !overlays[type];
+      const el = document.getElementById(type === 'grid' ? 'overlayGrid' : (type === 'safe' ? 'overlaySafe' : 'overlayThirds'));
+      const btn = document.getElementById(type === 'grid' ? 'btnToggleGrid' : (type === 'safe' ? 'btnToggleSafe' : 'btnToggleThirds'));
+      
+      if (overlays[type]) {
+        el.classList.remove('hidden');
+        btn.classList.add('bg-white/30', 'border-white');
+      } else {
+        el.classList.add('hidden');
+        btn.classList.remove('bg-white/30', 'border-white');
+      }
+    }
+
+    function getZoneBgColor(type) {
+      switch (type) {
+        case 'CHARACTER': return 'bg-blue-500/20 border-blue-600 text-blue-900';
+        case 'OBJECT': return 'bg-amber-500/25 border-amber-600 text-amber-950';
+        case 'VOICE': return 'bg-emerald-500/25 border-emerald-600 text-emerald-950';
+        case 'CTA': return 'bg-pink-500/30 border-pink-600 text-pink-950 touch-target-pulse';
+        case 'HUD': return 'bg-indigo-500/20 border-indigo-600 text-indigo-950';
+        default: return 'bg-slate-500/20 border-slate-600 text-slate-900';
+      }
+    }
+
+    function renderCanvas() {
+      const scene = blockingData[activeSceneIndex];
+      document.getElementById('canvasSceneBadge').innerText = `SCENE #${scene.sceneNum}`;
+      document.getElementById('canvasSceneTitle').innerText = scene.title;
+      document.getElementById('canvasComponentTag').innerText = scene.authoringComponent;
+      document.getElementById('backgroundArtGuide').innerText = scene.backgroundDesc.toUpperCase();
+
+      const boxContainer = document.getElementById('dynamicBoundingBoxes');
+      boxContainer.innerHTML = scene.boxes.map(box => {
+        const isSelected = box.id === selectedBoxId;
+        const colorClass = getZoneBgColor(box.type);
+        return `
+          <div id="bbox-${box.id}" onclick="selectBox('${box.id}')" 
+               style="left: ${box.x}%; top: ${box.y}%; width: ${box.w}%; height: ${box.h}%; z-index: ${box.z};"
+               class="absolute rounded-xl border-2 transition-all duration-200 cursor-pointer flex flex-col justify-between p-1.5 sm:p-2 backdrop-blur-[1px] ${colorClass} ${
+                 isSelected ? 'ring-4 ring-offset-2 ring-cBrand scale-[1.01] shadow-lg border-cBrand font-bold' : 'hover:scale-[1.005] hover:shadow-md'
+               }">
+            <div class="flex items-center justify-between text-[8px] sm:text-[10px] font-mono leading-none">
+              <span class="px-1.5 py-0.5 rounded bg-white/80 font-bold shadow-xs truncate max-w-[80%]">${box.id}</span>
+              <span class="hidden sm:inline opacity-70">${box.w}% &times; ${box.h}%</span>
+            </div>
+            <div class="text-[9px] sm:text-xs font-extrabold truncate text-center my-auto px-1">
+              ${box.label}
+            </div>
+            <div class="flex items-center justify-between text-[7px] sm:text-[9px] font-mono opacity-80 leading-none">
+              <span class="uppercase font-bold">${box.type}</span>
+              <span class="hidden sm:inline">Z:${box.z}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectBox(boxId) {
+      selectedBoxId = boxId;
+      const scene = blockingData[activeSceneIndex];
+      const box = scene.boxes.find(b => b.id === boxId);
+      if (!box) return;
+
+      document.getElementById('selectedZoneBadge').innerText = box.id;
+      renderCanvas();
+      
+      // Jika box memiliki SFX terkait, mainkan preview audionya
+      if (box.sfxType) {
+        playSFX(box.sfxType);
+      }
+
+      // Update Inspector Panel
+      const inspector = document.getElementById('inspectorContent');
+      document.getElementById('inspectTypeBadge').innerText = box.type;
+      
+      inspector.innerHTML = `
+        <div class="p-3.5 rounded-xl border-2 border-cBrand bg-sky-50/50 space-y-2">
+          <div class="flex items-center justify-between pb-1.5 border-b border-sky-200">
+            <strong class="text-xs font-extrabold text-cDark font-mono">${box.id}</strong>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-cBrand text-white">${box.type}</span>
+          </div>
+          <div class="text-xs font-bold text-slate-800">${box.label}</div>
+          <p class="text-[11px] text-slate-600 leading-snug">${box.description}</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-[11px] font-mono">
+          <div class="p-2.5 rounded-lg bg-cBase border border-cLine">
+            <span class="text-cMuted block text-[9px] uppercase">Posisi Relatif</span>
+            <strong>X: ${box.x}% • Y: ${box.y}%</strong>
+          </div>
+          <div class="p-2.5 rounded-lg bg-cBase border border-cLine">
+            <span class="text-cMuted block text-[9px] uppercase">Dimensi Kanvas</span>
+            <strong>W: ${box.w}% • H: ${box.h}%</strong>
+          </div>
+          <div class="p-2.5 rounded-lg bg-cBase border border-cLine">
+            <span class="text-cMuted block text-[9px] uppercase">Resolusi Piksel (1080p)</span>
+            <strong class="text-sky-700">${box.pixelSize}</strong>
+          </div>
+          <div class="p-2.5 rounded-lg bg-cBase border border-cLine">
+            <span class="text-cMuted block text-[9px] uppercase">Lapisan Kedalaman</span>
+            <strong>Z-Index: ${box.z}</strong>
+          </div>
+        </div>
+
+        <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-[11px] space-y-1">
+          <strong class="text-amber-900 block font-bold">iSpring Suite 11 Trigger &amp; Behaviour:</strong>
+          <p class="text-slate-700 font-sans leading-snug">${box.ispringTrigger}</p>
+        </div>
+
+        ${box.sfxType ? `
+          <div class="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] flex items-center justify-between">
+            <span class="text-emerald-900 font-bold">🔊 Respon Audio Sentuh:</span>
+            <button onclick="playSFX('${box.sfxType}')" class="px-2 py-0.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px]">
+              Putar Suara
+            </button>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function resetInspector() {
+      document.getElementById('selectedZoneBadge').innerText = "Semua Zona Aktif";
+      document.getElementById('inspectTypeBadge').innerText = "PROPERTIES";
+      document.getElementById('inspectorContent').innerHTML = `
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 space-y-2 text-center py-8">
+          <div class="text-3xl mb-1">👆</div>
+          <strong class="text-slate-800 block text-sm">Pilih Bounding Box pada Kanvas</strong>
+          <p class="text-[11px] text-slate-500 leading-snug">Klik elemen visual di atas untuk melihat koordinat X/Y, ukuran piksel 1080p, layer z-index, respon audio, serta komponen iSpring Suite 11 yang digunakan.</p>
+        </div>
+      `;
+    }
+
+    function renderCoordTable() {
+      const scene = blockingData[activeSceneIndex];
+      const tbody = document.getElementById('coordTableBody');
+      tbody.innerHTML = scene.boxes.map(box => `
+        <tr class="hover:bg-sky-50/60 transition cursor-pointer ${box.id === selectedBoxId ? 'bg-sky-100 font-bold' : ''}" onclick="selectBox('${box.id}')">
+          <td class="p-2 text-slate-900">
+            <span class="text-[10px] text-cBrand font-bold block">${box.id}</span>
+            <span class="font-sans font-normal text-[10px] text-slate-600 truncate max-w-[140px] block">${box.label}</span>
+          </td>
+          <td class="p-2">
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold ${getZoneBadgeColor(box.type)}">${box.type}</span>
+          </td>
+          <td class="p-2 text-slate-700">${box.x}%, ${box.y}%</td>
+          <td class="p-2 text-slate-700">${box.w}% &times; ${box.h}%</td>
+          <td class="p-2 text-sky-800 font-semibold">${box.pixelSize}</td>
+          <td class="p-2 text-center text-slate-500">${box.z}</td>
+        </tr>
+      `).join('');
+    }
+
+    function getZoneBadgeColor(type) {
+      switch (type) {
+        case 'CHARACTER': return 'bg-blue-100 text-blue-800';
+        case 'OBJECT': return 'bg-amber-100 text-amber-800';
+        case 'VOICE': return 'bg-emerald-100 text-emerald-800';
+        case 'CTA': return 'bg-pink-100 text-pink-800';
+        case 'HUD': return 'bg-indigo-100 text-indigo-800';
+        default: return 'bg-slate-100 text-slate-800';
+      }
+    }
+
+    function copyCurrentSceneCoords() {
+      const scene = blockingData[activeSceneIndex];
+      const payload = `=== BLOCKING LAYOUT & SPATIAL BLUEPRINT: SCENE #${scene.sceneNum} ===
+Judul Scene: ${scene.title}
+Komponen iSpring: ${scene.authoringComponent}
+Latar Belakang: ${scene.backgroundDesc}
+Paradigma: Audio & Visual Heavy (Pre-Readers Usia 4–6 Tahun / PAUD)
+
+MATRIKS BOUNDING BOX (1920x1080 WIDESCREEN):
+${scene.boxes.map(b => `- [${b.id}] (${b.type}) ${b.label}
+  Posisi (X,Y): ${b.x}%, ${b.y}% | Dimensi (W,H): ${b.w}%, ${b.h}% | Resolusi: ${b.pixelSize} | Z-Index: ${b.z}
+  Perilaku iSpring: ${b.ispringTrigger}`).join('\n\n')}`;
+
+      const dummy = document.createElement("textarea");
+      dummy.value = payload;
+      document.body.appendChild(dummy);
+      dummy.select();
+      try {
+        document.execCommand('copy');
+        showToast(`Matriks koordinat Scene #${scene.sceneNum} berhasil disalin!`);
+      } catch (err) {
+        showToast("Gagal menyalin data.");
+      }
+      document.body.removeChild(dummy);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 2600);
+    }
+
+    window.onload = function() {
+      renderSceneNav();
+      renderCanvas();
+      renderCoordTable();
+    };
+  </script>
+</body>
+</html>

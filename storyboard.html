@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storyboard Video Interaktif - Study Tour Museum Transportasi (iSpring Suite 11)</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    /* KONFIGURASI TEMA VISUAL CERIA EDUKATIF (ANAK USIA DINI TTKA)
+       1. Base Canvas: #F8FAFC (Slate Off-White Bersih & Ramah Mata)
+       2. Teks Utama: #0F172A (Deep Slate Ink Kontras Tinggi)
+       3. Brand Navigasi: #0284C7 (Sky Blue Edukasi & Ramah Anak)
+       4. Aksen Semangat: #EA580C (Orange Ceria untuk Sorotan Penting)
+       5. Border & Kartu: #BAE6FD / #E2E8F0 (Pastel Sky Palette)
+    */
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            cBase: '#F8FAFC',
+            cDark: '#0F172A',
+            cBrand: '#0284C7',
+            cBrandLight: '#E0F2FE',
+            cBrandHover: '#0369A1',
+            cAccent: '#EA580C',
+            cAccentLight: '#FFEDD5',
+            cLine: '#E2E8F0',
+            cMuted: '#64748B',
+            templateHeader: '#70B4E8',
+            templateBorder: '#BAE6FD',
+            templateBg: '#F0F9FF'
+          },
+          boxShadow: {
+            card: '0 2px 14px rgba(15, 23, 42, 0.06)',
+            lift: '0 10px 25px -5px rgba(2, 132, 199, 0.18)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      .slide-page { break-after: page; page-break-after: always; margin-bottom: 2rem; }
+      body { background-color: #FFFFFF !important; }
+    }
+    .scrollbar-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 9999px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background-color: #F1F5F9; }
+    .sfx-active { animation: pulse 0.5s ease-in-out infinite alternate; }
+    @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
+  </style>
+</head>
+<body class="bg-cBase text-cDark antialiased font-sans min-h-screen selection:bg-cBrand selection:text-white">
+
+  <!-- TOP APP BAR / CONTROLS & METADATA -->
+  <header class="no-print sticky top-0 z-50 bg-cDark text-white border-b border-white/10 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand & Metadata Header -->
+      <div class="flex items-center space-x-3">
+        <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-sky-500 to-amber-500 flex items-center justify-center text-white font-bold text-lg shadow-md border border-white/20">
+          🚌
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-cBrand text-white">Media Pembelajaran Interaktif PAUD / TTKA</span>
+            <span class="text-xs text-white/60">iSpring Suite 11 Video Interactive Course</span>
+          </div>
+          <h1 class="text-sm sm:text-base font-extrabold text-white leading-tight mt-0.5">
+            Study Tour Museum Transportasi: Mengenal 3 Sahabat Mobil
+          </h1>
+        </div>
+      </div>
+
+      <!-- Action Buttons (Slide-by-Slide, Show All, Print PDF) -->
+      <div class="flex items-center flex-wrap gap-2 text-xs">
+        <button id="btnViewSingle" onclick="setViewMode('single')" class="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 font-medium text-white transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-3.5 h-3.5 text-cBrandLight" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+          Slide-by-Slide
+        </button>
+        <button id="btnViewAll" onclick="setViewMode('all')" class="px-3 py-1.5 rounded-lg border border-transparent bg-cBrand text-white hover:bg-cBrandHover font-semibold transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+          <span id="btnViewAllText">Tampilkan Semua (7 Scene)</span>
+        </button>
+        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 font-medium text-white transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Cetak PDF
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Slide Quick Picker Strip -->
+    <div class="bg-slate-900 border-t border-white/10 px-4 sm:px-6 py-2">
+      <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto scrollbar-thin">
+        <span class="text-[10px] font-bold text-white/50 uppercase tracking-wider whitespace-nowrap mr-1">Scene Navigasi:</span>
+        <div class="flex items-center gap-1.5" id="slideTabButtons">
+          <!-- Dynamically populated scene buttons -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- INSTRUCTIONAL DESIGN SPECIFICATION CARD (AUDIO & VISUAL HEAVY PARADIGM) -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 mt-6 no-print">
+    <div class="bg-white rounded-2xl border-2 border-amber-300 shadow-card p-5">
+      <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-cLine">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] font-extrabold mb-1.5 border border-amber-300">
+            <span class="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+            Paradigma Audio-Visual Heavy · Bebas Beban Membaca (Anak Usia 4–6 Tahun / PAUD / TTKA)
+          </div>
+          <h2 class="text-xl font-extrabold text-cDark">Study Tour Museum Transportasi: 3 Sahabat Mobil</h2>
+          <p class="text-xs text-cMuted mt-1 leading-relaxed">
+            <strong>Target Pembelajar:</strong> Anak Usia Dini (Belum Mahir Membaca) • <strong>Prinsip Utama:</strong> 100% Pemandu Suara (Voice-Guided), Piktogram Visual Kartun Besar, Asosiasi Bunyi Kendaraan (SFX), dan Interaksi Sentuh Sederhana.
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs w-full lg:w-auto">
+          <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-center">
+            <span class="text-amber-800 block text-[10px] uppercase font-bold">Beban Teks Layar</span>
+            <strong class="text-red-600 font-bold">Minim (Zero Reading)</strong>
+          </div>
+          <div class="p-2.5 rounded-xl bg-cBase border border-cLine text-center">
+            <span class="text-cMuted block text-[10px] uppercase font-bold">Pemandu Audio</span>
+            <strong class="text-cBrand font-semibold">100% Narasi Suara</strong>
+          </div>
+          <div class="p-2.5 rounded-xl bg-cBase border border-cLine text-center">
+            <span class="text-cMuted block text-[10px] uppercase font-bold">Target Sentuh</span>
+            <strong class="text-emerald-700 font-mono font-bold">&ge; 80 &times; 80 px</strong>
+          </div>
+          <div class="p-2.5 rounded-xl bg-cBase border border-cLine text-center">
+            <span class="text-cMuted block text-[10px] uppercase font-bold">Authoring Suite</span>
+            <strong class="text-sky-800 font-bold font-mono">iSpring Suite 11</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Block Guide & Sound Effect Simulator -->
+      <div class="mt-4 pt-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-3 flex-wrap">
+          <span class="text-[11px] font-bold text-cMuted uppercase">Simulator Efek Suara Pembelajaran (Uji Suara):</span>
+          <div class="flex items-center gap-1.5 font-mono text-[10px] flex-wrap">
+            <button onclick="playSFX('horn')" class="px-2.5 py-1 rounded-lg bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold border border-sky-300 transition flex items-center gap-1 shadow-sm">
+              📢 Klakson Bis
+            </button>
+            <button onclick="playSFX('fire')" class="px-2.5 py-1 rounded-lg bg-red-100 hover:bg-red-200 text-red-800 font-bold border border-red-300 transition flex items-center gap-1 shadow-sm">
+              🚒 Sirine Pemadam
+            </button>
+            <button onclick="playSFX('ambulance')" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold border border-amber-300 transition flex items-center gap-1 shadow-sm">
+              🚑 Sirine Ambulans
+            </button>
+            <button onclick="playSFX('truck')" class="px-2.5 py-1 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-900 font-bold border border-orange-300 transition flex items-center gap-1 shadow-sm">
+              🚚 Mesin &amp; Bak Truk
+            </button>
+            <button onclick="playSFX('reward')" class="px-2.5 py-1 rounded-lg bg-yellow-100 hover:bg-yellow-200 text-yellow-900 font-bold border border-yellow-300 transition flex items-center gap-1 shadow-sm">
+              ⭐ Bintang Hadiah
+            </button>
+            <button onclick="playSFX('cheer')" class="px-2.5 py-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold border border-emerald-300 transition flex items-center gap-1 shadow-sm">
+              👏 Tepuk Tangan
+            </button>
+          </div>
+        </div>
+        
+        <div class="text-[11px] text-cMuted font-mono">
+          <strong>Pendekatan:</strong> Audio-First Narration + Visual Scaffolding + Tactile Sound Feedback
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN STORYBOARD CANVAS -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+    <div id="storyboardContainer" class="space-y-10">
+      <!-- Generated via JavaScript Data -->
+    </div>
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-cDark text-white text-xs px-4 py-2.5 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition duration-300 pointer-events-none z-50 flex items-center gap-2 border border-white/20">
+    <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+    <span id="toastMsg">Naskah berhasil disalin ke clipboard!</span>
+  </div>
+
+  <script>
+    // =========================================================================
+    // DATA SPESIFIKASI STORYBOARD AUDIO-VISUAL HEAVY (ANAK USIA DINI TTKA)
+    // =========================================================================
+    const moduleData = {
+      program: "Pendidikan Anak Usia Dini (PAUD / TTKA)",
+      moduleTitle: "Study Tour Museum Transportasi: Mengenal 3 Sahabat Mobil",
+      targetAudience: "Anak Usia 4–6 Tahun (Pre-Readers / Belum Mahir Membaca)",
+      pedagogicalModel: "Audio-Visual Heavy & Sensory Feedback (Zero Reading Required)",
+      duration: "~5–7 Menit Interaktif",
+      idAuthor: "iSpring 11 Learning Architect",
+      dateCreated: "3 Oktober 2026",
+      sourceDoc: "Story Board Cerita.pdf (Study Tour Museum Transportasi Mobil)"
+    };
+
+    const slidesData = [
+      /* =====================================================================
+         SCENE 1: BERANGKAT DARI SEKOLAH NAIK BIS
+         ===================================================================== */
+      {
+        slideNum: 1,
+        program: moduleData.program,
+        slideTitle: "Scene 1: Berangkat Naik Bis Sekolah Kuning",
+        masterSlide: "SCENE_INTRO_BUS (16:9)",
+        ispringBlock: "PowerPoint Slide + iSpring Narration Sync (Auto-Play Audio)",
+        taxonomyLevel: "Audio-Visual Hook & Attention (Usia 4–6 Tahun)",
+        gagneEvent: "1. Gain Attention & Stimulate Readiness",
+        
+        userSees: `
+          <div class="space-y-3">
+            <p><strong>Komposisi Visual (Fokus Gambar Kartun 2D Warna Cerah &amp; Minim Elemen Teks):</strong></p>
+            <div class="p-4 rounded-xl bg-templateBg border border-templateBorder space-y-2">
+              <div class="flex items-center justify-between pb-1 border-b border-sky-200">
+                <span class="text-xs font-bold text-cBrand font-mono">Fokus Gambar: Halaman TK Cerah &amp; Bis Sekolah Kuning Besar</span>
+                <span class="px-2 py-0.5 rounded bg-sky-200 text-sky-800 text-[10px] font-mono">BGM: Marimba &amp; Ukulele Ceria</span>
+              </div>
+              <p class="text-xs text-cDark leading-relaxed">
+                • <strong>Latar Penuh:</strong> Halaman sekolah TK dengan matahari kartun tersenyum hangat dan awan bergerak perlahan.<br>
+                • <strong>Karakter Bergerak:</strong> Di sisi kiri, <strong>Ceri</strong> (bando merah) melompat riang melambaikan tangan, dan <strong>Rio</strong> (topi biru) tersenyum menunjuk ke arah bis.<br>
+                • <strong>Objek Utama:</strong> Sebuah <strong>Bis Sekolah Kuning</strong> berukuran raksasa di tengah layar dengan pintu terbuka lebar dan siluet anak-anak tersenyum di kaca jendela.<br>
+                • <strong>Ibu Guru:</strong> Berdiri di samping tangga bis dengan pose tangan menyambut hangat.<br>
+                • <strong>Tombol Sentuh Ramah Anak:</strong> Di pojok kanan bawah, muncul tombol kartun berbentuk <strong>Setir Mobil Hijau Berdenyut (Pulse Ring)</strong> dengan ikon klakson 📢 (ukuran &gt; 110 &times; 110 px).
+              </p>
+            </div>
+          </div>
+        `,
+        
+        userHears: `
+          <div class="space-y-2">
+            <p class="font-mono text-cMuted text-[11px]">[00:00 - 00:03] SFX: Musik marimba ceria anak bertempo riang &bull; Suara tawa anak-anak di taman sekolah.</p>
+            
+            <div class="bg-white p-3 rounded-xl border border-cLine space-y-2 text-xs leading-relaxed">
+              <p><strong class="text-pink-600">Ceri (Suara Anak Ceria):</strong> <em>"Halo teman-teman! Aku Ceri!"</em></p>
+              <p><strong class="text-sky-600">Rio (Suara Anak Semangat):</strong> <em>"Dan aku Rio! Pagi ini kita mau jalan-jalan seru ke Museum Transportasi! Ayo ikut kami!"</em></p>
+              <p class="font-mono text-[10px] text-cMuted">[00:09] SFX: Bunyi klakson bis ceria berbunyi dua kali: 'Tut-tut! Telolet!' &bull; Suara langkah kaki kecil.</p>
+              <p><strong class="text-sky-600">Rio:</strong> <em>"Wah, Ibu Guru! Kita pergi naik mobil besar ini ya?"</em></p>
+              <p><strong class="text-emerald-700">Ibu Guru (Suara Hangat &amp; Lembut):</strong> <em>"Iya, Rio! Ini mobil bis sekolah kita."</em></p>
+              <p><strong class="text-pink-600">Ceri:</strong> <em>"Hebat sekali! Bis ini panjang dan muat banyak sekali teman-teman!"</em></p>
+              <p class="font-mono text-[10px] text-cMuted">[00:22] SFX: Suara mesin bis mulai menyala ramah: 'Brummm... brummm...'</p>
+              <p><strong class="text-purple-700">Ibu Guru (Pemandu Suara):</strong> <em>"Yuk anak-anak di rumah, sentuh tombol setir bis di layar untuk membunyikan klakson dan berangkat!"</em></p>
+            </div>
+            <p class="text-[11px] text-emerald-700 font-mono font-bold">100% Pemandu Suara Otomatis • Anak tidak perlu membaca naskah apa pun.</p>
+          </div>
+        `,
+        
+        onScreenText: `
+          <div class="space-y-1.5 text-xs font-sans">
+            <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-300 text-amber-950 flex items-center gap-2">
+              <span class="text-2xl">🚌</span>
+              <div>
+                <strong class="text-xs block text-amber-900 font-extrabold uppercase">Teks di Layar Sangat Minim (Bebas Beban Baca):</strong>
+                <span class="text-[11px] text-slate-700">Hanya menampilkan spanduk kartun besar: <strong>"Ayo Naik Bis!"</strong> yang dibacakan langsung oleh suara Bu Guru.</span>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        graphicAssets: `
+          <ul class="list-disc pl-4 space-y-1 text-cDark font-mono text-xs">
+            <li><code>bg_tk_morning_cartoon.png</code> (Latar halaman sekolah vektor warna cerah 1920x1080)</li>
+            <li><code>char_ceri_jumping.png</code> &amp; <code>char_rio_point.png</code> (Karakter transparan ekspresi gembira)</li>
+            <li><code>veh_yellow_schoolbus.png</code> (Bis kartun kuning besar)</li>
+            <li><code>btn_green_steering_wheel.png</code> (Tombol sentuh setir kartun 120x120 px)</li>
+            <li><code>sfx_horn_tut_tut.mp3</code> &amp; <code>vo_scene1_intro.mp3</code></li>
+          </ul>
+        `,
+        
+        additionalNotes: `
+          <div class="space-y-2 text-xs text-cDark">
+            <p><strong>Pengaturan iSpring Suite 11 (Audio-First Early Childhood):</strong></p>
+            <ul class="list-disc pl-4 space-y-1 text-[11px] text-cMuted">
+              <li><strong>Auto-Play Narration:</strong> Audio langsung berputar otomatis saat slide terbuka tanpa perlu mencari tombol play.</li>
+              <li><strong>Navigasi Terkunci (Locked):</strong> Menghilangkan tombol next kecil bawaan player; navigasi sepenuhnya menggunakan sentuhan pada tombol setir bis di dalam kanvas visual.</li>
+            </ul>
+          </div>
+        `,
+        
+        userInteraction: `
+          <div class="text-xs text-cDark space-y-1.5">
+            <p>1. Anak menonton animasi bis dan mendengarkan suara ajakan Rio, Ceri, dan Bu Guru.</p>
+            <p>2. Bu Guru memberi aba-aba suara: <em>"Sentuh tombol setir bis di layar ya!"</em>.</p>
+            <p>3. Anak menekan tombol setir hijau &rarr; berbunyi klakson riang *"Tut-tut!"*, bis bergerak melaju ke kanan, dan layar berpindah ke Scene 2.</p>
+          </div>
+        `
+      },
+
+      /* =====================================================================
+         SCENE 2: TIBA DI MUSEUM TRANSPORTASI (LOBI 3 PINTU GERBANG)
+         ===================================================================== */
+      {
+        slideNum: 2,
+        program: moduleData.program,
+        slideTitle: "Scene 2: Tiba di Museum &amp; 3 Pintu Gerbang Sahabat Mobil",
+        masterSlide: "SCENE_MUSEUM_LOBBY (16:9)",
+        ispringBlock: "iSpring Visuals -> Hotspot (Audio-Guided Exploration)",
+        taxonomyLevel: "Audio-Visual Recognition (Mengenal 3 Kategori)",
+        gagneEvent: "2. Inform Objectives & 4. Present Stimulus Visually",
+        
+        userSees: `
+          <div class="space-y-3">
+            <p><strong>Komposisi Visual (3 Pintu Gerbang Berwarna Mencolok &amp; Ikon Kartun Besar):</strong></p>
+            <div class="p-4 rounded-xl bg-white border-2 border-cBrand shadow-card space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-cLine">
+                <span class="text-xs font-bold text-cBrand font-mono">Fokus Gambar: Lobi Museum Mewah &amp; 3 Gerbang Bergambar Ikonik</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-mono">Panduan Suara Aktif</span>
+              </div>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                <!-- Pintu 1 -->
+                <div class="p-4 rounded-2xl bg-sky-100 border-4 border-sky-400 text-sky-950 flex flex-col items-center justify-center space-y-1.5 cursor-pointer transform hover:scale-105 transition shadow-md">
+                  <span class="text-4xl animate-bounce">🚕</span>
+                  <span class="text-sm font-extrabold text-sky-900 block">PINTU 1</span>
+                  <span class="px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold">Warna Biru</span>
+                  <span class="text-[11px] text-sky-800 font-semibold mt-1">Mobil Penumpang (Orang)</span>
+                </div>
+
+                <!-- Pintu 2 -->
+                <div class="p-4 rounded-2xl bg-red-100 border-4 border-red-400 text-red-950 flex flex-col items-center justify-center space-y-1.5 opacity-90 cursor-pointer shadow-sm">
+                  <span class="text-4xl">🚒🚨</span>
+                  <span class="text-sm font-extrabold text-red-900 block">PINTU 2</span>
+                  <span class="px-2.5 py-0.5 rounded-full bg-red-500 text-white font-mono text-[10px] font-bold">Warna Merah</span>
+                  <span class="text-[11px] text-red-800 font-semibold mt-1">Mobil Penyelamat (Bahaya)</span>
+                </div>
+
+                <!-- Pintu 3 -->
+                <div class="p-4 rounded-2xl bg-amber-100 border-4 border-amber-400 text-amber-950 flex flex-col items-center justify-center space-y-1.5 opacity-90 cursor-pointer shadow-sm">
+                  <span class="text-4xl">🚚📦</span>
+                  <span class="text-sm font-extrabold text-amber-900 block">PINTU 3</span>
+                  <span class="px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold">Warna Oranye</span>
+                  <span class="text-[11px] text-amber-800 font-semibold mt-1">Mobil Pengangkut (Barang)</span>
+                </div>
+              </div>
+
+              <p class="text-xs text-cMuted text-center pt-1">Di depan pintu, karakter Bu Guru menunjuk ke arah Pintu Biru dengan lingkaran animasi berkilau.</p>
+            </div>
+          </div>
+        `,
+        
+        userHears: `
+          <div class="space-y-2">
+            <p class="font-mono text-cMuted text-[11px]">[00:00 - 00:03] SFX: Langkah kaki gembira di lantai marmer &bull; Gema seru lobi museum.</p>
+            
+            <div class="bg-white p-3 rounded-xl border border-cLine space-y-2 text-xs leading-relaxed">
+              <p><strong class="text-purple-700">Narasi (Suara Ramah):</strong> <em>"Horeee! Rio, Ceri, dan teman-teman sudah sampai di museum transportasi!"</em></p>
+              <p><strong class="text-pink-600">Ceri:</strong> <em>"Wahhh, lihat! Pintunya besar-besar sekali dan ada gambarnya!"</em></p>
+              <p><strong class="text-emerald-700">Ibu Guru:</strong> <em>"Betul sekali anak-anak! Di museum ini ada tiga pintu sahabat mobil kita: Pintu Biru untuk mobil yang membawa orang, Pintu Merah bersirine untuk mobil penolong bahaya, dan Pintu Oranye untuk mobil pembawa barang-barang berat!"</em></p>
+              <p><strong class="text-sky-600">Rio:</strong> <em>"Ibu Guru, kita masuk ke pintu mana dulu ya?"</em></p>
+              <p><strong class="text-emerald-700">Ibu Guru (Instruksi Audio):</strong> <em>"Ayo anak-anak di rumah, sentuh Pintu 1 yang berwarna BIRU bergambar taksi untuk masuk!"</em></p>
+            </div>
+            <p class="text-[11px] text-emerald-700 font-mono font-bold">Audio panduan warna dan ikon memandu anak tanpa perlu bisa membaca kata.</p>
+          </div>
+        `,
+        
+        onScreenText: `
+          <div class="space-y-1.5 text-xs font-sans">
+            <div class="p-2.5 rounded-lg bg-sky-50 border border-sky-300 text-sky-950 flex items-center gap-2">
+              <span class="text-xl">🚖</span>
+              <div>
+                <strong class="text-xs block text-sky-900 font-extrabold">Simbol Visual di Pintu:</strong>
+                <span class="text-[11px] text-slate-700">Pintu 1: Ikon Taksi &amp; Orang • Pintu 2: Ikon Api &amp; Sirine • Pintu 3: Ikon Kotak Barang.</span>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        graphicAssets: `
+          <ul class="list-disc pl-4 space-y-1 text-cDark font-mono text-xs">
+            <li><code>bg_museum_lobby_cartoon.png</code> (Lobi kubah kaca ceria 1920x1080)</li>
+            <li><code>door_blue_passenger.png</code>, <code>door_red_rescue.png</code>, <code>door_orange_cargo.png</code> (3 Pintu gerbang visual besar)</li>
+            <li><code>glow_pulse_marker.png</code> (Penanda hotspot berkedip lembut di Pintu 1)</li>
+            <li><code>sfx_door_magic_open.mp3</code> &amp; <code>vo_scene2_lobby.mp3</code></li>
+          </ul>
+        `,
+        
+        additionalNotes: `
+          <div class="space-y-2 text-xs text-cDark">
+            <p><strong>Pengaturan iSpring Visuals (Hotspot Terarah Suara):</strong></p>
+            <ul class="list-disc pl-4 space-y-1 text-[11px] text-cMuted">
+              <li>Pintu 1 (Biru) dijadikan area sentuh aktif seluas $480 \times 496\text{ px}$.</li>
+              <li>Jika anak menyentuh pintu 2 atau 3 lebih dulu, terdengar suara ramah Bu Guru: <em>"Kita selesaikan pintu biru dulu ya, sayang!"</em>.</li>
+            </ul>
+          </div>
+        `,
+        
+        userInteraction: `
+          <div class="text-xs text-cDark space-y-1.5">
+            <p>1. Anak mendengar suara Bu Guru mengarahkan untuk menyentuh pintu warna biru.</p>
+            <p>2. Anak menyentuh <strong>Pintu 1 Warna Biru 🚕</strong>.</p>
+            <p>3. Terdengar efek suara pintu geser terbuka *"Cringgg!"* dengan animasi pintu terbuka menyambut anak masuk ke Scene 3.</p>
+          </div>
+        `
+      },
+
+      /* =====================================================================
+         SCENE 3: RUANGAN 1 - MOBIL PENUMPANG (AUDIO-FIRST EXPLORATION)
+         ===================================================================== */
+      {
+        slideNum: 3,
+        program: moduleData.program,
+        slideTitle: "Scene 3: Ruang Mobil Penumpang (Transjakarta, Angkot, &amp; Taksi)",
+        masterSlide: "SCENE_ROOM_PASSENGER (16:9)",
+        ispringBlock: "iSpring Visuals -> Tabs (Visual Cards with Audio Honk)",
+        taxonomyLevel: "Audio-Visual Association (Pengertian, Fungsi, &amp; Contoh)",
+        gagneEvent: "4. Present Content through Sound &amp; Pictures",
+        
+        userSees: `
+          <div class="space-y-3">
+            <p><strong>Komposisi Visual (Panggung Mobil Penumpang dengan Kartu Interaktif Bersuara):</strong></p>
+            <div class="p-4 rounded-xl bg-white border-2 border-cBrand shadow-card space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-cLine">
+                <span class="text-xs font-bold text-cBrand font-mono">Ruangan 1: Mobil Penumpang (Membawa Kita Jalan-Jalan &amp; Sekolah)</span>
+                <span class="px-2 py-0.5 rounded bg-sky-100 text-sky-800 text-[10px] font-mono">Sentuh Mobil untuk Bunyikan Klakson</span>
+              </div>
+
+              <!-- 3 Kartu Gambar Mobil Besar -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                <!-- 1. Bis Transjakarta -->
+                <div class="p-3.5 rounded-2xl bg-sky-50 border-2 border-sky-300 flex flex-col items-center justify-between shadow-sm cursor-pointer hover:scale-105 transition">
+                  <div class="text-5xl my-2">🚌</div>
+                  <strong class="text-xs font-extrabold text-sky-900 block">Bis Transjakarta</strong>
+                  <span class="text-[10px] text-sky-700 bg-white px-2 py-0.5 rounded-full border border-sky-200 mt-1">Muat Banyak Orang (Ramai!)</span>
+                  <button class="mt-2 w-full py-1.5 bg-sky-600 text-white rounded-xl text-[10px] font-bold flex items-center justify-center gap-1 shadow-sm">
+                    🔊 Sentuh Klakson: Tuuut!
+                  </button>
+                </div>
+
+                <!-- 2. Angkot Merah/Biru -->
+                <div class="p-3.5 rounded-2xl bg-amber-50 border-2 border-amber-300 flex flex-col items-center justify-between shadow-sm cursor-pointer hover:scale-105 transition">
+                  <div class="text-5xl my-2">🚐</div>
+                  <strong class="text-xs font-extrabold text-amber-900 block">Mobil Angkot</strong>
+                  <span class="text-[10px] text-amber-700 bg-white px-2 py-0.5 rounded-full border border-amber-200 mt-1">Duduk Hadap-hadapan</span>
+                  <button class="mt-2 w-full py-1.5 bg-amber-600 text-white rounded-xl text-[10px] font-bold flex items-center justify-center gap-1 shadow-sm">
+                    🔊 Sentuh Klakson: Din-din!
+                  </button>
+                </div>
+
+                <!-- 3. Taksi Kuning -->
+                <div class="p-3.5 rounded-2xl bg-yellow-50 border-2 border-yellow-300 flex flex-col items-center justify-between shadow-sm cursor-pointer hover:scale-105 transition">
+                  <div class="text-5xl my-2">🚖</div>
+                  <strong class="text-xs font-extrabold text-yellow-900 block">Mobil Taksi</strong>
+                  <span class="text-[10px] text-yellow-800 bg-white px-2 py-0.5 rounded-full border border-yellow-200 mt-1">Untuk Satu Keluarga</span>
+                  <button class="mt-2 w-full py-1.5 bg-yellow-500 text-white rounded-xl text-[10px] font-bold flex items-center justify-center gap-1 shadow-sm">
+                    🔊 Sentuh Klakson: Tin-tin!
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tombol Lanjut Mencolok Berkedip -->
+              <div class="pt-2 flex items-center justify-between">
+                <span class="text-[11px] text-cMuted font-mono">Dengarkan penjelasan Bu Guru sambil menyentuh mobil 👆</span>
+                <button class="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs flex items-center gap-2 shadow-md animate-pulse">
+                  <span>🚨 Ke Ruang Mobil Penyelamat!</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        userHears: `
+          <div class="space-y-2">
+            <div class="bg-white p-3 rounded-xl border border-cLine space-y-2 text-xs leading-relaxed">
+              <p><strong class="text-emerald-700">Ibu Guru (Voice Over Utama):</strong> <em>"Selamat datang di Ruang Mobil Penumpang! Mobil penumpang adalah mobil yang bertugas membawa kita semua bepergian—pergi ke sekolah, ke rumah nenek, atau bertamasya bersama keluarga!"</em></p>
+              <p><strong class="text-pink-600">Ceri:</strong> <em>"Wahhh, mobil penumpangnya lucu-lucu sekali ya!"</em></p>
+              <p><strong class="text-sky-600">Rio:</strong> <em>"Ada bis Transjakarta yang panjang, ada angkot keliling kota, dan ada taksi yang lincah!"</em></p>
+              <p><strong class="text-emerald-700">Ibu Guru (Instruksi Suara Interaktif):</strong> <em>"Coba anak-anak sentuh gambar bis Transjakarta, angkot, dan taksi untuk membunyikan suara klaksonnya masing-masing! Asyik sekali!"</em></p>
+              <p class="font-mono text-[10px] text-cMuted">[Saat kartu disentuh]: Bunyi klakson bersahutan ramah: 'Tuuut-tuuut!' &bull; 'Din-diiin!' &bull; 'Tin-tiiin!'.</p>
+              <p><strong class="text-emerald-700">Ibu Guru (Menumbuhkan Rasa Penasaran):</strong> <em>"Nah, kalau mobil tadi membawa orang jalan-jalan, ada tidak ya mobil yang tugasnya menolong saat ada api atau orang sakit? Ayo sentuh tombol merah bersirine untuk masuk ke Ruang Mobil Penyelamat!"</em></p>
+            </div>
+            <p class="text-[11px] text-emerald-700 font-mono font-bold">Penjelasan materi 1. Pengertian, 2. Fungsi, dan 3. Contoh disampaikan sepenuhnya lewat percakapan audio.</p>
+          </div>
+        `,
+        
+        onScreenText: `
+          <div class="space-y-1.5 text-xs font-sans">
+            <div class="p-2.5 rounded-lg bg-sky-50 border border-sky-300 text-sky-950 flex items-center gap-2">
+              <span class="text-2xl">👥</span>
+              <div>
+                <strong class="text-xs block text-sky-900 font-extrabold">Simbol Visual Pengingat:</strong>
+                <span class="text-[11px] text-slate-700">Ikon Orang Ramai (Membawa Manusia) • Gambar Klakson Bunyi • Ikon Bintang Senyum.</span>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        graphicAssets: `
+          <ul class="list-disc pl-4 space-y-1 text-cDark font-mono text-xs">
+            <li><code>veh_tj_bus_big.png</code>, <code>veh_angkot_cute.png</code>, <code>veh_taxi_yellow.png</code> (3 Ilustrasi kartun resolusi tajam)</li>
+            <li><code>bg_city_road_clean.png</code> (Ruang pamer bertema jalan aspal kartun)</li>
+            <li><code>sfx_honk_bus.mp3</code>, <code>sfx_honk_angkot.mp3</code>, <code>sfx_honk_taxi.mp3</code></li>
+            <li><code>vo_scene3_passenger_dialog.mp3</code></li>
+          </ul>
+        `,
+        
+        additionalNotes: `
+          <div class="space-y-2 text-xs text-cDark">
+            <p><strong>Pengaturan iSpring Visuals (Tabs Navigation):</strong></p>
+            <ul class="list-disc pl-4 space-y-1 text-[11px] text-cMuted">
+              <li>Setiap kartu kendaraan memiliki audio trigger klakson yang berputar seketika saat disentuh jari anak.</li>
+              <li>Tombol transisi menuju Scene 4 berkedip warna merah mencolok dengan ikon rotator ambulans 🚨 agar mudah dikenali anak.</li>
+            </ul>
+          </div>
+        `,
+        
+        userInteraction: `
+          <div class="text-xs text-cDark space-y-1.5">
+            <p>1. Anak menyentuh ketiga gambar mobil penumpang untuk mendengarkan bunyinya secara gembira.</p>
+            <p>2. Menyimak pertanyaan Bu Guru tentang mobil penolong saat bahaya.</p>
+            <p>3. Menekan tombol merah besar berkedip <strong>[ 🚨 Ke Ruang Mobil Penyelamat! ]</strong>.</p>
+          </div>
+        `
+      },
+
+      /* =====================================================================
+         SCENE 4: RUANGAN 2 - MOBIL PENYELAMAT (AUDIO SIRINE & ETIKA JALAN)
+         ===================================================================== */
+      {
+        slideNum: 4,
+        program: moduleData.program,
+        slideTitle: "Scene 4: Ruang Mobil Penyelamat (Pemadam Kebakaran &amp; Ambulans)",
+        masterSlide: "SCENE_ROOM_RESCUE (16:9)",
+        ispringBlock: "iSpring Visuals -> Hotspot (Emergency Siren Audio Simulation)",
+        taxonomyLevel: "Audio Siren Recognition &amp; Social Empathy",
+        gagneEvent: "4. Stimulate Senses &amp; Present Etiquette Visually",
+        
+        userSees: `
+          <div class="space-y-3">
+            <p><strong>Komposisi Visual (Pos Penyelamat Merah Gagah &amp; Animasi Mobil Bergeser Menepi):</strong></p>
+            <div class="p-4 rounded-xl bg-white border-2 border-red-300 shadow-card space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-cLine">
+                <span class="text-xs font-bold text-red-700 font-mono">Ruangan 2: Mobil Penyelamat (Pahlawan Penolong Saat Bahaya!)</span>
+                <span class="px-2 py-0.5 rounded bg-red-100 text-red-800 text-[10px] font-mono">Lampu Berkedip Merah-Biru</span>
+              </div>
+
+              <!-- 2 Mobil Penyelamat Raksasa -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+                <!-- Mobil Pemadam -->
+                <div class="p-4 rounded-2xl bg-red-50 border-3 border-red-400 flex flex-col items-center justify-between shadow-md cursor-pointer hover:scale-105 transition">
+                  <div class="text-6xl my-2">🚒</div>
+                  <strong class="text-sm font-extrabold text-red-900 block">Mobil Pemadam Kebakaran</strong>
+                  <span class="text-[10px] text-red-800 font-semibold bg-white px-2.5 py-0.5 rounded-full border border-red-200 mt-1">Ada Tangga Panjang &amp; Semprotan Air!</span>
+                  <button onclick="playSFX('fire')" class="mt-3 w-full py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 shadow">
+                    🔊 Bunyikan Sirine: Nii-noo-nii-noo!
+                  </button>
+                </div>
+
+                <!-- Mobil Ambulans -->
+                <div class="p-4 rounded-2xl bg-sky-50 border-3 border-sky-400 flex flex-col items-center justify-between shadow-md cursor-pointer hover:scale-105 transition">
+                  <div class="text-6xl my-2">🚑</div>
+                  <strong class="text-sm font-extrabold text-sky-900 block">Mobil Ambulans</strong>
+                  <span class="text-[10px] text-sky-800 font-semibold bg-white px-2.5 py-0.5 rounded-full border border-sky-200 mt-1">Membawa Dokter &amp; Ranjang Pasien!</span>
+                  <button onclick="playSFX('ambulance')" class="mt-3 w-full py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 shadow">
+                    🔊 Bunyikan Sirine: Wiuw-wiuw-wiuw!
+                  </button>
+                </div>
+              </div>
+
+              <!-- Animasi Visual Etika Jalan Raya -->
+              <div class="p-3 rounded-2xl bg-amber-50 border border-amber-300 text-xs flex items-center gap-3">
+                <span class="text-3xl">👈 🚗 🚑 🚙 👉</span>
+                <div class="text-[11px] text-amber-950 leading-snug">
+                  <strong>Pelajaran Penting (Diceritakan Suara Bu Guru):</strong><br>
+                  Saat sirine berbunyi, mobil-mobil lain di jalan akan minggir ke kiri dan kanan memberi jalan agar mobil penyelamat bisa melaju cepat menolong orang!
+                </div>
+              </div>
+
+              <!-- Tombol Lanjut -->
+              <div class="pt-1 flex items-center justify-end">
+                <button class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs flex items-center gap-2 shadow-md">
+                  <span>🚚 Ke Ruang Mobil Pengangkut Berat!</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        userHears: `
+          <div class="space-y-2">
+            <p class="font-mono text-cMuted text-[11px]">[00:00 - 00:03] SFX: Suara lampu sirine berkedip &bull; Suara gema pos pemadam kebakaran.</p>
+            
+            <div class="bg-white p-3 rounded-xl border border-cLine space-y-2 text-xs leading-relaxed">
+              <p><strong class="text-sky-600">Rio (Takjub):</strong> <em>"Oh, jadi mobil yang mengeluarkan suara sirine kencang itu namanya mobil penyelamat!"</em></p>
+              <p><strong class="text-pink-600">Ceri:</strong> <em>"Ceri pernah lihat di jalan waktu mobil ambulans lewat, semua mobil lain pada minggir bergeser. Kenapa mobil lain minggir ya, Bu Guru?"</em></p>
+              <p><strong class="text-emerald-700">Ibu Guru:</strong> <em>"Pertanyaan pintar, Ceri! Mobil penyelamat membawa orang sakit dan pemadam api, jadi jalannya harus diutamakan dan didahulukan agar cepat sampai menolong orang lain!"</em></p>
+              <p><strong class="text-sky-600">Rio:</strong> <em>"Keren sekali para mobil pahlawan kita!"</em></p>
+              <p><strong class="text-emerald-700">Ibu Guru (Instruksi Suara Interaktif):</strong> <em>"Ayo anak-anak di rumah, sentuh tombol merah untuk mendengar sirine pemadam api, dan tombol biru untuk sirine ambulans!"</em></p>
+              <p class="font-mono text-[10px] text-cMuted">[Saat disentuh]: Sirine Pemadam 'Nii-noo-nii-noo!' &bull; Sirine Ambulans 'Wiuw-wiuw-wiuw!'.</p>
+              <p><strong class="text-emerald-700">Ibu Guru (Transisi Penasaran):</strong> <em>"Nah, kalau mobil membawa orang sudah, bagaimana ya kalau kita mau membawa barang-barang yang besaaar dan berat sekali seperti pasir atau kulkas? Apakah mobil penumpang muat?"</em></p>
+            </div>
+            <p class="text-[11px] text-emerald-700 font-mono font-bold">Anak belajar etika jalan raya melalui cerita audio yang dramatis dan mudah dipahami.</p>
+          </div>
+        `,
+        
+        onScreenText: `
+          <div class="space-y-1.5 text-xs font-sans">
+            <div class="p-2.5 rounded-lg bg-red-50 border border-red-300 text-red-950 flex items-center gap-2">
+              <span class="text-2xl">🚨</span>
+              <div>
+                <strong class="text-xs block text-red-900 font-extrabold">Simbol Visual Pengingat:</strong>
+                <span class="text-[11px] text-slate-700">Lampu Sirine Merah • Tanda Palang Medis • Selang Air Pemadam.</span>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        graphicAssets: `
+          <ul class="list-disc pl-4 space-y-1 text-cDark font-mono text-xs">
+            <li><code>veh_fire_truck_big.png</code> (Truk pemadam kartun dengan tangga dan selang)</li>
+            <li><code>veh_ambulance_medic.png</code> (Ambulans putih dengan palang merah cerah)</li>
+            <li><code>ill_cars_moving_aside.png</code> (Animasi mobil-mobil menepi memberi jalan)</li>
+            <li><code>sfx_siren_fire.mp3</code> &amp; <code>sfx_siren_ambulance.mp3</code></li>
+            <li><code>vo_scene4_rescue_dialog.mp3</code></li>
+          </ul>
+        `,
+        
+        additionalNotes: `
+          <div class="space-y-2 text-xs text-cDark">
+            <p><strong>Pengaturan iSpring Visuals (Hotspot Audio Simulation):</strong></p>
+            <ul class="list-disc pl-4 space-y-1 text-[11px] text-cMuted">
+              <li>Tombol sirine dibuat sangat kontras dengan tombol audio besar agar anak berusia 4-6 tahun puas memencet dan membedakan kedua bunyi sirine.</li>
+            </ul>
+          </div>
+        `,
+        
+        userInteraction: `
+          <div class="text-xs text-cDark space-y-1.5">
+            <p>1. Anak menyentuh tombol sirine pemadam untuk membunyikan *"Nii-noo!"*.</p>
+            <p>2. Anak menyentuh tombol sirine ambulans untuk membunyikan *"Wiuw-wiuw!"*.</p>
+            <p>3. Menyimak pesan Bu Guru bahwa mobil darurat harus diberi jalan.</p>
+            <p>4. Menekan tombol kuning <strong>[ 🚚 Ke Ruang Mobil Pengangkut Berat! ]</strong>.</p>
+          </div>
+        `
+      },
+
+      /* =====================================================================
+         SCENE 5: RUANGAN 3 - MOBIL PENGANGKUT (AUDIO MESIN & BAK TERANGKAT)
+         ===================================================================== */
+      {
+        slideNum: 5,
+        program: moduleData.program,
+        slideTitle: "Scene 5: Ruang Mobil Pengangkut (Truk, Dump Truck, &amp; Box Lalamove)",
+        masterSlide: "SCENE_ROOM_CARGO (16:9)",
+        ispringBlock: "iSpring Visuals -> Media Cards (Mechanical Animations &amp; SFX)",
+        taxonomyLevel: "Audio-Visual Recognition (Kekuatan Mesin &amp; Muatan)",
+        gagneEvent: "4. Present Content &amp; 5. Learning Guidance",
+        
+        userSees: `
+          <div class="space-y-3">
+            <p><strong>Komposisi Visual (Ruang Logistik &amp; Pembangunan dengan 3 Kartu Truk Bergerak):</strong></p>
+            <div class="p-4 rounded-xl bg-white border-2 border-amber-400 shadow-card space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-cLine">
+                <span class="text-xs font-bold text-amber-800 font-mono">Ruangan 3: Mobil Pengangkut (Bertenaga Kuat Angkut Barang Raksasa!)</span>
+                <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 text-[10px] font-mono">Bodi Baja &amp; Mesin Kuat</span>
+              </div>
+
+              <!-- 3 Kartu Truk Kartun Raksasa -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                <!-- 1. Mobil Box Paket (Lalamove) -->
+                <div class="p-3.5 rounded-2xl bg-amber-50 border-2 border-amber-300 flex flex-col items-center justify-between shadow-sm cursor-pointer hover:scale-105 transition">
+                  <div class="text-5xl my-2">🚐📦</div>
+                  <strong class="text-xs font-extrabold text-amber-900 block">Mobil Box Paket (Lalamove)</strong>
+                  <span class="text-[10px] text-amber-800 bg-white px-2 py-0.5 rounded-full border border-amber-200 mt-1">Bawa Kardus Belanjaan &amp; Lemari</span>
+                  <button class="mt-2 w-full py-1.5 bg-amber-600 text-white rounded-xl text-[10px] font-bold shadow-sm">
+                    📦 Sentuh: Buka Pintu Belakang!
+                  </button>
+                </div>
+
+                <!-- 2. Truk Kontainer 18 Roda -->
+                <div class="p-3.5 rounded-2xl bg-sky-50 border-2 border-sky-300 flex flex-col items-center justify-between shadow-sm cursor-pointer hover:scale-105 transition">
+                  <div class="text-5xl my-2">🚛</div>
+                  <strong class="text-xs font-extrabold text-sky-900 block">Truk Kontainer Raksasa</strong>
+                  <span class="text-[10px] text-sky-800 bg-white px-2 py-0.5 rounded-full border border-sky-200 mt-1">Rodanya Banyak Sekali (18 Roda!)</span>
+                  <button class="mt-2 w-full py-1.5 bg-sky-600 text-white rounded-xl text-[10px] font-bold shadow-sm">
+                    📢 Sentuh: Klakson Bass 'HOOONK!'
+                  </button>
+                </div>
+
+                <!-- 3. Dump Truck Pasir -->
+                <div class="p-3.5 rounded-2xl bg-orange-50 border-2 border-orange-300 flex flex-col items-center justify-between shadow-sm cursor-pointer hover:scale-105 transition">
+                  <div class="text-5xl my-2">🚚🪨</div>
+                  <strong class="text-xs font-extrabold text-orange-900 block">Dump Truck (Truk Jungkit)</strong>
+                  <span class="text-[10px] text-orange-800 bg-white px-2 py-0.5 rounded-full border border-orange-200 mt-1">Bak Jungkit Tumpahkan Pasir</span>
+                  <button onclick="playSFX('truck')" class="mt-2 w-full py-1.5 bg-orange-600 text-white rounded-xl text-[10px] font-bold shadow-sm">
+                    🏗️ Sentuh: Jungkitkan Bak Pasir!
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tombol Menuju Kuis Menyenangkan -->
+              <div class="pt-2 flex items-center justify-between">
+                <span class="text-[11px] text-cMuted font-mono">Sentuh dump truck untuk melihat bak pasirnya terangkat 🪨</span>
+                <button class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center gap-2 shadow-md animate-bounce">
+                  <span>🎮 Ayo Main Kuis Tebak Mobil!</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        userHears: `
+          <div class="space-y-2">
+            <div class="bg-white p-3 rounded-xl border border-cLine space-y-2 text-xs leading-relaxed">
+              <p><strong class="text-pink-600">Ceri:</strong> <em>"Hmm, kalau kita mau bawa kasur, lemari, atau pasir semen, apakah mobil penumpang muat, Bu?"</em></p>
+              <p><strong class="text-emerald-700">Ibu Guru:</strong> <em>"Tentu tidak muat, Ceri! Ada mobil khusus yang bertenaga super kuat untuk mengangkat barang-barang berat itu: namanya Mobil Pengangkut!"</em></p>
+              <p><strong class="text-pink-600">Ceri:</strong> <em>"Wahhh, lihat itu! Bodi mobilnya besar-besar sekali dan rodanya banyak!"</em></p>
+              <p><strong class="text-emerald-700">Ibu Guru:</strong> <em>"Ada mobil box seperti mobil Lalamove pengantar paket kurir ke rumah kita, ada truk kontainer raksasa, dan ada dump truck yang bak belakangnya bisa miring mengangkat pasir!"</em></p>
+              <p class="font-mono text-[10px] text-cMuted">[Saat Dump Truck disentuh]: Suara hidrolik bak terangkat 'Ssshh-krrrkk!' dan batu kerikil tumpah.</p>
+              <p><strong class="text-sky-600">Rio (Gembira):</strong> <em>"Brummm! Kuat sekali mobil-mobil ini!"</em></p>
+              <p><strong class="text-emerald-700">Ibu Guru (Tantangan Suara Bermain):</strong> <em>"Nah anak-anak pintar, sekarang yuk kita uji ingatanmu bermain kuis tebak tugas mobil bersama Ceri dan Rio! Sentuh tombol hijau ya!"</em></p>
+            </div>
+            <p class="text-[11px] text-emerald-700 font-mono font-bold">Konsep kekuatan mesin disampaikan dengan efek suara mekanik dan bak terangkat.</p>
+          </div>
+        `,
+        
+        onScreenText: `
+          <div class="space-y-1.5 text-xs font-sans">
+            <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-300 text-amber-950 flex items-center gap-2">
+              <span class="text-2xl">📦</span>
+              <div>
+                <strong class="text-xs block text-amber-900 font-extrabold">Simbol Visual Pengingat:</strong>
+                <span class="text-[11px] text-slate-700">Kotak Paket Kurir • Pasir &amp; Batu Bangunan • Roda Banyak Berotot.</span>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        graphicAssets: `
+          <ul class="list-disc pl-4 space-y-1 text-cDark font-mono text-xs">
+            <li><code>veh_box_lalamove.png</code>, <code>veh_big_container.png</code>, <code>veh_dump_truck_action.png</code></li>
+            <li><code>bg_harbor_logistics.png</code> (Latar ruang pelabuhan dan tumpukan peti kemas kartun)</li>
+            <li><code>sfx_heavy_engine.mp3</code>, <code>sfx_dump_gravel.mp3</code></li>
+            <li><code>vo_scene5_cargo_dialog.mp3</code></li>
+          </ul>
+        `,
+        
+        additionalNotes: `
+          <div class="space-y-2 text-xs text-cDark">
+            <p><strong>Pengaturan iSpring Visuals (Media Cards):</strong></p>
+            <ul class="list-disc pl-4 space-y-1 text-[11px] text-cMuted">
+              <li>Animasi kartun bak dump truck terangkat miring (*hydraulic lift*) dan pintu mobil box terbuka menampilkan kardus saat kartu disentuh.</li>
+            </ul>
+          </div>
+        `,
+        
+        userInteraction: `
+          <div class="text-xs text-cDark space-y-1.5">
+            <p>1. Anak menyentuh mobil box untuk melihat pintu bagasi terbuka.</p>
+            <p>2. Anak menyentuh dump truck untuk mengangkat bak pasirnya dan mendengarkan suaranya.</p>
+            <p>3. Anak menekan tombol hijau berdenyut <strong>[ 🎮 Ayo Main Kuis Tebak Mobil! ]</strong>.</p>
+          </div>
+        `
+      },
+
+      /* =====================================================================
+         SCENE 6: KUIS INTERAKTIF ANAK (AUDIO-VISUAL MATCHING GAME)
+         ===================================================================== */
+      {
+        slideNum: 6,
+        program: moduleData.program,
+        slideTitle: "Scene 6: Kuis Cerdas Ceria - Tebak Tugas 3 Sahabat Mobil (Audio Matching)",
+        masterSlide: "QUIZMAKER_EMBED (16:9)",
+        ispringBlock: "iSpring QuizMaker -> Drag-and-Drop (100% Visual &amp; Audio Guided)",
+        taxonomyLevel: "Audio-Visual Matching &amp; Memory Association",
+        gagneEvent: "7. Assess Performance &amp; 8. Immediate Sound Feedback",
+        
+        userSees: `
+          <div class="space-y-3">
+            <p><strong>Komposisi Visual (Panggung Kuis Ceria: 3 Keranjang Sasaran Bergambar Jelas):</strong></p>
+            <div class="p-4 rounded-xl bg-white border-2 border-emerald-400 shadow-card space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-cLine text-xs">
+                <span class="font-bold text-emerald-800 font-mono">Tantangan Sahabat Mobil Cilik</span>
+                <span class="font-bold text-amber-600 font-mono">Hadiah: Bintang Emas Ceria ⭐⭐⭐</span>
+              </div>
+
+              <!-- 3 Sasaran Keranjang Drop dengan Gambar Jelas (Non-Text Target) -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                <div class="p-3.5 rounded-2xl bg-sky-50 border-3 border-dashed border-sky-400">
+                  <span class="text-4xl block mb-1">🚏👥</span>
+                  <strong class="text-xs font-bold text-sky-900 block">Antar Orang / Penumpang</strong>
+                  <span class="text-[10px] text-sky-700 bg-white px-2 py-0.5 rounded-full border border-sky-200 mt-1 inline-block">Gambar Halte Bis</span>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-red-50 border-3 border-dashed border-red-400">
+                  <span class="text-4xl block mb-1">🔥🚒</span>
+                  <strong class="text-xs font-bold text-red-900 block">Menolong Api &amp; Darurat</strong>
+                  <span class="text-[10px] text-red-700 bg-white px-2 py-0.5 rounded-full border border-red-200 mt-1 inline-block">Gambar Api Padam</span>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-amber-50 border-3 border-dashed border-amber-400">
+                  <span class="text-4xl block mb-1">🏗️🪨</span>
+                  <strong class="text-xs font-bold text-amber-900 block">Membawa Pasir &amp; Batu Berat</strong>
+                  <span class="text-[10px] text-amber-700 bg-white px-2 py-0.5 rounded-full border border-amber-200 mt-1 inline-block">Gambar Bangunan</span>
+                </div>
+              </div>
+
+              <!-- 3 Mobil yang Dapat Ditarik (Draggable Cards) -->
+              <div class="p-3 rounded-2xl bg-slate-100 border border-slate-300">
+                <span class="text-[10px] font-mono font-bold text-slate-500 uppercase block text-center mb-2">Tarik Mobil Ini dengan Jarimu ke Keranjang yang Tepat:</span>
+                <div class="grid grid-cols-3 gap-3 text-center">
+                  <div class="p-2 rounded-xl bg-white border-2 border-sky-400 shadow-sm cursor-grab flex flex-col items-center">
+                    <span class="text-4xl">🚌</span>
+                    <span class="text-[10px] font-bold text-slate-800 mt-1">Bis Kuning</span>
+                  </div>
+                  <div class="p-2 rounded-xl bg-white border-2 border-red-400 shadow-sm cursor-grab flex flex-col items-center">
+                    <span class="text-4xl">🚒</span>
+                    <span class="text-[10px] font-bold text-slate-800 mt-1">Mobil Pemadam</span>
+                  </div>
+                  <div class="p-2 rounded-xl bg-white border-2 border-amber-400 shadow-sm cursor-grab flex flex-col items-center">
+                    <span class="text-4xl">🚚</span>
+                    <span class="text-[10px] font-bold text-slate-800 mt-1">Truk Pasir</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2 flex items-center justify-between text-xs">
+                <span class="text-emerald-700 font-mono text-[11px] font-bold">Soal dibacakan suara Bu Guru secara otomatis 🔊</span>
+                <button onclick="playSFX('cheer'); playSFX('reward');" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md transition">
+                  Periksa Jawaban ✓
+                </button>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        userHears: `
+          <div class="space-y-2">
+            <p class="font-mono text-cMuted text-[11px]">[00:00 - 00:02] SFX: Suara trompet ceria 'Ta-daaa!'</p>
+            <div class="bg-white p-3 rounded-xl border border-cLine space-y-2 text-xs leading-relaxed">
+              <p><strong class="text-emerald-700">Ibu Guru (Instruksi Suara Otomatis):</strong> <em>"Bantu Rio dan Ceri yuk! Tarik mobil pemadam ke gambar api, bis kuning ke gambar orang halte, dan truk besar ke gambar pasir! Ayo pasangkan dengan benar!"</em></p>
+              <p class="font-mono text-[10px] text-cMuted">[Saat mobil disentuh]: Suara audio menyebut namanya: 'Aku Bis Sekolah!' &bull; 'Aku Mobil Pemadam!' &bull; 'Aku Truk Pasir!'.</p>
+              <p class="font-mono text-[10px] text-emerald-700 font-bold">[Jika Jawaban Benar]: Suara tepuk tangan riuh 'Horeee! Pintar sekali!' &bull; Efek denting bintang 'Cring-cring!' &bull; Ceri &amp; Rio bersorak gembira.</p>
+              <p class="font-mono text-[10px] text-amber-700">[Jika Belum Pas]: Suara lembut Bu Guru 'Tuing... coba perhatikan lagi ya sayang, mobil mana yang punya selang air untuk padamkan api?'.</p>
+            </div>
+            <p class="text-[11px] text-emerald-700 font-mono font-bold">Anak tidak perlu membaca; seluruh navigasi dipandu suara audio dan ikon gambar.</p>
+          </div>
+        `,
+        
+        onScreenText: `
+          <div class="space-y-1.5 text-xs font-sans">
+            <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-950 flex items-center gap-2">
+              <span class="text-2xl">🎮</span>
+              <div>
+                <strong class="text-xs block text-emerald-900 font-extrabold">Tampilan Kuis Bebas Teks:</strong>
+                <span class="text-[11px] text-slate-700">Setiap sasaran dan mobil menggunakan gambar kartun besar. Tidak ada teks soal panjang.</span>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        graphicAssets: `
+          <ul class="list-disc pl-4 space-y-1 text-cDark font-mono text-xs">
+            <li><code>quiz_kids_dragdrop_transport.quiz</code> (Paket kuis iSpring QuizMaker 11 Slide View)</li>
+            <li><code>target_bus_stop.png</code>, <code>target_fire_flame.png</code>, <code>target_gravel_sand.png</code></li>
+            <li><code>star_reward_burst.png</code> (Efek animasi bintang hadiah)</li>
+            <li><code>sfx_cheering_claps.mp3</code> &amp; <code>sfx_magic_star.mp3</code></li>
+          </ul>
+        `,
+        
+        additionalNotes: `
+          <div class="space-y-2 text-xs text-cDark">
+            <p><strong>Pengaturan iSpring QuizMaker 11 (Kids Mode):</strong></p>
+            <ul class="list-disc pl-4 space-y-1 text-[11px] text-cMuted">
+              <li>Tipe Soal: <em>Drag and Drop Matching</em> (Desain Slide View dengan tombol besar).</li>
+              <li>Timer dinonaktifkan (*no countdown*).</li>
+              <li>Percobaan tidak terbatas (*unlimited attempts*) dengan suara apresiasi positif di setiap hasil.</li>
+            </ul>
+          </div>
+        `,
+        
+        userInteraction: `
+          <div class="text-xs text-cDark space-y-1.5">
+            <p>1. Anak mendengar suara instruksi Bu Guru yang menyebutkan tugas masing-masing mobil.</p>
+            <p>2. Anak menarik gambar mobil menggunakan jarinya ke kotak gambar tugas yang cocok.</p>
+            <p>3. Menekan tombol centang periksa &rarr; terdengar sorak tepuk tangan riang dan muncul bintang emas!</p>
+          </div>
+        `
+      },
+
+      /* =====================================================================
+         SCENE 7: RANGKUMAN, REFLEKSI & CLOSING CERIA
+         ===================================================================== */
+      {
+        slideNum: 7,
+        program: moduleData.program,
+        slideTitle: "Scene 7: Rangkuman Petualangan, Pesan Ayah Bunda, &amp; Dadahh!",
+        masterSlide: "SCENE_SUMMARY_FAREWELL (16:9)",
+        ispringBlock: "PowerPoint Standard Slide + Resources (Download Lembar Mewarnai)",
+        taxonomyLevel: "Affective Closure &amp; Social Sharing",
+        gagneEvent: "9. Enhance Retention &amp; Transfer to Home",
+        
+        userSees: `
+          <div class="space-y-3">
+            <p><strong>Komposisi Visual (Taman Museum Sore Hari yang Hangat &amp; Rio Ceri Melambaikan Tangan):</strong></p>
+            <div class="p-4 rounded-xl bg-white border border-cLine shadow-card space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-cLine">
+                <span class="text-xs font-bold text-cBrand font-mono">Penutup: Taman Depan Museum Transportasi Sore Hari</span>
+                <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 text-[10px] font-mono font-bold">Lencana Penjelajah Cilik ⭐</span>
+              </div>
+
+              <!-- 3 Medali Gambar Mobil Rangkuman -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs text-center">
+                <div class="p-3 rounded-2xl bg-sky-50 border border-sky-300 shadow-sm flex flex-col items-center">
+                  <div class="text-4xl mb-1">🚌</div>
+                  <strong class="text-sky-900 block font-bold">Mobil Penumpang</strong>
+                  <span class="text-[10px] text-sky-800">Antar kita pergi sekolah!</span>
+                </div>
+
+                <div class="p-3 rounded-2xl bg-red-50 border border-red-300 shadow-sm flex flex-col items-center">
+                  <div class="text-4xl mb-1">🚒🚨</div>
+                  <strong class="text-red-900 block font-bold">Mobil Penyelamat</strong>
+                  <span class="text-[10px] text-red-800">Sigap tolong saat bahaya!</span>
+                </div>
+
+                <div class="p-3 rounded-2xl bg-amber-50 border border-amber-300 shadow-sm flex flex-col items-center">
+                  <div class="text-4xl mb-1">🚚📦</div>
+                  <strong class="text-amber-900 block font-bold">Mobil Pengangkut</strong>
+                  <span class="text-[10px] text-amber-800">Kuat bawa barang berat!</span>
+                </div>
+              </div>
+
+              <!-- Kartu Pesan ke Ayah Bunda & Tombol Unduh Lembar Mewarnai -->
+              <div class="p-4 rounded-2xl bg-cDark text-white flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="space-y-1 text-center sm:text-left">
+                  <span class="text-[10px] text-amber-300 font-mono font-bold uppercase">Hadiah untuk Ayah &amp; Bunda di Rumah</span>
+                  <h4 class="text-sm font-bold text-white">Lembar Mewarnai 3 Sahabat Mobil (.PDF)</h4>
+                  <p class="text-[11px] text-slate-300">Ajak anak mewarnai gambar bis, pemadam kebakaran, dan truk untuk mengasah motorik halusnya!</p>
+                </div>
+                <button onclick="showToast('Lembar Mewarnai siap dicetak untuk adik-adik!')" class="px-4 py-2.5 rounded-xl bg-cBrand hover:bg-cBrandHover text-white font-extrabold text-xs flex items-center gap-1.5 transition shadow-sm whitespace-nowrap">
+                  <span>🎨 Unduh Lembar Mewarnai</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        userHears: `
+          <div class="space-y-2">
+            <p class="font-mono text-cMuted text-[11px]">[00:00 - 00:03] BGM: Musik ukulele ceria penutup &bull; Suara burung berkicau hangat sore hari.</p>
+            
+            <div class="bg-white p-3 rounded-xl border border-cLine space-y-2 text-xs leading-relaxed">
+              <p><strong class="text-sky-600">Rio (Gembira):</strong> <em>"Wah, seru sekali petualangan kita hari ini di museum transportasi!"</em></p>
+              <p><strong class="text-pink-600">Ceri:</strong> <em>"Iya, Ceri senang sekali! Ada mobil penumpang yang mengantar kita, mobil penyelamat yang cepat menolong orang, dan mobil pengangkut yang kuat membawa barang-barang berat!"</em></p>
+              <p><strong class="text-sky-600">Rio:</strong> <em>"Nah teman-teman di rumah, mobil mana yang paling kamu sukai? Jangan lupa ceritakan ke ayah dan bunda ya!"</em></p>
+              <p><strong class="text-purple-700">Rio &amp; Ceri bersama-sama (Melambaikan tangan ceria):</strong> <em>"Dadahhh teman-teman, sampai jumpa lagi! Dadahhh!"</em></p>
+              <p class="font-mono text-[10px] text-cMuted">[00:35] SFX: Suara tawa anak-anak dan tepuk tangan ceria &bull; Musik penutup fade-out lembut.</p>
+            </div>
+            <p class="text-[11px] text-emerald-700 font-mono font-bold">Penutup naratif yang hangat dan mengajak anak berinteraksi langsung dengan orang tua di rumah.</p>
+          </div>
+        `,
+        
+        onScreenText: `
+          <div class="space-y-1.5 text-xs font-sans">
+            <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-300 text-amber-950 flex items-center gap-2">
+              <span class="text-2xl">👋</span>
+              <div>
+                <strong class="text-xs block text-amber-900 font-extrabold">Visual Lambaian Tangan:</strong>
+                <span class="text-[11px] text-slate-700">Karakter Rio &amp; Ceri beranimasi melambaikan tangan dengan balon tulisan besar: <strong>"Dadahh, Sampai Jumpa Lagi!"</strong>.</span>
+              </div>
+            </div>
+          </div>
+        `,
+        
+        graphicAssets: `
+          <ul class="list-disc pl-4 space-y-1 text-cDark font-mono text-xs">
+            <li><code>bg_museum_garden_sunset.png</code> (Taman museum langit oranye hangat 1920x1080)</li>
+            <li><code>char_rio_ceri_waving_cute.png</code> (Karakter melambaikan tangan kartun)</li>
+            <li><code>lembar_mewarnai_sahabat_mobil.pdf</code> (File lampiran lembar mewarnai iSpring Resources)</li>
+            <li><code>bgm_farewell_happy_kids.mp3</code></li>
+          </ul>
+        `,
+        
+        additionalNotes: `
+          <div class="space-y-2 text-xs text-cDark">
+            <p><strong>Pengaturan iSpring Suite 11 (Resources &amp; Course Completion):</strong></p>
+            <ul class="list-disc pl-4 space-y-1 text-[11px] text-cMuted">
+              <li>File lembar mewarnai disematkan di tab <em>Resources</em> player iSpring.</li>
+              <li>Status kelulusan kursus otomatis terkirim ke LMS setelah adegan penutup selesai diputar.</li>
+            </ul>
+          </div>
+        `,
+        
+        userInteraction: `
+          <div class="text-xs text-cDark space-y-1.5">
+            <p>1. Anak menonton lambaian tangan Rio dan Ceri sambil mendengarkan lagu perpisahan.</p>
+            <p>2. Orang tua atau guru dapat menekan tombol <strong>[ Unduh Lembar Mewarnai ]</strong> untuk dicetak sebagai kegiatan motorik anak di rumah.</p>
+          </div>
+        `
+      }
+    ];
+
+    // =========================================================================
+    // LOGIKA TAMPILAN INTERAKTIF & SIMULATOR AUDIO SYNTHESIZER
+    // =========================================================================
+    let currentViewMode = 'all'; // 'all' atau 'single'
+    let currentSingleSlide = 1;
+
+    function playSFX(type) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const now = ctx.currentTime;
+
+        if (type === 'horn') {
+          // Bus horn tone (dual-tone beep)
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc1.type = 'sawtooth';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(340, now);
+          osc2.frequency.setValueAtTime(510, now);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.5);
+          osc2.stop(now + 0.5);
+          showToast("📢 Bunyi Klakson Bis: 'Tut-tut! / Telolet!'");
+        } else if (type === 'fire') {
+          // Fire truck siren (slow wavering high-low)
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(620, now);
+          osc.frequency.linearRampToValueAtTime(950, now + 0.35);
+          osc.frequency.linearRampToValueAtTime(620, now + 0.7);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.75);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.8);
+          showToast("🚒 Sirine Pemadam: 'Nii-noo-nii-noo!'");
+        } else if (type === 'ambulance') {
+          // Ambulance siren (fast modulating high pitch)
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(780, now);
+          osc.frequency.setValueAtTime(980, now + 0.2);
+          osc.frequency.setValueAtTime(780, now + 0.4);
+          osc.frequency.setValueAtTime(980, now + 0.6);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.75);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.8);
+          showToast("🚑 Sirine Ambulans: 'Wiuw-wiuw-wiuw!'");
+        } else if (type === 'truck') {
+          // Heavy diesel engine rumble & dumping sound
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(85, now);
+          osc.frequency.linearRampToValueAtTime(130, now + 0.3);
+          osc.frequency.linearRampToValueAtTime(90, now + 0.6);
+          gain.gain.setValueAtTime(0.28, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.65);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.7);
+          showToast("🚚 Suara Mesin & Bak Truk: 'Brummm... Krrrkk!'");
+        } else if (type === 'reward') {
+          // Star chime celebration
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+          osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.65);
+          showToast("⭐ Suara Hadiah Bintang: 'Tringgg Ta-daaa!'");
+        } else if (type === 'cheer') {
+          // Cheering applause tone
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.linearRampToValueAtTime(880, now + 0.2);
+          osc.frequency.linearRampToValueAtTime(550, now + 0.4);
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.55);
+          showToast("👏 Suara Sorak & Tepuk Tangan: 'Horeee! Pintar Sekali!'");
+        }
+      } catch (e) {
+        console.log("Audio not supported or blocked by user gesture");
+      }
+    }
+
+    function renderSlideCard(slide) {
+      const totalSlides = slidesData.length;
+      return `
+        <article id="slide-card-${slide.slideNum}" class="slide-page bg-white rounded-2xl border-2 border-templateBorder shadow-card overflow-hidden transition-all duration-200">
+          
+          <!-- Slide Header Bar (Child-Friendly Colorful Theme) -->
+          <div class="bg-gradient-to-r from-sky-600 via-indigo-600 to-amber-600 text-white px-5 py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-white/10 shadow-inner">
+            <div class="flex items-center gap-3">
+              <span class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-lg text-xs font-mono font-bold tracking-wider uppercase border border-white/30 text-cBrandLight">
+                Scene #${slide.slideNum} / ${totalSlides}
+              </span>
+              <div class="text-xs sm:text-sm font-medium text-white/90">
+                Program: <span class="font-bold text-white underline decoration-sky-300 underline-offset-2">${slide.program}</span>
+              </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <div class="text-xs sm:text-sm font-extrabold tracking-tight">
+                Judul Scene: <span class="text-amber-300">${slide.slideTitle}</span>
+              </div>
+              <button onclick="copySlideScript(${slide.slideNum})" title="Salin Naskah Suara &amp; Teks Scene Ini" class="no-print p-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs transition border border-white/20 flex items-center gap-1 shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                <span class="hidden sm:inline text-[11px]">Salin Naskah</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Metadata Ribbon: Paradigma Non-Reading & Master Layout -->
+          <div class="bg-cBase px-5 py-2 border-b border-cLine flex flex-wrap items-center justify-between gap-2 text-[11px] text-cMuted font-mono">
+            <div>
+              <span class="font-bold text-cDark">Tingkat Literasi:</span> <span class="text-amber-700 font-bold bg-amber-100 px-2 py-0.5 rounded">Pre-Reader (Zero Reading Burden)</span>
+            </div>
+            <div>
+              <span class="font-bold text-cDark">Pemandu Belajar:</span> <span class="text-sky-700 font-semibold">${slide.taxonomyLevel}</span>
+            </div>
+            <div>
+              <span class="font-bold text-cDark">Master Layout:</span> <span class="text-slate-700 font-semibold">${slide.masterSlide}</span>
+            </div>
+          </div>
+
+          <div class="p-5 sm:p-6 space-y-6">
+
+            <!-- BAGIAN 1: USER SEES (Full Width Visual Description - Gambar Besar Kartun) -->
+            <div class="rounded-xl border border-templateBorder bg-templateBg p-4 shadow-sm">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-cBrand flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-cBrand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  USER SEES (Deskripsi Visual Layar, Ilustrasi Kartun 2D &amp; Objek Besar)
+                </span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-200 text-sky-800 font-mono">Rasio 16:9 Widescreen</span>
+              </div>
+              <div class="text-xs sm:text-sm text-cDark leading-relaxed">
+                ${slide.userSees}
+              </div>
+            </div>
+
+            <!-- BAGIAN 2: 2-COLUMN GRID (User Hears + On-Screen Text & Graphic Assets + Notes) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              
+              <!-- Kolom Kiri: USER HEARS (AUDIO-HEAVY DIALOG) & ON-SCREEN TEXT (MINIMALIS) -->
+              <div class="space-y-6">
+                
+                <!-- USER HEARS -->
+                <div class="rounded-xl border-2 border-sky-300 bg-sky-50/40 p-4 shadow-sm hover:border-cBrand transition">
+                  <div class="flex items-center justify-between mb-2 pb-1 border-b border-sky-200">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-sky-900 flex items-center gap-1.5">
+                      <svg class="w-4 h-4 text-sky-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                      USER HEARS (Naskah Dialog Karakter Verbatim &amp; Efek Suara SFX)
+                    </span>
+                    <span class="text-[10px] font-bold text-sky-800 bg-sky-200 px-2 py-0.5 rounded font-mono">100% Pemandu Suara</span>
+                  </div>
+                  <div class="text-xs sm:text-sm text-cDark leading-relaxed">
+                    ${slide.userHears}
+                  </div>
+                </div>
+
+                <!-- ON-SCREEN TEXT -->
+                <div class="rounded-xl border border-cLine bg-white p-4 shadow-sm hover:border-cBrand transition">
+                  <div class="flex items-center justify-between mb-2 pb-1 border-b border-cLine">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-cBrand flex items-center gap-1.5">
+                      <svg class="w-4 h-4 text-cBrand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                      ON-SCREEN TEXT (Simbol &amp; Label Visual Tanpa Membebani Membaca)
+                    </span>
+                    <span class="text-[10px] font-mono text-amber-700 bg-amber-100 px-2 py-0.5 rounded font-bold">Minim Teks</span>
+                  </div>
+                  <div class="text-xs sm:text-sm text-cDark leading-relaxed">
+                    ${slide.onScreenText}
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Kolom Kanan: GRAPHIC ASSETS & ADDITIONAL NOTES -->
+              <div class="space-y-6">
+                
+                <!-- GRAPHIC ASSETS -->
+                <div class="rounded-xl border border-cLine bg-white p-4 shadow-sm hover:border-cBrand transition">
+                  <div class="flex items-center justify-between mb-2 pb-1 border-b border-cLine">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-cBrand flex items-center gap-1.5">
+                      <svg class="w-4 h-4 text-cBrand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                      GRAPHIC ASSETS (Manifest Berkas Ilustrasi Kartun &amp; Audio SFX)
+                    </span>
+                    <span class="text-[10px] font-mono text-cMuted">Asset Manifest</span>
+                  </div>
+                  <div class="text-xs text-cDark leading-relaxed">
+                    ${slide.graphicAssets}
+                  </div>
+                </div>
+
+                <!-- ADDITIONAL NOTES & iSPRING 11 CONFIG -->
+                <div class="rounded-xl border border-amber-200 bg-amber-50/40 p-4 shadow-sm hover:border-cAccent transition">
+                  <div class="flex items-center justify-between mb-2 pb-1 border-b border-amber-300/50">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
+                      <svg class="w-4 h-4 text-cAccent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      ADDITIONAL NOTES &amp; KONFIGURASI iSPRING 11 (KIDS MODE)
+                    </span>
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-cAccent text-white font-mono">
+                      ${slide.ispringBlock.split('->')[0]}
+                    </span>
+                  </div>
+                  <div class="text-xs text-cDark leading-relaxed">
+                    <p class="mb-1 font-semibold text-cDark">Blok Fitur: <span class="text-cBrand font-bold">${slide.ispringBlock}</span></p>
+                    ${slide.additionalNotes}
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- BAGIAN 3: USER INTERACTION & TACTILE SOUND FEEDBACK -->
+            <div class="rounded-xl border border-sky-300 bg-sky-50/70 p-4 shadow-sm">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-cBrand flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-cBrand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+                  USER INTERACTION &amp; RESPON SENTUHAN ANAK
+                </span>
+                <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300 font-mono">Umpan Balik Suara &amp; Animasi</span>
+              </div>
+              <div class="text-xs sm:text-sm text-cDark leading-relaxed font-normal">
+                ${slide.userInteraction}
+              </div>
+            </div>
+
+            <!-- Card Footer Bar (Metadata & Signature) -->
+            <div class="pt-3 border-t border-cLine flex flex-wrap items-center justify-between gap-2 text-[11px] text-cMuted font-mono">
+              <div>
+                <span>Author: <strong class="text-cDark">${moduleData.idAuthor}</strong></span>
+                <span class="mx-1.5">•</span>
+                <span>Standar: <strong class="text-cBrand">iSpring 11 Early Childhood Pre-Reader Spec</strong></span>
+              </div>
+              <div>
+                <span>Tanggal Rilis: ${moduleData.dateCreated} • Berdasarkan Sumber PDF Cerita</span>
+              </div>
+            </div>
+
+          </div>
+        </article>
+      `;
+    }
+
+    function renderStoryboard() {
+      const container = document.getElementById('storyboardContainer');
+      const totalSlides = slidesData.length;
+      
+      if (currentViewMode === 'all') {
+        container.innerHTML = slidesData.map(s => renderSlideCard(s)).join('');
+      } else {
+        const slide = slidesData.find(s => s.slideNum === currentSingleSlide) || slidesData[0];
+        container.innerHTML = `
+          <div class="mb-4 flex items-center justify-between no-print">
+            <button onclick="navigateSlide(-1)" ${currentSingleSlide === 1 ? 'disabled class="opacity-40 cursor-not-allowed"' : 'class="hover:bg-slate-200"'} class="px-4 py-2 rounded-xl bg-white border border-cLine font-semibold text-xs text-cDark flex items-center gap-2 transition shadow-sm">
+              ← Scene #${currentSingleSlide - 1} Sebelumnya
+            </button>
+            <span class="text-xs font-bold text-cDark font-mono bg-cBrandLight text-cBrand px-3 py-1 rounded-full">
+              Menampilkan Scene ${currentSingleSlide} dari ${totalSlides}
+            </span>
+            <button onclick="navigateSlide(1)" ${currentSingleSlide === totalSlides ? 'disabled class="opacity-40 cursor-not-allowed"' : 'class="hover:bg-slate-200"'} class="px-4 py-2 rounded-xl bg-white border border-cLine font-semibold text-xs text-cDark flex items-center gap-2 transition shadow-sm">
+              Scene #${currentSingleSlide + 1} Berikutnya →
+            </button>
+          </div>
+          ${renderSlideCard(slide)}
+        `;
+      }
+      updateTabButtons();
+    }
+
+    function buildTabButtons() {
+      const btnContainer = document.getElementById('slideTabButtons');
+      btnContainer.innerHTML = slidesData.map(s => `
+        <button id="tabBtn-${s.slideNum}" onclick="goToSlide(${s.slideNum})" class="px-2.5 py-1 rounded text-xs font-mono font-bold transition flex items-center gap-1 border ${
+          s.slideNum === currentSingleSlide 
+            ? 'bg-cBrand text-white border-cBrand shadow-sm' 
+            : 'bg-white/10 text-white/80 border-white/10 hover:bg-white/20 hover:text-white'
+        }">
+          <span>#${s.slideNum}</span>
+          <span class="hidden md:inline font-sans font-normal text-[10px] truncate max-w-[95px]">${s.slideTitle.split(':')[0]}</span>
+        </button>
+      `).join('');
+    }
+
+    function updateTabButtons() {
+      slidesData.forEach(s => {
+        const btn = document.getElementById(`tabBtn-${s.slideNum}`);
+        if (btn) {
+          if (currentViewMode === 'single' && s.slideNum === currentSingleSlide) {
+            btn.className = 'px-2.5 py-1 rounded text-xs font-mono font-bold transition flex items-center gap-1 border bg-cBrand text-white border-cBrand shadow-sm';
+          } else {
+            btn.className = 'px-2.5 py-1 rounded text-xs font-mono font-bold transition flex items-center gap-1 border bg-white/10 text-white/80 border-white/10 hover:bg-white/20 hover:text-white';
+          }
+        }
+      });
+    }
+
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      const btnSingle = document.getElementById('btnViewSingle');
+      const btnAll = document.getElementById('btnViewAll');
+      if (mode === 'all') {
+        btnAll.className = 'px-3 py-1.5 rounded-lg border border-transparent bg-cBrand text-white font-semibold transition flex items-center gap-1.5 shadow-sm';
+        btnSingle.className = 'px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 font-medium text-white transition flex items-center gap-1.5 shadow-sm';
+      } else {
+        btnSingle.className = 'px-3 py-1.5 rounded-lg border border-transparent bg-cBrand text-white font-semibold transition flex items-center gap-1.5 shadow-sm';
+        btnAll.className = 'px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 font-medium text-white transition flex items-center gap-1.5 shadow-sm';
+      }
+      renderStoryboard();
+    }
+
+    function goToSlide(num) {
+      currentSingleSlide = num;
+      if (currentViewMode === 'all') {
+        const el = document.getElementById(`slide-card-${num}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else {
+        renderStoryboard();
+      }
+    }
+
+    function navigateSlide(direction) {
+      const totalSlides = slidesData.length;
+      const nextSlide = currentSingleSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= totalSlides) {
+        currentSingleSlide = nextSlide;
+        renderStoryboard();
+      }
+    }
+
+    function copySlideScript(num) {
+      const slide = slidesData.find(s => s.slideNum === num);
+      if (!slide) return;
+      
+      const cleanHears = slide.userHears.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
+      const cleanText = slide.onScreenText.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
+      
+      const copyPayload = `[STORYBOARD iSPRING SUITE 11 - SCENE #${slide.slideNum}]
+Judul Scene: ${slide.slideTitle}
+Program: ${slide.program}
+Model Instruksional: ${moduleData.pedagogicalModel}
+Blok iSpring: ${slide.ispringBlock}
+Master Layout: ${slide.masterSlide}
+
+=== USER HEARS (DIALOG VERBATIM & PANDUAN SUARA) ===
+${cleanHears}
+
+=== ON-SCREEN TEXT (SIMBOL & LABEL VISUAL) ===
+${cleanText}
+
+=== CATATAN TEKNIS iSPRING (KIDS MODE) ===
+${slide.additionalNotes.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim()}`;
+
+      const dummy = document.createElement("textarea");
+      dummy.value = copyPayload;
+      document.body.appendChild(dummy);
+      dummy.select();
+      try {
+        document.execCommand('copy');
+        showToast(`Naskah Scene #${num} berhasil disalin ke clipboard!`);
+      } catch (err) {
+        showToast("Gagal menyalin naskah.");
+      }
+      document.body.removeChild(dummy);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 2600);
+    }
+
+    window.onload = function () {
+      buildTabButtons();
+      renderStoryboard();
+    };
+  </script>
+</body>
+</html>
